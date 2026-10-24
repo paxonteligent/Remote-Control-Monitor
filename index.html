@@ -4,243 +4,1151 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Remote Control Monitor</title>
+<meta name="theme-color" content="#080d19">
+<title>Spyteligent</title>
+
 <style>
-:root{--bg:#f4f6fb;--panel:#fff;--ink:#182230;--muted:#7d8797;--line:#e9edf4;--primary:#6658e8;--nav:#15152c;--shadow:0 12px 35px #1a25400d}
-*{box-sizing:border-box}
-body{margin:0;font-family:Inter,system-ui,-apple-system,"Segoe UI",sans-serif;background:var(--bg);color:var(--ink)}
-button,input,textarea,select{font:inherit}button{cursor:pointer}
-.hidden{display:none!important}.muted{color:var(--muted)}.small{font-size:12px}
-.pill{display:inline-flex;align-items:center;gap:6px;border-radius:30px;padding:6px 10px;font-size:11px;background:#f0efff;color:var(--primary);font-weight:700}
-.btn{border:0;border-radius:10px;padding:11px 15px;font-weight:700;background:var(--primary);color:white}
-.btn:hover{filter:brightness(1.06)}.btn.secondary{background:#f0efff;color:var(--primary)}.btn.ghost{background:white;color:#596275;border:1px solid var(--line)}.btn.danger{background:#fff0f1;color:#d44c5a}
-.field{width:100%;border:1px solid #e4e8f0;border-radius:11px;padding:13px 14px;outline:none;background:white;color:var(--ink)}.field:focus{border-color:var(--primary);box-shadow:0 0 0 3px #6658e81b}
-.card{background:var(--panel);border:1px solid var(--line);border-radius:17px;padding:20px;box-shadow:var(--shadow)}.card-title{font-size:15px;font-weight:800;margin:0 0 16px}
-.section-heading{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:20px}.section-heading h1{font-size:24px;margin:0 0 6px;letter-spacing:-.6px}.section-heading p{color:var(--muted);margin:0;font-size:13px}
-.avatar{width:42px;height:42px;border-radius:14px;display:grid;place-items:center;flex-shrink:0;background:linear-gradient(135deg,#ddd9ff,#b8b0ff);color:#4537ad;font-weight:800}.avatar.green{background:linear-gradient(135deg,#d5f8e9,#9ee9c9);color:#187a58}.avatar.orange{background:linear-gradient(135deg,#ffebd7,#ffd0a0);color:#a45b19}.avatar.blue{background:linear-gradient(135deg,#d9edff,#b5d6ff);color:#2865a4}.avatar.pink{background:linear-gradient(135deg,#ffe0eb,#ffbad0);color:#a83f68}
+:root {
+  --bg:#080d19;
+  --panel:#111a2b;
+  --panel2:#172238;
+  --border:#26334b;
+  --text:#edf3ff;
+  --muted:#91a1bb;
+  --accent:#6d8cff;
+  --green:#42d6a4;
+}
 
-/* Login */
-#loginScreen{min-height:100vh;display:grid;grid-template-columns:1.05fr .95fr;background:#fff}
-.login-art{position:relative;overflow:hidden;padding:52px;background:radial-gradient(circle at 20% 20%,#7567f7 0,transparent 34%),linear-gradient(145deg,#15152d,#24204c 65%,#433b8f);color:white;display:flex;flex-direction:column;justify-content:space-between}
-.login-art:before,.login-art:after{content:"";position:absolute;border:1px solid #ffffff19;border-radius:50%;width:430px;height:430px;right:-100px;top:17%}
-.login-art:after{width:570px;height:570px;right:-170px;top:9%}
-.brand{display:flex;align-items:center;gap:12px;font-size:17px;font-weight:850;letter-spacing:-.3px}
-.brand-icon{width:42px;height:42px;display:grid;place-items:center;background:linear-gradient(135deg,#8f83ff,#5b4be0);border-radius:13px;font-size:21px;box-shadow:0 8px 25px #5c4ee955}
-.art-copy{position:relative;z-index:1;max-width:490px}.art-copy h1{font-size:clamp(32px,4vw,51px);line-height:1.12;letter-spacing:-1.8px;margin:0 0 18px}.art-copy p{color:#d0cdec;line-height:1.8;font-size:15px;max-width:410px}
-.art-stat-row{display:flex;gap:26px;flex-wrap:wrap;margin-top:32px}.art-stat strong{display:block;font-size:21px}.art-stat span{color:#c7c3e4;font-size:12px}.art-footer{font-size:12px;color:#aaa6d0;position:relative;z-index:1}
-.login-side{display:flex;align-items:center;justify-content:center;padding:35px 24px}.login-box{width:100%;max-width:390px}.login-box h2{font-size:30px;letter-spacing:-.9px;margin:0 0 9px}.login-box .sub{color:var(--muted);font-size:14px;line-height:1.7;margin:0 0 29px}
-.login-box label{display:block;font-size:12px;font-weight:800;margin:17px 0 8px;color:#3c4658}.input-wrap{position:relative}.input-wrap .field{padding-left:42px}.input-icon{position:absolute;left:14px;top:50%;transform:translateY(-50%);color:#9299a9;font-size:16px}.show-password{position:absolute;right:12px;top:50%;transform:translateY(-50%);border:0;background:none;color:#7b8496;font-size:12px;font-weight:700}
-.login-options{display:flex;align-items:center;justify-content:space-between;gap:8px;margin:15px 0 22px;font-size:12px;color:var(--muted)}.login-options label{display:flex;align-items:center;gap:7px;margin:0;font-weight:500}.login-submit{width:100%;padding:14px;border-radius:11px;box-shadow:0 8px 18px #6658e82b}.login-error{color:#d44758;font-size:12px;margin-top:10px;min-height:16px}
+* {
+  box-sizing:border-box;
+  margin:0;
+  padding:0;
+}
 
-/* Dashboard */
-#app{min-height:100vh}.sidebar{position:fixed;inset:0 auto 0 0;width:252px;background:var(--nav);color:white;padding:23px 15px;display:flex;flex-direction:column;z-index:20;overflow-y:auto}.sidebar .brand{padding:0 8px 28px;font-size:15px}
-.side-label{font-size:10px;color:#777894;text-transform:uppercase;letter-spacing:1.5px;font-weight:800;padding:14px 12px 9px}
-.nav-item{width:100%;border:0;background:transparent;color:#aaaac2;text-align:left;padding:11px 12px;border-radius:10px;display:flex;align-items:center;gap:12px;font-size:13px;font-weight:600;margin:2px 0}.nav-item .nav-icon{width:19px;text-align:center;font-size:16px}.nav-item:hover{background:#ffffff0c;color:white}.nav-item.active{background:linear-gradient(100deg,#6658e8,#7968ef);color:white;box-shadow:0 7px 20px #6658e82b}.nav-count{margin-left:auto;font-size:10px;background:#ffffff17;border-radius:7px;padding:3px 7px}
-.sidebar-bottom{margin-top:auto;padding-top:20px}.user-mini{display:flex;align-items:center;gap:10px;padding:15px 8px 3px;border-top:1px solid #ffffff14}.user-mini .avatar{width:35px;height:35px;border-radius:12px}.user-mini strong{font-size:12px;display:block}.user-mini small{color:#9c9cb6;font-size:10px}
-.main{margin-left:252px;min-height:100vh}.topbar{height:76px;background:#ffffffd9;backdrop-filter:blur(12px);border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;padding:0 30px;position:sticky;top:0;z-index:10}.topbar-left{display:flex;align-items:center;gap:13px}.topbar-title{font-weight:800;font-size:15px}.topbar-sub{font-size:11px;color:var(--muted);margin-top:3px}.topbar-right{display:flex;align-items:center;gap:12px}
-.icon-btn{width:38px;height:38px;border-radius:11px;border:1px solid var(--line);background:white;color:#6f7787}.online-dot{width:7px;height:7px;border-radius:50%;background:#22bd83;display:inline-block}
-.content{padding:28px;max-width:1600px;margin:0 auto}.page{display:none}.page.active{display:block}.grid{display:grid;gap:18px}.stats-grid{grid-template-columns:repeat(4,minmax(0,1fr));margin-bottom:20px}.stat-card{display:flex;align-items:center;gap:14px}.stat-icon{width:47px;height:47px;border-radius:15px;display:grid;place-items:center;font-size:21px;background:#f0efff;color:var(--primary)}.stat-card:nth-child(2) .stat-icon{background:#e4faf1;color:#169b6c}.stat-card:nth-child(3) .stat-icon{background:#fff1df;color:#d58b30}.stat-card:nth-child(4) .stat-icon{background:#e9f3ff;color:#438ad9}.stat-card .num{font-size:25px;font-weight:850;letter-spacing:-.8px}.stat-card .label{font-size:12px;color:var(--muted);margin-top:4px}
-.two-col{grid-template-columns:minmax(0,1.5fr) minmax(260px,.85fr)}.device-card{display:flex;gap:20px;align-items:center}.phone-art{width:100px;height:170px;flex-shrink:0;border:5px solid #242536;border-radius:23px;background:linear-gradient(160deg,#252344,#7567ed);padding:8px;position:relative;box-shadow:0 12px 22px #29214c20}.phone-art:before{content:"";width:35px;height:7px;background:#242536;border-radius:0 0 8px 8px;position:absolute;top:0;left:50%;transform:translateX(-50%)}.phone-screen{height:100%;border-radius:13px;background:linear-gradient(150deg,#c6c0ff,#f1efff);display:flex;align-items:center;justify-content:center;font-size:35px}
-.device-info h3{margin:0 0 6px;font-size:19px}.device-info p{margin:0 0 13px;color:var(--muted);font-size:12px}.info-line{display:flex;justify-content:space-between;gap:15px;padding:12px 0;border-bottom:1px solid var(--line);font-size:12px}.info-line:last-child{border-bottom:0}.info-line span:first-child{color:var(--muted)}
-.activity-row{display:flex;align-items:center;gap:12px;padding:13px 0;border-bottom:1px solid var(--line)}.activity-row:last-child{border:0}.activity-row .avatar{width:38px;height:38px}.activity-row strong{font-size:12px;display:block}.activity-row small{font-size:11px;color:var(--muted);display:block;margin-top:4px}.activity-row .time{margin-left:auto;font-size:10px;color:var(--muted);white-space:nowrap}
-.progress{height:7px;border-radius:10px;background:#eceef5;overflow:hidden;margin-top:10px}.progress span{display:block;height:100%;border-radius:10px;background:linear-gradient(90deg,var(--primary),#a79cff)}
-.toolbar{display:flex;gap:10px;flex-wrap:wrap;align-items:center}.toolbar .field{max-width:300px}.table-wrap{overflow:auto}table{width:100%;border-collapse:collapse;font-size:12px}th{text-align:left;padding:12px;color:var(--muted);font-size:10px;text-transform:uppercase;letter-spacing:.7px;background:#fafbfe}td{padding:14px 12px;border-bottom:1px solid var(--line);white-space:nowrap}tbody tr:last-child td{border-bottom:0}.person-cell{display:flex;align-items:center;gap:10px}.person-cell .avatar{width:36px;height:36px;border-radius:12px}.person-cell strong{display:block;font-size:12px}.person-cell small{display:block;color:var(--muted);margin-top:4px;font-size:10px}.status{display:inline-flex;align-items:center;gap:5px;font-size:10px;font-weight:700;color:#18976b;background:#e9faf3;border-radius:20px;padding:6px 8px}.status.off{background:#fff1e7;color:#b56a22}.empty-state{text-align:center;padding:45px 15px;color:var(--muted);font-size:13px}
+body {
+  min-height:100vh;
+  background:var(--bg);
+  color:var(--text);
+  font-family:Inter,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  line-height:1.5;
+}
 
-/* Messages */
-.messages-layout{display:grid;grid-template-columns:minmax(250px,330px) minmax(0,1fr);height:min(700px,calc(100vh - 160px));min-height:470px;border:1px solid var(--line);border-radius:17px;overflow:hidden;background:white;box-shadow:var(--shadow)}
-.chat-list{border-right:1px solid var(--line);display:flex;flex-direction:column;min-width:0}.chat-list-head{padding:18px;border-bottom:1px solid var(--line)}.chat-list-head h3{font-size:16px;margin:0 0 13px}.chat-list-head .field{padding:10px 12px;font-size:12px}.platform-tabs{display:flex;gap:6px;flex-wrap:wrap;margin-top:12px}.platform-tabs button{border:1px solid var(--line);background:white;color:#727b8c;border-radius:8px;padding:7px 9px;font-size:10px;font-weight:700}.platform-tabs button.active{background:#f0efff;color:var(--primary);border-color:#dedaff}
-.chat-list-items{overflow:auto;flex:1}.chat-person{width:100%;border:0;border-bottom:1px solid #f0f2f7;background:white;display:flex;gap:10px;align-items:center;padding:13px;text-align:left}.chat-person:hover{background:#fafaff}.chat-person.active{background:#f3f2ff}.chat-person .avatar{width:40px;height:40px;border-radius:13px}.chat-person-info{min-width:0;flex:1}.chat-person-info strong{font-size:12px;display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.chat-person-info small{font-size:10px;color:var(--muted);display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;margin-top:5px}.chat-person time{font-size:9px;color:#9ca3b0;align-self:flex-start}
-.chat-panel{display:flex;flex-direction:column;min-width:0}.chat-head{padding:15px 20px;border-bottom:1px solid var(--line);display:flex;align-items:center;gap:11px}.chat-head .avatar{width:40px;height:40px}.chat-head-info{flex:1;min-width:0}.chat-head-info strong{font-size:13px;display:block}.chat-head-info small{font-size:10px;color:var(--muted);display:block;margin-top:4px}.chat-head-actions{display:flex;gap:7px}.chat-head-actions button{border:1px solid var(--line);background:white;border-radius:9px;width:34px;height:34px;color:#778092}
-.chat-body{flex:1;overflow:auto;padding:20px;background-color:#fafbff;background-image:radial-gradient(#e8e9f3 .7px,transparent .7px);background-size:17px 17px}.day-label{text-align:center;margin:0 auto 18px;font-size:10px;color:#858da0;background:#fff;border:1px solid var(--line);border-radius:20px;padding:6px 12px;width:max-content}.bubble-row{display:flex;margin:9px 0;align-items:flex-end;gap:7px}.bubble-row.mine{justify-content:flex-end}.bubble{max-width:min(78%,410px);padding:11px 13px;border-radius:14px 14px 14px 4px;background:white;border:1px solid #edf0f5;box-shadow:0 2px 6px #17243c05;font-size:12px;line-height:1.6;overflow-wrap:anywhere}.mine .bubble{background:#6a5ce9;color:white;border-color:#6a5ce9;border-radius:14px 14px 4px 14px}.bubble time{display:block;text-align:right;font-size:9px;margin-top:5px;opacity:.65}
-.chat-compose{padding:14px;border-top:1px solid var(--line);display:flex;gap:9px;align-items:flex-end;background:white}.chat-compose textarea{resize:none;min-height:43px;max-height:100px;flex:1;border:1px solid var(--line);border-radius:11px;padding:12px;outline:none;font-size:12px}.chat-compose textarea:focus{border-color:var(--primary)}.chat-compose .btn{height:43px}.mobile-back{display:none}
-.setting-row{display:flex;align-items:center;justify-content:space-between;gap:20px;padding:16px 0;border-bottom:1px solid var(--line)}.setting-row:last-child{border:0}.setting-row strong{font-size:12px;display:block}.setting-row small{font-size:11px;color:var(--muted);display:block;margin-top:5px}
-.switch{width:42px;height:24px;position:relative;display:inline-block;flex-shrink:0}.switch input{opacity:0;width:0;height:0}.switch span{position:absolute;inset:0;border-radius:30px;background:#d7dbe5;transition:.2s}.switch span:before{content:"";position:absolute;width:18px;height:18px;left:3px;top:3px;border-radius:50%;background:white;transition:.2s;box-shadow:0 2px 4px #0001}.switch input:checked+span{background:var(--primary)}.switch input:checked+span:before{transform:translateX(18px)}
-.plan-card{border:1px solid #dedaff;background:linear-gradient(140deg,#f8f7ff,#fff)}.plan-price{font-size:38px;font-weight:900;letter-spacing:-1px;margin:14px 0}.plan-price small{font-size:12px;color:var(--muted);font-weight:500;letter-spacing:0}.feature{padding:9px 0;font-size:12px;color:#596275}.feature:before{content:"✓";color:#1aa879;font-weight:900;margin-right:9px}
-.notice{border:1px solid #f2d6a4;background:#fff9eb;color:#8b5b18;padding:15px;border-radius:12px;font-size:12px;line-height:1.7}.toast{position:fixed;right:22px;bottom:22px;z-index:100;background:#20213a;color:white;padding:13px 17px;border-radius:12px;box-shadow:0 10px 35px #14152a33;font-size:12px;max-width:340px;animation:toastin .2s ease}@keyframes toastin{from{transform:translateY(10px);opacity:0}to{transform:translateY(0);opacity:1}}
-.hamburger{display:none}footer{text-align:center;color:#a1a8b5;font-size:10px;padding:24px 0 4px}
-@media(max-width:1100px){.sidebar{width:220px}.main{margin-left:220px}.content{padding:20px}.stats-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.messages-layout{grid-template-columns:minmax(220px,280px) minmax(0,1fr)}}
-@media(max-width:760px){
- #loginScreen{grid-template-columns:1fr}.login-art{display:none}.login-side{min-height:100vh;padding:26px 22px}
- .sidebar{transform:translateX(-100%);transition:transform .25s;width:260px;box-shadow:15px 0 40px #1112}.sidebar.open{transform:translateX(0)}
- .main{margin-left:0}.topbar{height:66px;padding:0 15px}.hamburger{display:inline-grid;place-items:center}.content{padding:17px 13px}
- .section-heading h1{font-size:21px}.section-heading{align-items:flex-start}.stats-grid{gap:10px}.stat-card{padding:13px;gap:10px}.stat-icon{width:39px;height:39px;border-radius:12px}.stat-card .num{font-size:21px}
- .two-col{grid-template-columns:1fr}.device-card{align-items:flex-start}.phone-art{width:78px;height:140px}
- .messages-layout{display:block;height:calc(100dvh - 145px);min-height:460px;position:relative}.chat-list{height:100%;border:0}.chat-panel{display:none;height:100%}.messages-layout.mobile-chat-open .chat-list{display:none}.messages-layout.mobile-chat-open .chat-panel{display:flex}.mobile-back{display:inline-grid}
- .chat-body{padding:14px}.bubble{max-width:88%}.chat-head{padding:12px}.chat-compose{padding:10px}.toolbar .field{max-width:none;flex:1}
+button,input {
+  font:inherit;
+}
+
+button {
+  cursor:pointer;
+}
+
+.hidden {
+  display:none!important;
+}
+
+.login-screen {
+  min-height:100vh;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding:24px;
+  background:
+    radial-gradient(ellipse at top,#1c2d53 0%,transparent 55%),
+    var(--bg);
+}
+
+.login-card {
+  width:100%;
+  max-width:420px;
+  padding:36px;
+  background:var(--panel);
+  border:1px solid var(--border);
+  border-radius:20px;
+  box-shadow:0 24px 80px #0005;
+}
+
+.brand {
+  display:flex;
+  align-items:center;
+  gap:12px;
+  font-size:22px;
+  font-weight:750;
+  letter-spacing:-.6px;
+}
+
+.brand-mark {
+  width:42px;
+  height:42px;
+  display:grid;
+  place-items:center;
+  border-radius:13px;
+  background:linear-gradient(135deg,#7795ff,#5368e8);
+  color:white;
+  font-size:23px;
+}
+
+.login-card h1 {
+  margin-top:32px;
+  font-size:28px;
+  letter-spacing:-.8px;
+}
+
+.subtitle {
+  color:var(--muted);
+  font-size:14px;
+  margin:8px 0 26px;
+}
+
+.field {
+  margin-bottom:18px;
+}
+
+.field label {
+  display:block;
+  margin-bottom:8px;
+  color:#d7e0f2;
+  font-size:13px;
+}
+
+.field input {
+  width:100%;
+  padding:13px 14px;
+  color:var(--text);
+  background:#0b1220;
+  border:1px solid var(--border);
+  border-radius:10px;
+  outline:none;
+}
+
+.field input:focus {
+  border-color:var(--accent);
+  box-shadow:0 0 0 3px #6d8cff20;
+}
+
+.primary-btn {
+  width:100%;
+  padding:13px 16px;
+  border:0;
+  border-radius:10px;
+  background:var(--accent);
+  color:white;
+  font-weight:700;
+  transition:filter .2s;
+}
+
+.primary-btn:hover {
+  filter:brightness(1.12);
+}
+
+.login-message {
+  min-height:20px;
+  margin-top:10px;
+  color:#ff9ba9;
+  font-size:13px;
+}
+
+.login-footer {
+  margin-top:20px;
+  text-align:center;
+  color:var(--muted);
+  font-size:12px;
+}
+
+.app {
+  min-height:100vh;
+  display:flex;
+}
+
+.sidebar {
+  width:245px;
+  flex-shrink:0;
+  padding:24px 16px;
+  background:#0d1423;
+  border-right:1px solid var(--border);
+  display:flex;
+  flex-direction:column;
+}
+
+.sidebar .brand {
+  padding:0 8px 30px;
+  font-size:19px;
+}
+
+.nav-label {
+  padding:10px 12px;
+  color:#71819d;
+  text-transform:uppercase;
+  letter-spacing:1.4px;
+  font-size:10px;
+  font-weight:700;
+}
+
+.nav-btn {
+  width:100%;
+  display:flex;
+  align-items:center;
+  gap:12px;
+  padding:12px;
+  margin:3px 0;
+  color:#a9b7ce;
+  background:transparent;
+  border:0;
+  border-radius:9px;
+  text-align:left;
+  font-size:14px;
+}
+
+.nav-btn:hover,
+.nav-btn.active {
+  background:#1a2740;
+  color:white;
+}
+
+.nav-btn.active {
+  box-shadow:inset 3px 0 var(--accent);
+}
+
+.nav-icon {
+  width:20px;
+  text-align:center;
+}
+
+.sidebar-bottom {
+  margin-top:auto;
+  padding:16px 8px 0;
+}
+
+.user-mini {
+  display:flex;
+  align-items:center;
+  gap:10px;
+  padding:12px 0;
+  border-top:1px solid var(--border);
+}
+
+.avatar {
+  width:36px;
+  height:36px;
+  display:grid;
+  place-items:center;
+  border-radius:50%;
+  background:#26385d;
+  color:#dce5ff;
+  font-weight:700;
+}
+
+.user-mini strong {
+  display:block;
+  font-size:13px;
+}
+
+.user-mini small {
+  color:var(--muted);
+  font-size:11px;
+}
+
+.main {
+  flex:1;
+  min-width:0;
+}
+
+.topbar {
+  min-height:76px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:16px;
+  padding:18px 30px;
+  border-bottom:1px solid var(--border);
+  background:#0b1120;
+}
+
+.topbar h2 {
+  font-size:19px;
+}
+
+.topbar-right {
+  display:flex;
+  align-items:center;
+  gap:12px;
+}
+
+.status-pill {
+  display:flex;
+  align-items:center;
+  gap:7px;
+  padding:7px 11px;
+  border:1px solid #275643;
+  border-radius:20px;
+  color:var(--green);
+  font-size:12px;
+}
+
+.status-dot {
+  width:7px;
+  height:7px;
+  border-radius:50%;
+  background:var(--green);
+}
+
+.logout-btn,
+.secondary-btn {
+  padding:9px 13px;
+  border:1px solid var(--border);
+  border-radius:9px;
+  background:var(--panel);
+  color:var(--text);
+  font-size:13px;
+}
+
+.content {
+  max-width:1500px;
+  margin:auto;
+  padding:30px;
+}
+
+.page-heading {
+  display:flex;
+  align-items:flex-start;
+  justify-content:space-between;
+  gap:20px;
+  margin-bottom:26px;
+}
+
+.page-heading h1 {
+  font-size:27px;
+  letter-spacing:-.8px;
+}
+
+.page-heading p {
+  margin-top:5px;
+  color:var(--muted);
+  font-size:14px;
+}
+
+.stats-grid {
+  display:grid;
+  grid-template-columns:repeat(4,minmax(0,1fr));
+  gap:18px;
+  margin-bottom:24px;
+}
+
+.stat-card,
+.panel {
+  background:var(--panel);
+  border:1px solid var(--border);
+  border-radius:15px;
+}
+
+.stat-card {
+  padding:20px;
+}
+
+.stat-top {
+  display:flex;
+  justify-content:space-between;
+  gap:10px;
+  color:var(--muted);
+  font-size:13px;
+}
+
+.stat-icon {
+  width:36px;
+  height:36px;
+  display:grid;
+  place-items:center;
+  border-radius:10px;
+  background:#25345a;
+  color:#a7b8ff;
+  font-size:18px;
+}
+
+.stat-number {
+  margin-top:20px;
+  font-size:29px;
+  font-weight:750;
+  letter-spacing:-.8px;
+}
+
+.stat-note {
+  margin-top:5px;
+  color:var(--muted);
+  font-size:12px;
+}
+
+.dashboard-grid {
+  display:grid;
+  grid-template-columns:minmax(0,1.5fr) minmax(280px,1fr);
+  gap:20px;
+}
+
+.panel {
+  min-width:0;
+  overflow:hidden;
+}
+
+.panel-header {
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:14px;
+  padding:20px;
+  border-bottom:1px solid var(--border);
+}
+
+.panel-header h3 {
+  font-size:15px;
+}
+
+.panel-header p {
+  margin-top:4px;
+  color:var(--muted);
+  font-size:12px;
+}
+
+.panel-body {
+  padding:20px;
+}
+
+.chart {
+  height:210px;
+  display:flex;
+  align-items:flex-end;
+  justify-content:space-around;
+  gap:12px;
+  padding-top:12px;
+}
+
+.chart-item {
+  flex:1;
+  max-width:50px;
+  height:100%;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:flex-end;
+  gap:10px;
+}
+
+.chart-bar {
+  width:100%;
+  max-width:38px;
+  min-height:5px;
+  border-radius:7px 7px 2px 2px;
+  background:linear-gradient(180deg,#849bff,#4c63d6);
+}
+
+.chart-label {
+  color:var(--muted);
+  font-size:11px;
+}
+
+.activity-list {
+  list-style:none;
+}
+
+.activity-item {
+  display:flex;
+  gap:12px;
+  padding:15px 0;
+  border-bottom:1px solid var(--border);
+}
+
+.activity-item:last-child {
+  border-bottom:0;
+}
+
+.activity-symbol {
+  width:35px;
+  height:35px;
+  flex-shrink:0;
+  display:grid;
+  place-items:center;
+  border-radius:10px;
+  background:#202f4a;
+}
+
+.activity-item strong {
+  display:block;
+  font-size:13px;
+  font-weight:600;
+}
+
+.activity-item p {
+  margin-top:3px;
+  color:var(--muted);
+  font-size:12px;
+}
+
+.section-page {
+  display:none;
+}
+
+.section-page.active {
+  display:block;
+}
+
+.table-wrap {
+  overflow-x:auto;
+}
+
+table {
+  width:100%;
+  border-collapse:collapse;
+  text-align:left;
+  white-space:nowrap;
+}
+
+th,td {
+  padding:15px 20px;
+  border-bottom:1px solid var(--border);
+  font-size:13px;
+}
+
+th {
+  color:var(--muted);
+  font-size:11px;
+  font-weight:600;
+  text-transform:uppercase;
+  letter-spacing:.7px;
+}
+
+td {
+  color:#dce5f4;
+}
+
+.tag {
+  display:inline-block;
+  padding:4px 8px;
+  border-radius:20px;
+  background:#1d3b35;
+  color:var(--green);
+  font-size:11px;
+}
+
+.empty-state {
+  padding:45px 20px;
+  text-align:center;
+  color:var(--muted);
+}
+
+.empty-state .big-icon {
+  margin-bottom:12px;
+  font-size:34px;
+}
+
+.empty-state h3 {
+  margin-bottom:6px;
+  color:var(--text);
+}
+
+.settings-form {
+  max-width:550px;
+}
+
+.settings-form .field {
+  margin-bottom:20px;
+}
+
+.mobile-menu {
+  display:none;
+  width:40px;
+  height:40px;
+  border:1px solid var(--border);
+  border-radius:9px;
+  background:var(--panel);
+  color:white;
+  font-size:20px;
+}
+
+.toast {
+  position:fixed;
+  right:20px;
+  bottom:20px;
+  z-index:20;
+  max-width:calc(100% - 40px);
+  padding:13px 18px;
+  background:#1b352e;
+  border:1px solid #326c59;
+  border-radius:10px;
+  color:#b8ffe5;
+  font-size:13px;
+  box-shadow:0 12px 35px #0005;
+}
+
+@media(max-width:1100px) {
+  .stats-grid {
+    grid-template-columns:repeat(2,minmax(0,1fr));
+  }
+
+  .dashboard-grid {
+    grid-template-columns:1fr;
+  }
+}
+
+@media(max-width:760px) {
+  .sidebar {
+    position:fixed;
+    z-index:10;
+    top:0;
+    bottom:0;
+    left:0;
+    width:260px;
+    transform:translateX(-100%);
+    transition:transform .25s ease;
+    box-shadow:15px 0 50px #0005;
+  }
+
+  .sidebar.open {
+    transform:translateX(0);
+  }
+
+  .mobile-menu {
+    display:block;
+    flex-shrink:0;
+  }
+
+  .topbar {
+    padding:14px 18px;
+  }
+
+  .topbar h2 {
+    font-size:16px;
+  }
+
+  .status-pill {
+    display:none;
+  }
+
+  .content {
+    padding:22px 16px;
+  }
+
+  .page-heading h1 {
+    font-size:23px;
+  }
+
+  .stat-card {
+    padding:16px;
+  }
+
+  .stat-number {
+    font-size:25px;
+  }
+
+  .login-card {
+    padding:27px 22px;
+  }
+}
+
+@media(max-width:420px) {
+  .stats-grid {
+    grid-template-columns:1fr;
+  }
+
+  .topbar-right {
+    gap:7px;
+  }
+
+  .logout-btn {
+    padding:8px 10px;
+  }
+
+  .page-heading {
+    flex-direction:column;
+  }
+
+  .chart {
+    gap:6px;
+  }
 }
 </style>
 </head>
+
 <body>
-<section id="loginScreen">
- <div class="login-art">
-  <div class="brand"><div class="brand-icon">◈</div><span>Remote Control Monitor</span></div>
-  <div class="art-copy">
-   <span class="pill" style="background:#ffffff18;color:#e3dfff;margin-bottom:20px">MONITORING DASHBOARD</span>
-   <h1>Your digital workspace, all in one place.</h1>
-   <p>Access your dashboard, conversations, contacts, device information, and account settings from one organized workspace.</p>
-   <div class="art-stat-row"><div class="art-stat"><strong>70+</strong><span>Contacts</span></div><div class="art-stat"><strong>6</strong><span>Messaging views</span></div><div class="art-stat"><strong>24/7</strong><span>Dashboard access</span></div></div>
+
+<section class="login-screen" id="loginScreen">
+  <div class="login-card">
+    <div class="brand">
+      <div class="brand-mark">S</div>
+      <span>Spyteligent</span>
+    </div>
+
+    <h1>Welcome back</h1>
+    <p class="subtitle">Sign in to access your workspace.</p>
+
+    <form id="loginForm">
+      <div class="field">
+        <label for="username">Email or username</label>
+        <input id="username" name="username" type="text"
+          placeholder="Enter your username"
+          autocomplete="username" required>
+      </div>
+
+      <div class="field">
+        <label for="password">Password</label>
+        <input id="password" name="password" type="password"
+          placeholder="Enter your password"
+          autocomplete="current-password" required>
+      </div>
+
+      <button class="primary-btn" type="submit">Sign in</button>
+      <p class="login-message" id="loginMessage" role="status"></p>
+    </form>
+
+    <p class="login-footer">Spyteligent</p>
   </div>
-  <div class="art-footer">© 2026 Remote Control Monitor</div>
- </div>
- <div class="login-side">
-  <form class="login-box" id="loginForm">
-   <div class="brand" style="margin-bottom:35px;color:#20243a"><div class="brand-icon">◈</div><span>Remote Control Monitor</span></div>
-   <h2>Welcome back</h2><p class="sub">Sign in to continue to your dashboard.</p>
-   <label for="loginUser">Username or email</label>
-   <div class="input-wrap"><span class="input-icon">✉</span><input class="field" id="loginUser" name="username" type="text" placeholder="Username or email" autocomplete="username" required></div>
-   <label for="loginPassword">Password</label>
-   <div class="input-wrap"><span class="input-icon">♙</span><input class="field" id="loginPassword" name="password" type="password" placeholder="Password" autocomplete="current-password" required><button type="button" class="show-password" id="togglePassword">SHOW</button></div>
-   <div class="login-options"><label><input type="checkbox" id="rememberMe" checked> Keep me signed in</label><span>Welcome</span></div>
-   <button type="submit" class="btn login-submit">Login to dashboard &nbsp; →</button>
-   <div class="login-error" id="loginError" role="status"></div>
-  </form>
- </div>
 </section>
 
-<div id="app" class="hidden">
- <aside class="sidebar" id="sidebar">
-  <div class="brand"><div class="brand-icon">◈</div><span>Remote Monitor</span></div>
-  <div class="side-label">Workspace</div>
-  <button class="nav-item active" data-page="dashboard"><span class="nav-icon">▦</span> Dashboard</button>
-  <button class="nav-item" data-page="device"><span class="nav-icon">▣</span> Device Information</button>
-  <button class="nav-item" data-page="contacts"><span class="nav-icon">♙</span> Contacts <span class="nav-count" id="contactCount">73</span></button>
-  <div class="side-label">Messages</div>
-  <button class="nav-item" data-page="whatsapp"><span class="nav-icon">◉</span> WhatsApp <span class="nav-count">●</span></button>
-  <button class="nav-item" data-page="sms"><span class="nav-icon">▤</span> SMS Messages</button>
-  <button class="nav-item" data-page="imessage"><span class="nav-icon">●</span> iMessage</button>
-  <button class="nav-item" data-page="telegram"><span class="nav-icon">➤</span> Telegram</button>
-  <button class="nav-item" data-page="messenger"><span class="nav-icon">ϟ</span> Messenger</button>
-  <button class="nav-item" data-page="instagram"><span class="nav-icon">◎</span> Instagram</button>
-  <div class="side-label">Device Activity</div>
-  <button class="nav-item" data-page="calls"><span class="nav-icon">♧</span> Call History</button>
-  <button class="nav-item" data-page="photos"><span class="nav-icon">▧</span> Photos & Notes</button>
-  <button class="nav-item" data-page="browser"><span class="nav-icon">◎</span> Browser Activity</button>
-  <div class="side-label">Account</div>
-  <button class="nav-item" data-page="subscription"><span class="nav-icon">◇</span> Subscription</button>
-  <button class="nav-item" data-page="settings"><span class="nav-icon">⚙</span> Settings</button>
-  <div class="sidebar-bottom"><div class="user-mini"><div class="avatar">U</div><div style="min-width:0;flex:1"><strong id="sidebarUsername">User</strong><small>Account</small></div><button id="logoutBtn" title="Log out" style="background:none;border:0;color:#b8b8d0;font-size:18px">↪</button></div></div>
- </aside>
- <main class="main">
-  <header class="topbar">
-   <div class="topbar-left"><button class="icon-btn hamburger" id="menuToggle" aria-label="Open navigation">☰</button><div><div class="topbar-title" id="topTitle">Dashboard Overview</div><div class="topbar-sub">Welcome back, <span id="welcomeName">User</span></div></div></div>
-   <div class="topbar-right"><span class="small muted" id="currentDate"></span><button class="icon-btn" id="topSettings" title="Settings">⚙</button><div class="avatar" style="width:36px;height:36px;border-radius:12px" id="topAvatar">U</div></div>
-  </header>
-  <div class="content">
-   <section class="page active" id="page-dashboard">
-    <div class="section-heading"><div><h1>Dashboard Overview</h1><p>Review your dashboard and recent activity.</p></div><span class="pill"><span class="online-dot"></span> Overview</span></div>
-    <div class="grid stats-grid">
-     <div class="card stat-card"><div class="stat-icon">♙</div><div><div class="num" id="statContacts">73</div><div class="label">Contacts</div></div></div>
-     <div class="card stat-card"><div class="stat-icon">▤</div><div><div class="num" id="statMessages">248</div><div class="label">Messages</div></div></div>
-     <div class="card stat-card"><div class="stat-icon">♧</div><div><div class="num">18</div><div class="label">Calls</div></div></div>
-     <div class="card stat-card"><div class="stat-icon">▣</div><div><div class="num">01</div><div class="label">Devices</div></div></div>
+<div class="app hidden" id="app">
+  <aside class="sidebar" id="sidebar">
+    <div class="brand">
+      <div class="brand-mark">S</div>
+      <span>Spyteligent</span>
     </div>
-    <div class="grid two-col">
-     <div class="grid">
-      <div class="card"><div class="section-heading" style="margin-bottom:18px"><div><h2 class="card-title" style="margin:0 0 5px">Connected device</h2><p class="small muted" style="margin:0">Device information</p></div><span class="pill">iPhone</span></div>
-       <div class="device-card"><div class="phone-art"><div class="phone-screen">▣</div></div><div class="device-info"><h3>iPhone 13</h3><p>iOS 26</p><span class="status"><span class="online-dot"></span> Available</span><div style="margin-top:15px"><button class="btn secondary" data-goto="device">View device details →</button></div></div></div>
+
+    <div class="nav-label">Workspace</div>
+
+    <button class="nav-btn active" data-page="overview">
+      <span class="nav-icon">▦</span> Overview
+    </button>
+
+    <button class="nav-btn" data-page="devices">
+      <span class="nav-icon">▣</span> Devices
+    </button>
+
+    <button class="nav-btn" data-page="activity">
+      <span class="nav-icon">◷</span> Activity
+    </button>
+
+    <button class="nav-btn" data-page="reports">
+      <span class="nav-icon">▤</span> Reports
+    </button>
+
+    <div class="nav-label">Preferences</div>
+
+    <button class="nav-btn" data-page="settings">
+      <span class="nav-icon">⚙</span> Settings
+    </button>
+
+    <div class="sidebar-bottom">
+      <div class="user-mini">
+        <div class="avatar" id="avatar">U</div>
+        <div>
+          <strong id="displayUser">User</strong>
+          <small>Account</small>
+        </div>
       </div>
-      <div class="card"><div class="section-heading"><div><h2 class="card-title" style="margin:0 0 5px">Recent conversations</h2><p class="small muted" style="margin:0">Latest messages</p></div><button class="btn secondary" data-goto="whatsapp">View messages</button></div><div id="recentConversations"></div></div>
-     </div>
-     <div class="grid">
-      <div class="card"><h2 class="card-title">Device profile</h2><div class="info-line"><span>Device name</span><strong>iPhone 13</strong></div><div class="info-line"><span>Operating system</span><strong>iOS 26</strong></div><div class="info-line"><span>Status</span><strong style="color:var(--green)">Available</strong></div><div class="info-line"><span>Last update</span><strong id="lastUpdate">Just now</strong></div><div style="margin-top:15px"><button class="btn ghost" style="width:100%" data-goto="device">Full device information</button></div></div>
-      <div class="card"><h2 class="card-title">Storage overview</h2><div style="display:flex;justify-content:space-between;font-size:12px"><strong>Device storage</strong><span class="muted">64 GB total</span></div><div class="progress"><span style="width:63%"></span></div><div style="display:flex;justify-content:space-between;margin-top:8px;font-size:10px;color:var(--muted)"><span>40.3 GB used</span><span>23.7 GB free</span></div><div style="margin-top:24px;display:flex;justify-content:space-between;font-size:12px"><strong>Conversation backup</strong><span class="pill">Ready</span></div><p class="small muted" style="line-height:1.7">Update the backup timestamp from the dashboard.</p><button class="btn" style="width:100%" id="dashboardBackup">Update conversation backup</button></div>
-     </div>
     </div>
-   </section>
+  </aside>
 
-   <section class="page" id="page-device"><div class="section-heading"><div><h1>Device Information</h1><p>Device profile and specifications.</p></div></div><div class="grid two-col"><div class="card"><div class="device-card"><div class="phone-art"><div class="phone-screen">▣</div></div><div class="device-info"><h3>iPhone 13</h3><p>iOS 26</p><span class="pill">Device profile</span></div></div><div style="margin-top:20px"><div class="info-line"><span>Device model</span><strong>iPhone 13</strong></div><div class="info-line"><span>Operating system</span><strong>iOS 26</strong></div><div class="info-line"><span>Storage capacity</span><strong>64 GB</strong></div><div class="info-line"><span>Battery level</span><strong>86%</strong></div><div class="info-line"><span>Network</span><strong>Wi-Fi</strong></div><div class="info-line"><span>Profile type</span><strong>Personal</strong></div></div></div><div class="card"><h2 class="card-title">Storage breakdown</h2><div class="info-line"><span>Applications</span><strong>18.4 GB</strong></div><div class="progress"><span style="width:29%"></span></div><div class="info-line"><span>Photos and media</span><strong>12.8 GB</strong></div><div class="progress"><span style="width:20%;background:#20b486"></span></div><div class="info-line"><span>System and other</span><strong>9.1 GB</strong></div><div class="progress"><span style="width:14%;background:#e5a64b"></span></div><div class="info-line"><span>Available</span><strong>23.7 GB</strong></div><div class="progress"><span style="width:37%;background:#6ba9ee"></span></div></div></div></section>
+  <main class="main">
+    <header class="topbar">
+      <div style="display:flex;align-items:center;gap:12px">
+        <button class="mobile-menu" id="mobileMenu"
+          aria-label="Open navigation">☰</button>
+        <h2 id="topbarTitle">Overview</h2>
+      </div>
 
-   <section class="page" id="page-contacts"><div class="section-heading"><div><h1>Contacts</h1><p>Browse and search your contact list.</p></div><span class="pill" id="contactsBadge">73 contacts</span></div><div class="card"><div class="toolbar" style="margin-bottom:18px"><input class="field" id="contactsSearch" placeholder="Search name, phone, or category…"><select class="field" id="contactCategory" style="max-width:180px"><option value="">All categories</option><option>Family</option><option>Other</option><option>Friendly relationship</option><option>Friends</option><option>Work</option></select></div><div class="table-wrap"><table><thead><tr><th>Contact</th><th>Phone number</th><th>Category</th><th>Actions</th></tr></thead><tbody id="contactsTable"></tbody></table></div></div></section>
+      <div class="topbar-right">
+        <div class="status-pill">
+          <span class="status-dot"></span>
+          Active
+        </div>
+        <button class="logout-btn" id="logoutBtn">Sign out</button>
+      </div>
+    </header>
 
-   <section class="page" id="page-whatsapp"><div class="section-heading"><div><h1>WhatsApp Messages</h1><p>Conversations and messages.</p></div><span class="pill">WhatsApp</span></div><div class="messages-layout" id="messages-whatsapp"></div></section>
-   <section class="page" id="page-sms"><div class="section-heading"><div><h1>SMS Messages</h1><p>Conversations and messages.</p></div><span class="pill">SMS</span></div><div class="messages-layout" id="messages-sms"></div></section>
-   <section class="page" id="page-imessage"><div class="section-heading"><div><h1>iMessage</h1><p>Conversations and messages.</p></div><span class="pill">iMessage</span></div><div class="messages-layout" id="messages-imessage"></div></section>
-   <section class="page" id="page-telegram"><div class="section-heading"><div><h1>Telegram Messages</h1><p>Conversations and messages.</p></div><span class="pill">Telegram</span></div><div class="messages-layout" id="messages-telegram"></div></section>
-   <section class="page" id="page-messenger"><div class="section-heading"><div><h1>Messenger</h1><p>Conversations and messages.</p></div><span class="pill">Messenger</span></div><div class="messages-layout" id="messages-messenger"></div></section>
-   <section class="page" id="page-instagram"><div class="section-heading"><div><h1>Instagram Messages</h1><p>Conversations and messages.</p></div><span class="pill">Instagram</span></div><div class="messages-layout" id="messages-instagram"></div></section>
+    <div class="content">
 
-   <section class="page" id="page-calls"><div class="section-heading"><div><h1>Call History</h1><p>Review call history.</p></div></div><div class="card"><div class="toolbar" style="margin-bottom:18px"><input class="field" id="callsSearch" placeholder="Search call history…"><select class="field" id="callType" style="max-width:170px"><option value="">All call types</option><option>Incoming</option><option>Outgoing</option><option>Missed</option></select></div><div class="table-wrap"><table><thead><tr><th>Contact</th><th>Call type</th><th>Date</th><th>Duration</th><th>Status</th></tr></thead><tbody id="callsTable"></tbody></table></div></div></section>
+      <section class="section-page active" id="page-overview">
+        <div class="page-heading">
+          <div>
+            <h1>Dashboard overview</h1>
+            <p>Welcome to your Spyteligent workspace.</p>
+          </div>
+        </div>
 
-   <section class="page" id="page-photos"><div class="section-heading"><div><h1>Photos & Notes</h1><p>Browse albums and saved notes.</p></div></div><div class="grid" style="grid-template-columns:repeat(auto-fit,minmax(180px,1fr))"><div class="card"><div style="height:130px;border-radius:13px;background:linear-gradient(140deg,#d9e8ff,#9fbaf4);display:grid;place-items:center;font-size:42px">▧</div><h3 style="font-size:13px">Weekend Memories</h3><p class="small muted">12 items</p></div><div class="card"><div style="height:130px;border-radius:13px;background:linear-gradient(140deg,#fce4d8,#f6bba9);display:grid;place-items:center;font-size:42px">♡</div><h3 style="font-size:13px">Favorites</h3><p class="small muted">8 items</p></div><div class="card"><div style="height:130px;border-radius:13px;background:linear-gradient(140deg,#d8f5e8,#94dec0);display:grid;place-items:center;font-size:42px">✎</div><h3 style="font-size:13px">Personal Notes</h3><p class="small muted">5 notes</p></div><div class="card"><div style="height:130px;border-radius:13px;background:linear-gradient(140deg,#eee2ff,#c6b2f5);display:grid;place-items:center;font-size:42px">✧</div><h3 style="font-size:13px">Saved Items</h3><p class="small muted">9 items</p></div></div></section>
+        <div class="stats-grid">
+          <article class="stat-card">
+            <div class="stat-top">
+              <span>Total devices</span>
+              <span class="stat-icon">▣</span>
+            </div>
+            <div class="stat-number">12</div>
+            <p class="stat-note">Device overview</p>
+          </article>
 
-   <section class="page" id="page-browser"><div class="section-heading"><div><h1>Browser Activity</h1><p>Browse recent activity.</p></div></div><div class="card"><div class="toolbar" style="margin-bottom:18px"><input class="field" id="browserSearch" placeholder="Search browsing history…"></div><div class="table-wrap"><table><thead><tr><th>Page</th><th>Website</th><th>Category</th><th>Visit time</th></tr></thead><tbody id="browserTable"></tbody></table></div></div></section>
+          <article class="stat-card">
+            <div class="stat-top">
+              <span>Active sessions</span>
+              <span class="stat-icon">◉</span>
+            </div>
+            <div class="stat-number">08</div>
+            <p class="stat-note">Session overview</p>
+          </article>
 
-   <section class="page" id="page-subscription"><div class="section-heading"><div><h1>Subscription</h1><p>Plan and activation status.</p></div><span class="pill">Pro plan</span></div><div class="grid two-col"><div class="card plan-card"><span class="pill">Current plan</span><h2 style="font-size:24px;margin:20px 0 0">Remote Monitor Pro</h2><div class="plan-price">$246 <small>/ remaining balance</small></div><div class="feature">Dashboard overview</div><div class="feature">Contact and message layouts</div><div class="feature">Device information</div><div class="feature">Account settings</div><button class="btn" id="renewBtn" style="width:100%;margin-top:18px">Request activation</button></div><div class="card"><h2 class="card-title">Activation status</h2><div class="notice" id="activationNotice">Your subscription activation status will appear here.</div><div class="info-line" style="margin-top:18px"><span>Account type</span><strong>Pro</strong></div><div class="info-line"><span>Payment status</span><strong>Pending</strong></div><div class="info-line"><span>Activation status</span><strong>Pending</strong></div></div></div></section>
+          <article class="stat-card">
+            <div class="stat-top">
+              <span>Reports</span>
+              <span class="stat-icon">▤</span>
+            </div>
+            <div class="stat-number">24</div>
+            <p class="stat-note">Report overview</p>
+          </article>
 
-   <section class="page" id="page-settings"><div class="section-heading"><div><h1>Settings</h1><p>Manage your preferences and account.</p></div></div><div class="grid two-col"><div class="card"><h2 class="card-title">Preferences</h2><div class="setting-row"><div><strong>Desktop notifications</strong><small>Notification preferences</small></div><label class="switch"><input type="checkbox" checked><span></span></label></div><div class="setting-row"><div><strong>Compact contact list</strong><small>Reduce spacing in conversation lists.</small></div><label class="switch"><input id="compactToggle" type="checkbox"><span></span></label></div><div class="setting-row"><div><strong>Show status badges</strong><small>Display profile status labels.</small></div><label class="switch"><input type="checkbox" checked><span></span></label></div></div><div class="card"><h2 class="card-title">Account settings</h2><div class="setting-row"><div><strong>Signed-in user</strong><small id="settingsUsername">User</small></div><span class="pill">Active</span></div><div class="setting-row"><div><strong>Login</strong><small>Username and password</small></div><span class="pill">Enabled</span></div><div class="setting-row"><div><strong>Session</strong><small>Current browser session</small></div><span class="pill">Active</span></div><button class="btn danger" id="settingsLogout" style="margin-top:17px">Log out</button></div></div></section>
-   <footer>Remote Control Monitor © 2026</footer>
-  </div>
- </main>
+          <article class="stat-card">
+            <div class="stat-top">
+              <span>Notifications</span>
+              <span class="stat-icon">♧</span>
+            </div>
+            <div class="stat-number">03</div>
+            <p class="stat-note">Recent notifications</p>
+          </article>
+        </div>
+
+        <div class="dashboard-grid">
+          <article class="panel">
+            <div class="panel-header">
+              <div>
+                <h3>Weekly activity</h3>
+                <p>Activity overview</p>
+              </div>
+              <span class="tag">This week</span>
+            </div>
+
+            <div class="panel-body">
+              <div class="chart">
+                <div class="chart-item">
+                  <div class="chart-bar" style="height:38%"></div>
+                  <span class="chart-label">Mon</span>
+                </div>
+                <div class="chart-item">
+                  <div class="chart-bar" style="height:62%"></div>
+                  <span class="chart-label">Tue</span>
+                </div>
+                <div class="chart-item">
+                  <div class="chart-bar" style="height:48%"></div>
+                  <span class="chart-label">Wed</span>
+                </div>
+                <div class="chart-item">
+                  <div class="chart-bar" style="height:82%"></div>
+                  <span class="chart-label">Thu</span>
+                </div>
+                <div class="chart-item">
+                  <div class="chart-bar" style="height:57%"></div>
+                  <span class="chart-label">Fri</span>
+                </div>
+                <div class="chart-item">
+                  <div class="chart-bar" style="height:94%"></div>
+                  <span class="chart-label">Sat</span>
+                </div>
+                <div class="chart-item">
+                  <div class="chart-bar" style="height:43%"></div>
+                  <span class="chart-label">Sun</span>
+                </div>
+              </div>
+            </div>
+          </article>
+
+          <article class="panel">
+            <div class="panel-header">
+              <div>
+                <h3>Recent activity</h3>
+                <p>Latest workspace events</p>
+              </div>
+            </div>
+
+            <div class="panel-body">
+              <ul class="activity-list">
+                <li class="activity-item">
+                  <div class="activity-symbol">↗</div>
+                  <div>
+                    <strong>Workspace opened</strong>
+                    <p>Overview section</p>
+                  </div>
+                </li>
+                <li class="activity-item">
+                  <div class="activity-symbol">▤</div>
+                  <div>
+                    <strong>Reports section</strong>
+                    <p>Report overview</p>
+                  </div>
+                </li>
+                <li class="activity-item">
+                  <div class="activity-symbol">⚙</div>
+                  <div>
+                    <strong>Account settings</strong>
+                    <p>Preferences</p>
+                  </div>
+                </li>
+              </ul>
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <section class="section-page" id="page-devices">
+        <div class="page-heading">
+          <div>
+            <h1>Devices</h1>
+            <p>Device inventory</p>
+          </div>
+        </div>
+
+        <div class="panel">
+          <div class="panel-header">
+            <h3>Device inventory</h3>
+          </div>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>Device</th>
+                  <th>Type</th>
+                  <th>Status</th>
+                  <th>Last updated</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Workspace device 01</td>
+                  <td>Mobile</td>
+                  <td><span class="tag">Listed</span></td>
+                  <td>—</td>
+                </tr>
+                <tr>
+                  <td>Workspace device 02</td>
+                  <td>Desktop</td>
+                  <td><span class="tag">Listed</span></td>
+                  <td>—</td>
+                </tr>
+                <tr>
+                  <td>Workspace device 03</td>
+                  <td>Tablet</td>
+                  <td><span class="tag">Listed</span></td>
+                  <td>—</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <section class="section-page" id="page-activity">
+        <div class="page-heading">
+          <div>
+            <h1>Activity</h1>
+            <p>Workspace activity history</p>
+          </div>
+        </div>
+
+        <div class="panel">
+          <div class="panel-header">
+            <h3>Activity history</h3>
+          </div>
+          <div class="panel-body">
+            <ul class="activity-list">
+              <li class="activity-item">
+                <div class="activity-symbol">↗</div>
+                <div>
+                  <strong>Workspace accessed</strong>
+                  <p>Overview section</p>
+                </div>
+              </li>
+              <li class="activity-item">
+                <div class="activity-symbol">▤</div>
+                <div>
+                  <strong>Reports viewed</strong>
+                  <p>Reports section</p>
+                </div>
+              </li>
+              <li class="activity-item">
+                <div class="activity-symbol">⚙</div>
+                <div>
+                  <strong>Settings opened</strong>
+                  <p>Preferences section</p>
+                </div>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <section class="section-page" id="page-reports">
+        <div class="page-heading">
+          <div>
+            <h1>Reports</h1>
+            <p>Reports overview</p>
+          </div>
+        </div>
+
+        <div class="panel">
+          <div class="panel-header">
+            <h3>Available reports</h3>
+          </div>
+          <div class="empty-state">
+            <div class="big-icon">▤</div>
+            <h3>No reports available</h3>
+          </div>
+        </div>
+      </section>
+
+      <section class="section-page" id="page-settings">
+        <div class="page-heading">
+          <div>
+            <h1>Settings</h1>
+            <p>Account preferences</p>
+          </div>
+        </div>
+
+        <div class="panel">
+          <div class="panel-header">
+            <h3>Account preferences</h3>
+          </div>
+          <div class="panel-body">
+            <form class="settings-form" id="settingsForm">
+              <div class="field">
+                <label for="accountName">Display name</label>
+                <input id="accountName" type="text"
+                  maxlength="60" required>
+              </div>
+
+              <div class="field">
+                <label for="accountEmail">Email address</label>
+                <input id="accountEmail" type="email"
+                  placeholder="you@example.com">
+              </div>
+
+              <button class="primary-btn" type="submit">
+                Save preferences
+              </button>
+            </form>
+          </div>
+        </div>
+      </section>
+
+    </div>
+  </main>
 </div>
-<div id="toast" class="toast hidden" role="status"></div>
+
+<div class="toast hidden" id="toast" role="status"></div>
 
 <script>
-(function(){
-"use strict";
-const $=(s,r=document)=>r.querySelector(s), $$=(s,r=document)=>[...r.querySelectorAll(s)];
-const loginScreen=$("#loginScreen"),app=$("#app"),sidebar=$("#sidebar"),loginForm=$("#loginForm");
-let currentUser="User",lastBackup=new Date();
-const chatSelections={},localMessages={};
-const originalContacts=[
-{name:"Benjamin Merel",category:"Family",phone:"+1 718 645 5740",color:"purple"},
-{name:"Abigail Merel Tamir",category:"Other",phone:"+1 561 409 4134",color:"pink"},
-{name:"Abigail Merel-Tamir",category:"Other",phone:"+1 718 382 1404",color:"orange"},
-{name:"Leah Scharf",category:"Other",phone:"+1 800 793 1111",color:"blue"},
-{name:"Bryan Charles",category:"Friendly relationship",phone:"+1 718 253 4941",color:"green"}
-];
-const extraNames=["Olivia Bennett","Ethan Brooks","Mia Carter","Noah Mitchell","Ava Collins","Lucas Morgan","Sophia Reed","James Parker","Isabella Hayes","Liam Foster","Amelia Ross","Mason Cooper","Charlotte Bell","Elijah Ward","Harper Gray","Logan Price","Evelyn James","Alexander King","Ella Scott","Daniel Young","Grace Hill","Henry Adams","Chloe Baker","Jack Turner","Lily Evans","Benjamin Wright","Zoe Phillips","Samuel Campbell","Aria Edwards","David Stewart","Nora Morris","Matthew Rogers","Layla Cook","Joseph Bailey","Riley Rivera","Owen Richardson","Ellie Cox","Gabriel Howard","Stella Ward","Julian Peterson","Hazel Brooks","Isaac Kelly","Violet Sanders","Leo Bennett","Lucy Barnes","Caleb Wood","Penelope Murphy","Nathan Hughes","Aurora Flores","Dylan Powell","Savannah Long","Ryan Patterson","Audrey Perry","Andrew Jenkins","Claire Watson","Thomas Coleman","Skylar Henderson","Adrian Fisher","Naomi Simmons","Aaron Foster","Elena Butler","Miles Bryant","Madeline Russell","Jason Griffin","Sophie Diaz","Christopher Hayes","Victoria Myers","Jonathan Ford"];
-const colors=["purple","green","orange","blue","pink"],categories=["Friends","Other","Work","Family","Friendly relationship"];
-const contacts=[...originalContacts];
-extraNames.forEach((name,i)=>contacts.push({name,category:categories[i%categories.length],phone:"+1 202 555 "+String(1000+i*37).padStart(4,"0"),color:colors[i%colors.length]}));
-contacts.forEach((c,i)=>c.id="c"+i);
-const platforms={whatsapp:{label:"WhatsApp"},sms:{label:"SMS"},imessage:{label:"iMessage"},telegram:{label:"Telegram"},messenger:{label:"Messenger"},instagram:{label:"Instagram"}};
-const titles={dashboard:"Dashboard Overview",device:"Device Information",contacts:"Contacts",whatsapp:"WhatsApp Messages",sms:"SMS Messages",imessage:"iMessage",telegram:"Telegram Messages",messenger:"Messenger",instagram:"Instagram Messages",calls:"Call History",photos:"Photos & Notes",browser:"Browser Activity",subscription:"Subscription",settings:"Settings"};
-const chatTemplates=[
-[["them","Hey, are we still meeting later?"],["me","Yes, that works for me. What time suits you?"],["them","Around 7 should be good."],["me","Perfect. I'll see you then."],["them","Looking forward to it 😊"]],
-[["them","I've been thinking about you today."],["me","Really? That's sweet of you to say."],["them","I wanted to tell you in person, honestly."],["me","Now you've made me curious ❤️"],["them","I'll tell you when we get a quiet moment."]],
-[["them","Can we talk privately when you have a minute?"],["me","Sure. Is everything okay?"],["them","Yes, nothing bad. I just have something personal to share."],["me","Okay, message me when you're ready."],["them","Thanks for understanding."]],
-[["them","I got home safely, thanks for checking."],["me","Glad to hear it. Get some rest."],["them","You too! Talk tomorrow."],["me","Goodnight 🙂"]],
-[["them","You always know how to make me smile."],["me","Maybe it's because I like talking to you."],["them","Maybe I like talking to you even more."],["me","We'll have to settle that in person 😄"]],
-[["them","Please keep this between us for now. I need a little time to figure things out."],["me","I understand. I won't jump to conclusions."],["them","Thank you. I just wanted to be honest about how confusing things feel."],["me","Take your time. We can talk when you're comfortable."]],
-[["them","Are you free this weekend?"],["me","I think so. What did you have in mind?"],["them","Coffee and a long conversation?"],["me","That sounds lovely."]],
-[["them","Sorry I disappeared earlier. Work got really busy."],["me","No worries. Hope everything is okay."],["them","All good now. How has your day been?"],["me","Better now that things have calmed down."]]
-];
-function esc(v){return String(v).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));}
-function initials(name){return name.split(/\s+/).slice(0,2).map(s=>s[0]||"").join("").toUpperCase();}
-function av(c){return c.color==="green"?"green":c.color==="orange"?"orange":c.color==="blue"?"blue":c.color==="pink"?"pink":"";}
-function getContact(id){return contacts.find(c=>c.id===id)||contacts[0];}
-function getMessages(platform,id){const key=platform+"_"+id;if(!localMessages[key]){const index=contacts.findIndex(c=>c.id===id),template=chatTemplates[(Math.max(index,0)+Object.keys(platforms).indexOf(platform)*2)%chatTemplates.length];localMessages[key]=template.map((m,i)=>({from:m[0],text:m[1],time:["9:12 AM","9:14 AM","9:16 AM","9:18 AM","9:21 AM"][i%5]}));}return localMessages[key];}
-function toast(message){const t=$("#toast");t.textContent=message;t.classList.remove("hidden");clearTimeout(toast.timer);toast.timer=setTimeout(()=>t.classList.add("hidden"),2600);}
-function updateDate(){$("#currentDate").textContent=new Date().toLocaleDateString(undefined,{weekday:"short",month:"short",day:"numeric",year:"numeric"});}
-function enterDashboard(username){currentUser=username.trim()||"User";$("#sidebarUsername").textContent=currentUser;$("#welcomeName").textContent=currentUser;$("#settingsUsername").textContent=currentUser;$("#topAvatar").textContent=initials(currentUser);$(".user-mini .avatar").textContent=initials(currentUser);loginScreen.classList.add("hidden");app.classList.remove("hidden");goPage("dashboard");renderDashboard();renderContacts();renderCalls();renderBrowser();updateDate();}
-loginForm.addEventListener("submit",e=>{e.preventDefault();const username=$("#loginUser").value.trim(),password=$("#loginPassword").value;if(!username||!password){$("#loginError").textContent="Enter your username/email and password.";return;}$("#loginError").textContent="";enterDashboard(username.includes("@")?username.split("@")[0]:username);});
-$("#togglePassword").addEventListener("click",()=>{const f=$("#loginPassword"),visible=f.type==="password";f.type=visible?"text":"password";$("#togglePassword").textContent=visible?"HIDE":"SHOW";});
-function logout(){app.classList.add("hidden");loginScreen.classList.remove("hidden");sidebar.classList.remove("open");$("#loginPassword").value="";$("#loginError").textContent="";}
-$("#logoutBtn").addEventListener("click",logout);$("#settingsLogout").addEventListener("click",logout);
-function goPage(page){if(!titles[page])return;$$(".page").forEach(p=>p.classList.remove("active"));$("#page-"+page)?.classList.add("active");$$(".nav-item").forEach(b=>b.classList.toggle("active",b.dataset.page===page));$("#topTitle").textContent=titles[page];sidebar.classList.remove("open");if(platforms[page])renderMessaging(page);if(page==="contacts")renderContacts();if(page==="calls")renderCalls();if(page==="browser")renderBrowser();if(window.innerWidth<=760&&platforms[page])$("#messages-"+page).classList.remove("mobile-chat-open");}
-$$(".nav-item").forEach(b=>b.addEventListener("click",()=>goPage(b.dataset.page)));
-document.addEventListener("click",e=>{const b=e.target.closest("[data-goto]");if(b)goPage(b.dataset.goto);});
-$("#topSettings").addEventListener("click",()=>goPage("settings"));$("#menuToggle").addEventListener("click",()=>sidebar.classList.toggle("open"));
+const loginScreen = document.getElementById("loginScreen");
+const loginForm = document.getElementById("loginForm");
+const loginMessage = document.getElementById("loginMessage");
+const app = document.getElementById("app");
+const sidebar = document.getElementById("sidebar");
+const toast = document.getElementById("toast");
 
-function renderDashboard(){const recent=$("#recentConversations");recent.innerHTML="";contacts.slice(0,5).forEach((c,i)=>{const msgs=getMessages("whatsapp",c.id),last=msgs[msgs.length-1],row=document.createElement("div");row.className="activity-row";row.style.cursor="pointer";row.innerHTML=`<div class="avatar ${av(c)}">${esc(initials(c.name))}</div><div style="min-width:0;flex:1"><strong>${esc(c.name)}</strong><small>${esc(last.text)}</small></div><span class="time">${["9:21 AM","9:18 AM","Yesterday","Yesterday","Mon"][i]}</span>`;row.addEventListener("click",()=>{goPage("whatsapp");selectChat("whatsapp",c.id);});recent.appendChild(row);});$("#lastUpdate").textContent=lastBackup.toLocaleTimeString([],{hour:"2-digit",minute:"2-digit"});}
-function renderContacts(){const q=($("#contactsSearch")?.value||"").toLowerCase().trim(),cat=$("#contactCategory")?.value||"",rows=contacts.filter(c=>(!q||(c.name+" "+c.phone+" "+c.category).toLowerCase().includes(q))&&(!cat||c.category===cat));$("#contactsTable").innerHTML=rows.map(c=>`<tr><td><div class="person-cell"><div class="avatar ${av(c)}">${esc(initials(c.name))}</div><div><strong>${esc(c.name)}</strong><small>Contact</small></div></div></td><td>${esc(c.phone)}</td><td>${esc(c.category)}</td><td><button class="btn secondary contact-message" data-id="${c.id}" style="padding:7px 10px;font-size:10px">Message</button></td></tr>`).join("")||`<tr><td colspan="4"><div class="empty-state">No contacts found.</div></td></tr>`;$$(".contact-message").forEach(b=>b.addEventListener("click",()=>{goPage("whatsapp");selectChat("whatsapp",b.dataset.id);}));}
-$("#contactsSearch").addEventListener("input",renderContacts);$("#contactCategory").addEventListener("change",renderContacts);
+let toastTimer;
 
-function renderMessaging(platform){const layout=$("#messages-"+platform);if(!layout)return;const selected=chatSelections[platform]||contacts[0].id;layout.innerHTML=`<div class="chat-list"><div class="chat-list-head"><h3>${platforms[platform].label} conversations</h3><input class="field chat-search" placeholder="Search conversations…"><div class="platform-tabs">${Object.keys(platforms).map(p=>`<button class="${p===platform?"active":""}" data-platform="${p}">${platforms[p].label}</button>`).join("")}</div></div><div class="chat-list-items"></div></div><div class="chat-panel"><div class="chat-head"></div><div class="chat-body"></div><div class="chat-compose"><textarea class="compose-input" rows="1" placeholder="Write a message…"></textarea><button class="btn send-message">➤ Send</button></div></div>`;
- layout.querySelectorAll("[data-platform]").forEach(b=>b.addEventListener("click",()=>goPage(b.dataset.platform)));layout.querySelector(".chat-search").addEventListener("input",e=>renderChatList(platform,e.target.value));layout.querySelector(".send-message").addEventListener("click",()=>{const input=layout.querySelector(".compose-input"),text=input.value.trim();if(!text)return;const id=chatSelections[platform]||contacts[0].id;getMessages(platform,id).push({from:"me",text,time:new Date().toLocaleTimeString([],{hour:"2-digit",minute:"2-digit"})});input.value="";renderChatList(platform,layout.querySelector(".chat-search").value);renderChatBody(platform,id);toast("Message added.");});layout.querySelector(".compose-input").addEventListener("keydown",e=>{if(e.key==="Enter"&&!e.shiftKey){e.preventDefault();layout.querySelector(".send-message").click();}});renderChatList(platform,"");renderChatBody(platform,selected);}
-function renderChatList(platform,search){const layout=$("#messages-"+platform);if(!layout)return;const list=layout.querySelector(".chat-list-items"),q=(search||"").toLowerCase().trim(),selected=chatSelections[platform]||contacts[0].id,filtered=contacts.filter(c=>c.name.toLowerCase().includes(q)||c.phone.includes(q));list.innerHTML=filtered.map((c,i)=>{const msgs=getMessages(platform,c.id),last=msgs[msgs.length-1];return `<button class="chat-person ${c.id===selected?"active":""}" data-id="${c.id}"><div class="avatar ${av(c)}">${esc(initials(c.name))}</div><div class="chat-person-info"><strong>${esc(c.name)}</strong><small>${esc(last.text)}</small></div><time>${["9:21","9:18","Yesterday","Mon"][i%4]}</time></button>`;}).join("")||`<div class="empty-state">No conversations found.</div>`;list.querySelectorAll("[data-id]").forEach(b=>b.addEventListener("click",()=>selectChat(platform,b.dataset.id)));}
-function selectChat(platform,id){chatSelections[platform]=id;const layout=$("#messages-"+platform);if(!layout)return;layout.classList.add("mobile-chat-open");renderChatList(platform,layout.querySelector(".chat-search")?.value||"");renderChatBody(platform,id);}
-function renderChatBody(platform,id){const layout=$("#messages-"+platform);if(!layout)return;const c=getContact(id),head=layout.querySelector(".chat-head");head.innerHTML=`<button class="chat-head-actions mobile-back" type="button">←</button><div class="avatar ${av(c)}">${esc(initials(c.name))}</div><div class="chat-head-info"><strong>${esc(c.name)}</strong><small>${esc(platforms[platform].label)}</small></div><div class="chat-head-actions"><button type="button" class="contact-details" title="Contact details">ⓘ</button><button type="button" class="chat-more" title="More options">⋯</button></div>`;head.querySelector(".mobile-back")?.addEventListener("click",()=>layout.classList.remove("mobile-chat-open"));head.querySelector(".contact-details").addEventListener("click",()=>toast(c.name+" · "+c.phone+" · "+c.category));head.querySelector(".chat-more").addEventListener("click",()=>toast("Conversation options"));const body=layout.querySelector(".chat-body");body.innerHTML=`<div class="day-label">Today</div>`+getMessages(platform,id).map(m=>`<div class="bubble-row ${m.from==="me"?"mine":""}"><div class="bubble">${esc(m.text)}<time>${esc(m.time)}</time></div></div>`).join("");body.scrollTop=body.scrollHeight;}
+function showToast(message) {
+  toast.textContent = message;
+  toast.classList.remove("hidden");
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => {
+    toast.classList.add("hidden");
+  }, 2600);
+}
 
-function renderCalls(){const calls=contacts.slice(0,18).map((c,i)=>({contact:c,type:["Incoming","Outgoing","Missed"][i%3],date:["Today, 9:14 AM","Today, 8:32 AM","Yesterday, 6:45 PM","Yesterday, 2:10 PM"][i%4],duration:["04:32","02:18","—","08:41"][i%4]}));const update=()=>{const q=($("#callsSearch").value||"").toLowerCase(),type=$("#callType").value,rows=calls.filter(x=>x.contact.name.toLowerCase().includes(q)&&(!type||x.type===type));$("#callsTable").innerHTML=rows.map(x=>`<tr><td><div class="person-cell"><div class="avatar ${av(x.contact)}">${esc(initials(x.contact.name))}</div><div><strong>${esc(x.contact.name)}</strong><small>${esc(x.contact.phone)}</small></div></div></td><td>${x.type}</td><td>${x.date}</td><td>${x.duration}</td><td><span class="status ${x.type==="Missed"?"off":""}">${x.type==="Missed"?"Missed":"Completed"}</span></td></tr>`).join("")||`<tr><td colspan="5"><div class="empty-state">No calls found.</div></td></tr>`;};$("#callsSearch").addEventListener("input",update);$("#callType").addEventListener("change",update);update();}
-function renderBrowser(){const history=[["Example search page","search.example.test","Search","Today, 10:24 AM"],["Travel inspiration","travel.example.test","Travel","Today, 9:40 AM"],["News homepage","news.example.test","News","Yesterday, 8:18 PM"],["Recipe collection","food.example.test","Lifestyle","Yesterday, 6:35 PM"],["Learning resources","learn.example.test","Education","Yesterday, 3:20 PM"],["Online store","shop.example.test","Shopping","Monday, 11:02 AM"],["Weather","weather.example.test","Utilities","Monday, 9:30 AM"]];const update=()=>{const q=($("#browserSearch").value||"").toLowerCase(),rows=history.filter(r=>r.join(" ").toLowerCase().includes(q));$("#browserTable").innerHTML=rows.map(r=>`<tr>${r.map((v,i)=>`<td>${i===1?`<span class="pill">${esc(v)}</span>`:esc(v)}</td>`).join("")}</tr>`).join("")||`<tr><td colspan="4"><div class="empty-state">No entries found.</div></td></tr>`;};$("#browserSearch").addEventListener("input",update);update();}
-function backup(){lastBackup=new Date();$("#lastUpdate").textContent=lastBackup.toLocaleTimeString([],{hour:"2-digit",minute:"2-digit"});toast("Conversation backup updated.");}
-$("#dashboardBackup").addEventListener("click",backup);
-$("#renewBtn").addEventListener("click",()=>{$("#activationNotice").textContent="The activation request was declined due to insufficient funds. The remaining balance $246 is still required before the activation can be completed successfully.";toast("Activation status updated.");});
-$("#compactToggle").addEventListener("change",e=>{$$(".chat-person").forEach(row=>row.style.padding=e.target.checked?"7px 10px":"13px");toast(e.target.checked?"Compact contact list enabled.":"Compact contact list disabled.");});
-Object.keys(platforms).forEach(p=>chatSelections[p]=contacts[0].id);
-renderContacts();renderCalls();renderBrowser();
-})();
+function openDashboard(username) {
+  const displayName = username.includes("@")
+    ? username.split("@")[0]
+    : username;
+
+  document.getElementById("displayUser").textContent = displayName;
+  document.getElementById("avatar").textContent =
+    displayName.charAt(0).toUpperCase() || "U";
+  document.getElementById("accountName").value = displayName;
+
+  loginScreen.classList.add("hidden");
+  app.classList.remove("hidden");
+  showPage("overview");
+}
+
+loginForm.addEventListener("submit", function(event) {
+  event.preventDefault();
+
+  const username = document.getElementById("username").value.trim();
+  const password = document.getElementById("password").value;
+
+  if (!username || !password) {
+    loginMessage.textContent = "Please complete both fields.";
+    return;
+  }
+
+  loginMessage.textContent = "";
+  loginForm.reset();
+  openDashboard(username);
+});
+
+function showPage(pageName) {
+  document.querySelectorAll(".section-page").forEach(section => {
+    section.classList.remove("active");
+  });
+
+  const target = document.getElementById("page-" + pageName);
+  if (target) target.classList.add("active");
+
+  document.querySelectorAll(".nav-btn").forEach(button => {
+    button.classList.toggle(
+      "active",
+      button.dataset.page === pageName
+    );
+  });
+
+  const titles = {
+    overview: "Overview",
+    devices: "Devices",
+    activity: "Activity",
+    reports: "Reports",
+    settings: "Settings"
+  };
+
+  document.getElementById("topbarTitle").textContent =
+    titles[pageName] || "Overview";
+
+  sidebar.classList.remove("open");
+}
+
+document.querySelectorAll(".nav-btn").forEach(button => {
+  button.addEventListener("click", () => {
+    showPage(button.dataset.page);
+  });
+});
+
+document.getElementById("mobileMenu").addEventListener("click", () => {
+  sidebar.classList.toggle("open");
+});
+
+document.getElementById("logoutBtn").addEventListener("click", () => {
+  app.classList.add("hidden");
+  loginScreen.classList.remove("hidden");
+  loginMessage.textContent = "";
+  loginForm.reset();
+});
+
+document.getElementById("settingsForm").addEventListener(
+  "submit",
+  event => {
+    event.preventDefault();
+
+    const name = document.getElementById("accountName").value.trim();
+
+    if (!name) {
+      showToast("Please enter a display name.");
+      return;
+    }
+
+    document.getElementById("displayUser").textContent = name;
+    document.getElementById("avatar").textContent =
+      name.charAt(0).toUpperCase();
+
+    showToast("Preferences updated.");
+  }
+);
 </script>
+
 </body>
 </html>
