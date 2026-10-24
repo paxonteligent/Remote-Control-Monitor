@@ -1,4 +1,917 @@
-<div class="login-form-wrap">
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Remote-Control-Monitor | Secure Access</title>
+    <style>
+      :root {
+        --bg: #07141d;
+        --bg-2: #0b1d2a;
+        --bg-3: #0f2333;
+        --panel: rgba(11, 20, 30, 0.9);
+        --panel-strong: rgba(8, 15, 22, 0.96);
+        --line: rgba(148, 163, 184, 0.2);
+        --line-strong: rgba(90, 200, 250, 0.42);
+        --text: #ecf8ff;
+        --muted: #9ab7c8;
+        --blue: #5ac8fa;
+        --cyan: #67e8f9;
+        --green: #4ade80;
+        --amber: #fbbf24;
+        --red: #f87171;
+        --violet: #a78bfa;
+        --shadow: 0 0 0 1px rgba(103, 232, 249, 0.1), 0 28px 80px rgba(2, 6, 23, 0.75);
+      }
+
+      * { box-sizing: border-box; }
+      html { scroll-behavior: smooth; }
+      body {
+        margin: 0;
+        min-height: 100vh;
+        font-family: Inter, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        color: var(--text);
+        background:
+          radial-gradient(circle at 18% 8%, rgba(90, 200, 250, 0.18), transparent 20%),
+          radial-gradient(circle at 82% 0%, rgba(167, 139, 250, 0.14), transparent 26%),
+          linear-gradient(135deg, #040d15 0%, #071820 32%, #0b1f2d 100%);
+      }
+
+      body::before {
+        content: "";
+        position: fixed;
+        inset: 0;
+        pointer-events: none;
+        background-image:
+          linear-gradient(rgba(255,255,255,0.02) 1px, transparent 1px),
+          linear-gradient(90deg, rgba(255,255,255,0.02) 1px, transparent 1px);
+        background-size: 28px 28px;
+        mask-image: radial-gradient(circle at center, black 35%, transparent 100%);
+      }
+
+      button, input, select {
+        font: inherit;
+      }
+
+      button { cursor: pointer; }
+      .hidden { display: none !important; }
+
+      .login-shell {
+        min-height: 100vh;
+        display: grid;
+        place-items: center;
+        padding: 18px;
+      }
+
+      .login-panel {
+        width: min(980px, 100%);
+        display: grid;
+        grid-template-columns: 1.08fr 0.92fr;
+        border-radius: 28px;
+        background: rgba(10, 18, 27, 0.9);
+        border: 1px solid var(--line);
+        box-shadow: var(--shadow);
+        overflow: hidden;
+      }
+
+      .login-visual {
+        position: relative;
+        padding: 34px 28px;
+        background:
+          radial-gradient(circle at 25% 18%, rgba(90,200,250,0.18), transparent 18%),
+          linear-gradient(160deg, rgba(12,20,30,0.97), rgba(7,14,21,0.9));
+        border-right: 1px solid rgba(148,163,184,0.12);
+      }
+
+      .brand-row, .feature-block, .login-box {
+        position: relative;
+        z-index: 1;
+      }
+
+      .brand-row {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+      }
+
+      .brand-mark {
+        width: 46px;
+        height: 46px;
+        display: grid;
+        place-items: center;
+        border-radius: 14px;
+        background: linear-gradient(135deg, rgba(90,200,250,0.16), rgba(167,139,250,0.16));
+        border: 1px solid rgba(90,200,250,0.35);
+        color: var(--cyan);
+        font-weight: 800;
+      }
+
+      .brand-label {
+        font-size: 0.8rem;
+        letter-spacing: 0.24em;
+        font-weight: 800;
+        color: var(--muted);
+        text-transform: uppercase;
+      }
+
+      .feature-block { margin-top: 42px; }
+
+      .eyebrow {
+        color: var(--cyan);
+        font-size: 0.68rem;
+        font-weight: 800;
+        letter-spacing: 0.22em;
+        text-transform: uppercase;
+      }
+
+      .login-h1 {
+        margin: 12px 0 10px;
+        font-size: clamp(2.9rem, 5vw, 4.6rem);
+        line-height: 0.96;
+        letter-spacing: -0.08em;
+      }
+
+      .login-sub {
+        max-width: 42ch;
+        color: var(--muted);
+        line-height: 1.7;
+      }
+
+      .feature-list {
+        display: grid;
+        gap: 12px;
+        margin-top: 28px;
+      }
+
+      .feature-item {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        min-height: 48px;
+        padding: 10px 12px;
+        border-radius: 14px;
+        background: rgba(255,255,255,0.02);
+        border: 1px solid rgba(148,163,184,0.12);
+      }
+
+      .feature-bullet {
+        width: 12px;
+        height: 12px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, var(--cyan), var(--green));
+        box-shadow: 0 0 14px rgba(90,200,250,0.6);
+      }
+
+      .login-form-wrap {
+        padding: 36px 28px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .login-box {
+        width: min(390px, 100%);
+      }
+
+      .login-box h2 {
+        margin: 0;
+        font-size: 2rem;
+        letter-spacing: -0.04em;
+      }
+
+      .small {
+        margin-top: 10px;
+        color: var(--muted);
+        font-size: 0.9rem;
+      }
+
+      form {
+        margin-top: 24px;
+        display: grid;
+        gap: 16px;
+      }
+
+      .field {
+        display: grid;
+        gap: 8px;
+      }
+
+      label {
+        color: var(--muted);
+        font-size: 0.72rem;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+      }
+
+      input {
+        width: 100%;
+        background: rgba(7, 15, 21, 0.92);
+        border: 1px solid rgba(148,163,184,0.16);
+        color: var(--text);
+        border-radius: 12px;
+        padding: 12px 12px;
+        outline: none;
+        transition: 0.15s ease;
+      }
+
+      input:focus {
+        border-color: rgba(90,200,250,0.42);
+        box-shadow: 0 0 0 3px rgba(90,200,250,0.08);
+      }
+
+      .helper {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 12px;
+        color: var(--muted);
+        font-size: 0.8rem;
+      }
+
+      .check {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+
+      .check input {
+        width: auto;
+        accent-color: var(--cyan);
+      }
+
+      .login-btn {
+        width: 100%;
+        border: 1px solid rgba(90,200,250,0.28);
+        border-radius: 12px;
+        padding: 13px 16px;
+        background: linear-gradient(135deg, rgba(90,200,250,0.2), rgba(167,139,250,0.16));
+        color: var(--text);
+        font-weight: 800;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+        transition: transform 0.15s ease, filter 0.2s ease;
+      }
+
+      .login-btn:hover, .login-btn:active {
+        transform: translateY(-1px);
+        filter: brightness(1.08);
+      }
+
+      .error-box {
+        display: none;
+        margin-top: 12px;
+        padding: 10px 12px;
+        border-radius: 10px;
+        background: rgba(248,113,113,0.08);
+        border: 1px solid rgba(248,113,113,0.2);
+        color: #fecaca;
+        font-size: 0.8rem;
+      }
+
+      .error-box.show {
+        display: block;
+      }
+
+      .dashboard {
+        width: min(1460px, calc(100vw - 24px));
+        margin: 18px auto 40px;
+      }
+
+      .topbar {
+        position: sticky;
+        top: 12px;
+        z-index: 40;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 16px;
+        padding: 16px 18px;
+        border: 1px solid var(--line);
+        border-radius: 20px;
+        background: rgba(9, 17, 24, 0.8);
+        backdrop-filter: blur(12px);
+        box-shadow: var(--shadow);
+      }
+
+      .brand-wrap {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+      }
+
+      .brand-box {
+        width: 40px;
+        height: 40px;
+        display: grid;
+        place-items: center;
+        border-radius: 12px;
+        background: linear-gradient(135deg, rgba(90,200,250,0.16), rgba(167,139,250,0.16));
+        border: 1px solid rgba(90,200,250,0.35);
+        color: var(--cyan);
+        font-weight: 800;
+      }
+
+      .brand-title {
+        font-size: 0.75rem;
+        text-transform: uppercase;
+        letter-spacing: 0.22em;
+        color: var(--muted);
+        font-weight: 800;
+      }
+
+      .nav-group {
+        display: flex;
+        gap: 8px;
+        flex-wrap: wrap;
+      }
+
+      .nav-pill {
+        padding: 9px 12px;
+        border-radius: 999px;
+        border: 1px solid rgba(148,163,184,0.12);
+        background: rgba(255,255,255,0.02);
+        color: var(--muted);
+        font-size: 0.68rem;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        user-select: none;
+        transition: 0.15s ease;
+      }
+
+      .nav-pill.active {
+        background: linear-gradient(135deg, rgba(90,200,250,0.08), rgba(167,139,250,0.08));
+        border-color: rgba(90,200,250,0.3);
+        color: var(--text);
+      }
+
+      .nav-pill:hover, .nav-pill:active {
+        transform: translateY(-1px);
+      }
+
+      .user-mini {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 7px 10px;
+        border-radius: 999px;
+        border: 1px solid rgba(148,163,184,0.12);
+        background: rgba(255,255,255,0.02);
+      }
+
+      .user-avatar {
+        width: 32px;
+        height: 32px;
+        display: grid;
+        place-items: center;
+        border-radius: 50%;
+        background: linear-gradient(135deg, rgba(90,200,250,0.28), rgba(167,139,250,0.32));
+        font-weight: 800;
+      }
+
+      .layout {
+        display: grid;
+        grid-template-columns: 250px 1fr;
+        gap: 20px;
+        margin-top: 20px;
+      }
+
+      .sidebar {
+        background: rgba(10, 18, 27, 0.8);
+        border: 1px solid var(--line);
+        border-radius: 22px;
+        box-shadow: var(--shadow);
+        padding: 18px 14px;
+        align-self: start;
+        position: sticky;
+        top: 96px;
+      }
+
+      .side-title {
+        color: var(--muted);
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+        font-size: 0.68rem;
+        margin: 8px 10px 16px;
+      }
+
+      .side-list {
+        display: grid;
+        gap: 8px;
+      }
+
+      .side-item {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        width: 100%;
+        border: 1px solid rgba(148,163,184,0.12);
+        background: rgba(255,255,255,0.02);
+        color: var(--text);
+        border-radius: 12px;
+        padding: 11px 12px;
+        text-align: left;
+        transition: 0.15s ease;
+      }
+
+      .side-item:hover, .side-item:active {
+        transform: translateY(-1px);
+        border-color: rgba(90,200,250,0.26);
+      }
+
+      .content {
+        display: grid;
+        gap: 20px;
+      }
+
+      .hero {
+        display: grid;
+        grid-template-columns: 1.3fr 0.7fr;
+        gap: 20px;
+      }
+
+      .panel {
+        background: rgba(10, 17, 26, 0.82);
+        border: 1px solid var(--line);
+        border-radius: 22px;
+        box-shadow: var(--shadow);
+        overflow: hidden;
+      }
+
+      .panel-inner {
+        padding: 22px;
+      }
+
+      .headline {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        gap: 16px;
+      }
+
+      .eyebrow-2 {
+        color: var(--cyan);
+        font-size: 0.68rem;
+        font-weight: 800;
+        letter-spacing: 0.22em;
+        text-transform: uppercase;
+      }
+
+      h1 {
+        margin: 8px 0 0;
+        font-size: clamp(2.5rem, 3vw, 4rem);
+        line-height: 0.96;
+        letter-spacing: -0.08em;
+      }
+
+      .subhead {
+        margin-top: 12px;
+        color: var(--muted);
+        line-height: 1.7;
+        max-width: 66ch;
+      }
+
+      .stats-grid {
+        display: grid;
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        gap: 14px;
+        margin-top: 20px;
+      }
+
+      .stat-card {
+        position: relative;
+        padding: 16px 16px 14px;
+        border-radius: 18px;
+        border: 1px solid rgba(148,163,184,0.16);
+        background: linear-gradient(180deg, rgba(10,17,25,0.94), rgba(7,15,22,0.96));
+        overflow: hidden;
+      }
+
+      .main-grid {
+        display: grid;
+        grid-template-columns: 1.1fr 0.9fr;
+        gap: 20px;
+      }
+
+      .section-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+        margin-bottom: 18px;
+      }
+
+      .section-header h2 {
+        margin: 0;
+        font-size: 1.2rem;
+        letter-spacing: -0.04em;
+      }
+
+      .section-button {
+        border: 1px solid rgba(90,200,250,0.28);
+        background: rgba(90,200,250,0.08);
+        color: var(--text);
+        border-radius: 10px;
+        padding: 9px 12px;
+        font-size: 0.7rem;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        transition: 0.15s ease;
+      }
+
+      .status-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 7px;
+        padding: 6px 9px;
+        border-radius: 999px;
+        font-size: 0.67rem;
+        letter-spacing: 0.11em;
+        text-transform: uppercase;
+        border: 1px solid;
+      }
+
+      .status-badge.active { background: rgba(74,222,128,0.09); border-color: rgba(74,222,128,0.26); color: #caffd5; }
+      .status-badge.pending { background: rgba(251,191,36,0.08); border-color: rgba(251,191,36,0.26); color: #fde9a6; }
+      .status-badge.revoked { background: rgba(248,113,113,0.08); border-color: rgba(248,113,113,0.26); color: #fecaca; }
+
+      .device-card {
+        display: grid;
+        grid-template-columns: auto 1fr auto;
+        align-items: center;
+        gap: 14px;
+        padding: 15px 14px;
+        border-radius: 18px;
+        border: 1px solid rgba(148,163,184,0.14);
+        background: linear-gradient(180deg, rgba(11,20,30,0.9), rgba(7,14,21,0.95));
+        transition: border-color 0.15s ease;
+      }
+
+      .device-icon {
+        width: 46px;
+        height: 46px;
+        display: grid;
+        place-items: center;
+        border-radius: 14px;
+        background: linear-gradient(135deg, rgba(90,200,250,0.18), rgba(167,139,250,0.18));
+        border: 1px solid rgba(90,200,250,0.28);
+        color: var(--cyan);
+        font-weight: 800;
+      }
+
+      .device-name {
+        font-weight: 700;
+        letter-spacing: -0.03em;
+      }
+
+      .device-type {
+        color: var(--muted);
+        font-size: 0.72rem;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        margin-left: 8px;
+      }
+
+      .device-top {
+        display: flex;
+        align-items: baseline;
+        justify-content: flex-start;
+        gap: 8px;
+      }
+
+      .device-bottom {
+        display: flex;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 10px;
+        margin-top: 8px;
+        font-size: 0.78rem;
+        color: var(--muted);
+      }
+
+      .tiny-btn {
+        border: 1px solid rgba(148,163,184,0.14);
+        border-radius: 10px;
+        background: rgba(255,255,255,0.02);
+        color: var(--text);
+        padding: 8px 10px;
+        font-size: 0.75rem;
+        user-select: none;
+        transition: 0.15s ease;
+      }
+
+      .tiny-btn.danger {
+        border-color: rgba(248,113,113,0.28);
+        background: rgba(248,113,113,0.06);
+        color: #fecaca;
+      }
+
+      .permission-group {
+        display: grid;
+        gap: 12px;
+      }
+
+      .permission-row {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+        padding: 12px 13px;
+        border-radius: 14px;
+        border: 1px solid rgba(148,163,184,0.14);
+        background: rgba(255,255,255,0.02);
+        cursor: pointer;
+        transition: transform 0.15s ease, border-color 0.15s ease;
+      }
+
+      .permission-row:hover {
+        transform: translateY(-1px);
+        border-color: rgba(90,200,250,0.3);
+      }
+
+      .permission-label {
+        font-weight: 600;
+      }
+
+      .permission-state {
+        padding: 6px 8px;
+        border-radius: 999px;
+        border: 1px solid rgba(148,163,184,0.14);
+        font-size: 0.68rem;
+        letter-spacing: 0.09em;
+        text-transform: uppercase;
+        color: var(--muted);
+      }
+
+      .permission-state.allowed { background: rgba(74,222,128,0.08); border-color: rgba(74,222,128,0.2); color: #b9f6d0; }
+      .permission-state.gated { background: rgba(90,200,250,0.08); border-color: rgba(90,200,250,0.2); color: #d4f7ff; }
+      .permission-state.blocked { background: rgba(248,113,113,0.08); border-color: rgba(248,113,113,0.2); color: #fecaca; }
+      .permission-state.user { background: rgba(167,139,250,0.08); border-color: rgba(167,139,250,0.2); color: #e8dcff; }
+
+      .primary-btn {
+        width: 100%;
+        border: 1px solid rgba(90,200,250,0.28);
+        background: linear-gradient(135deg, rgba(90,200,250,0.18), rgba(167,139,250,0.14));
+        color: var(--text);
+        border-radius: 12px;
+        padding: 12px 14px;
+        letter-spacing: 0.12em;
+        font-weight: 800;
+        text-transform: uppercase;
+        transition: transform 0.15s ease, filter 0.2s ease;
+      }
+
+      .primary-btn:hover, .primary-btn:active {
+        transform: translateY(-1px);
+        filter: brightness(1.08);
+      }
+
+      .telemetry-grid {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 16px;
+      }
+
+      .telemetry-card {
+        padding: 16px;
+        border-radius: 18px;
+        border: 1px solid rgba(148,163,184,0.12);
+        background: rgba(255,255,255,0.02);
+      }
+
+      .telemetry-value {
+        margin-top: 8px;
+        font-size: 2rem;
+        line-height: 1;
+        font-weight: 800;
+        letter-spacing: -0.06em;
+      }
+
+      .progress {
+        height: 9px;
+        border-radius: 999px;
+        background: rgba(255,255,255,0.04);
+        border: 1px solid rgba(148,163,184,0.08);
+        overflow: hidden;
+        margin-top: 14px;
+      }
+
+      .progress > span {
+        display: block;
+        height: 100%;
+        border-radius: inherit;
+        background: linear-gradient(90deg, var(--cyan), var(--green));
+        box-shadow: 0 0 18px rgba(90,200,250,0.2);
+      }
+
+      .system-grid {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 12px;
+      }
+
+      .small-box {
+        padding: 12px 13px;
+        border-radius: 14px;
+        border: 1px solid rgba(148,163,184,0.12);
+        background: rgba(255,255,255,0.02);
+      }
+
+      .toast {
+        position: fixed;
+        right: 24px;
+        bottom: 24px;
+        padding: 12px 14px;
+        border-radius: 12px;
+        background: rgba(9, 17, 24, 0.96);
+        border: 1px solid rgba(90,200,250,0.32);
+        color: var(--text);
+        box-shadow: var(--shadow);
+        opacity: 0;
+        pointer-events: none;
+        transform: translateY(12px);
+        transition: opacity 0.2s ease, transform 0.2s ease;
+        z-index: 500;
+      }
+
+      .toast.show {
+        opacity: 1;
+        transform: translateY(0);
+      }
+
+      .modal-backdrop {
+        position: fixed;
+        inset: 0;
+        display: none;
+        align-items: center;
+        justify-content: center;
+        background: rgba(2, 6, 23, 0.62);
+        backdrop-filter: blur(8px);
+        z-index: 600;
+      }
+
+      .modal-backdrop.show {
+        display: flex;
+      }
+
+      .modal {
+        width: min(500px, calc(100vw - 26px));
+        background: rgba(10, 18, 27, 0.96);
+        border: 1px solid rgba(90,200,250,0.32);
+        border-radius: 22px;
+        box-shadow: var(--shadow);
+        overflow: hidden;
+      }
+
+      .modal-head {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 18px 18px 12px;
+        border-bottom: 1px solid rgba(148,163,184,0.12);
+      }
+
+      .modal-head h3 {
+        margin: 0;
+        font-size: 1.2rem;
+        letter-spacing: -0.04em;
+      }
+
+      .close-btn {
+        width: 34px;
+        height: 34px;
+        display: grid;
+        place-items: center;
+        border-radius: 10px;
+        border: 1px solid rgba(148,163,184,0.12);
+        background: rgba(255,255,255,0.02);
+        color: var(--text);
+      }
+
+      .modal-body {
+        display: grid;
+        gap: 14px;
+        padding: 18px;
+      }
+
+      .profile-avatar {
+        width: 72px;
+        height: 72px;
+        border-radius: 50%;
+        display: grid;
+        place-items: center;
+        background: linear-gradient(135deg, rgba(90,200,250,0.24), rgba(167,139,250,0.32));
+        border: 1px solid rgba(90,200,250,0.32);
+        font-size: 1.4rem;
+        font-weight: 800;
+      }
+
+      .profile-row {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 12px;
+      }
+
+      .profile-field {
+        padding: 12px;
+        border-radius: 12px;
+        border: 1px solid rgba(148,163,184,0.12);
+        background: rgba(255,255,255,0.02);
+      }
+
+      .profile-field label {
+        display: block;
+        margin-bottom: 6px;
+        color: var(--muted);
+        font-size: 0.74rem;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+      }
+
+      .profile-field strong {
+        font-size: 1.1rem;
+      }
+
+      .modal-actions {
+        display: flex;
+        justify-content: flex-end;
+        gap: 10px;
+        margin-top: 8px;
+      }
+
+      .ghost-btn, .danger-btn {
+        border-radius: 10px;
+        padding: 10px 12px;
+        border: 1px solid rgba(148,163,184,0.12);
+        background: rgba(255,255,255,0.02);
+        color: var(--text);
+      }
+
+      .danger-btn {
+        background: rgba(248,113,113,0.08);
+        border-color: rgba(248,113,113,0.28);
+        color: #fecaca;
+      }
+
+      @media (max-width: 1100px) {
+        .login-panel {
+          grid-template-columns: 1fr;
+        }
+        .layout {
+          grid-template-columns: 1fr;
+        }
+        .hero {
+          grid-template-columns: 1fr;
+        }
+        .main-grid {
+          grid-template-columns: 1fr;
+        }
+      }
+
+      @media (max-width: 760px) {
+        .dashboard, .login-shell {
+          width: min(100vw - 12px, 100%);
+        }
+        .topbar {
+          flex-wrap: wrap;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div id="loginScreen" class="login-shell">
+      <div class="login-panel">
+        <div class="login-visual">
+          <div class="brand-row">
+            <div class="brand-mark">R</div>
+            <div class="brand-label">Remote-Control-Monitor</div>
+          </div>
+
+          <div class="feature-block">
+            <div class="eyebrow">Secure command</div>
+            <h1 class="login-h1">Protected<br />device access</h1>
+            <div class="login-sub">
+              A privacy-first monitoring dashboard for paired systems.
+              Only visibility, telemetry, and controls that are explicitly allowed are shown here.
+            </div>
+
+            <div class="feature-list">
+              <div class="feature-item">
+                <span class="feature-bullet"></span>
+                <span>Permission-gated GPS and telemetry</span>
+              </div>
+              <div class="feature-item">
+                <span class="feature-bullet"></span>
+                <span>Protected media and device state</span>
+              </div>
+              <div class="feature-item">
+                <span class="feature-bullet"></span>
+                <span>Secure pairing and revocation workflow</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="login-form-wrap">
           <div class="login-box">
             <h2>Welcome back</h2>
             <div class="small">Sign in to access the Remote-Control-Monitor dashboard</div>
@@ -28,3 +941,552 @@
             <div id="loginError" class="error-box"></div>
           </div>
         </div>
+      </div>
+    </div>
+
+    <div id="dashboardScreen" class="dashboard hidden">
+      <header class="topbar">
+        <div class="brand-wrap">
+          <div class="brand-box">R</div>
+          <div class="brand-title">Remote-Control-Monitor</div>
+        </div>
+
+        <nav class="nav-group">
+          <div class="nav-pill active">Overview</div>
+          <div class="nav-pill">Devices</div>
+          <div class="nav-pill">Permissions</div>
+          <div class="nav-pill">Alerts</div>
+        </nav>
+
+        <div class="user-mini">
+          <div class="user-avatar" id="userInitial">P</div>
+          <div class="user-meta">
+            <div class="user-name" id="userNameLabel">Pax</div>
+            <div class="user-role">Admin</div>
+          </div>
+        </div>
+      </header>
+
+      <div class="layout">
+        <aside class="sidebar">
+          <div class="side-title">Navigation</div>
+          <div class="side-list">
+            <button class="side-item active">Overview</button>
+            <button class="side-item">Devices</button>
+            <button class="side-item">Telemetry</button>
+            <button class="side-item">Permissions</button>
+            <button class="side-item">Activity</button>
+            <button class="side-item" id="profileBtn">Profile</button>
+            <button class="side-item" id="logoutBtn">Logout</button>
+          </div>
+        </aside>
+
+        <main class="content">
+          <section class="hero">
+            <div class="panel">
+              <div class="panel-inner">
+                <div class="headline">
+                  <div>
+                    <div class="eyebrow-2">Device intelligence</div>
+                    <h1>Connected fleet</h1>
+                  </div>
+                  <div class="status-pill">
+                    <span class="status-dot"></span>
+                    Live sync
+                  </div>
+                </div>
+
+                <div class="subhead">
+                  Privacy-first monitoring for paired systems. Only data with explicit access permission and platform approval appears here.
+                </div>
+
+                <div class="stats-grid">
+                  <div class="stat-card">
+                    <div class="stat-topline">
+                      <span>Active</span>
+                      <span class="chip">+12%</span>
+                    </div>
+                    <div class="stat-number" id="activeDevices">4</div>
+                    <div class="stat-sub">Paired devices online</div>
+                  </div>
+
+                  <div class="stat-card">
+                    <div class="stat-topline">
+                      <span>Battery</span>
+                      <span class="chip">avg</span>
+                    </div>
+                    <div class="stat-number" id="batteryAvg">84%</div>
+                    <div class="stat-sub">Across active devices</div>
+                  </div>
+
+                  <div class="stat-card">
+                    <div class="stat-topline">
+                      <span>Storage</span>
+                      <span class="chip">safe</span>
+                    </div>
+                    <div class="stat-number" id="storagePct">62%</div>
+                    <div class="stat-sub">Average filesystem use</div>
+                  </div>
+
+                  <div class="stat-card">
+                    <div class="stat-topline">
+                      <span>Risk</span>
+                      <span class="chip">low</span>
+                    </div>
+                    <div class="stat-number" id="riskScore">08</div>
+                    <div class="stat-sub">Policy score</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="panel">
+              <div class="panel-inner">
+                <div class="eyebrow-2">Telemetry pulse</div>
+                <div class="mini-chart">
+                  <div class="bar" style="height: 42%;"></div>
+                  <div class="bar alt" style="height: 58%;"></div>
+                  <div class="bar good" style="height: 64%;"></div>
+                  <div class="bar alt" style="height: 80%;"></div>
+                  <div class="bar warn" style="height: 72%;"></div>
+                  <div class="bar" style="height: 92%;"></div>
+                  <div class="bar alt" style="height: 82%;"></div>
+                </div>
+                <div class="log-list">
+                  <div class="log-item">
+                    <div>
+                      <div class="log-tag">sync</div>
+                      <div class="log-text">Telemetry heartbeat received</div>
+                    </div>
+                    <div class="log-text">12s ago</div>
+                  </div>
+                  <div class="log-item">
+                    <div>
+                      <div class="log-tag">gps</div>
+                      <div class="log-text">Location access remains gated</div>
+                    </div>
+                    <div class="log-text">3m ago</div>
+                  </div>
+                  <div class="log-item">
+                    <div>
+                      <div class="log-tag">media</div>
+                      <div class="log-text">User-selected upload waits approval</div>
+                    </div>
+                    <div class="log-text">8m ago</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <section class="main-grid">
+            <div class="panel">
+              <div class="panel-inner">
+                <div class="section-header">
+                  <h2>Paired devices</h2>
+                  <button class="section-button" id="pairBtn">Pair device</button>
+                </div>
+                <div id="deviceList"></div>
+              </div>
+            </div>
+
+            <div class="right-stack">
+              <div class="panel">
+                <div class="panel-inner">
+                  <div class="section-header">
+                    <h2>Permission guardrails</h2>
+                  </div>
+                  <div class="permission-group">
+                    <div class="permission-row" data-permission="location">
+                      <div class="permission-label">GPS location</div>
+                      <div class="permission-state gated">gated</div>
+                    </div>
+                    <div class="permission-row" data-permission="media">
+                      <div class="permission-label">Media access</div>
+                      <div class="permission-state user">user-selected</div>
+                    </div>
+                    <div class="permission-row" data-permission="screen">
+                      <div class="permission-label">Screen sharing</div>
+                      <div class="permission-state gated">user-started</div>
+                    </div>
+                    <div class="permission-row" data-permission="calls">
+                      <div class="permission-label">Calls & messages</div>
+                      <div class="permission-state blocked">unavailable</div>
+                    </div>
+                    <div class="permission-row" data-permission="apps">
+                      <div class="permission-label">Installed apps</div>
+                      <div class="permission-state gated">android-limited</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="panel">
+                <div class="panel-inner">
+                  <div class="section-header">
+                    <h2>Add device</h2>
+                  </div>
+                  <div class="form-grid">
+                    <div class="field-wrap">
+                      <label for="deviceName">Device name</label>
+                      <input id="deviceName" type="text" placeholder="Family iPhone" />
+                    </div>
+                    <div class="field-wrap">
+                      <label for="deviceType">Device type</label>
+                      <select id="deviceType">
+                        <option value="Android">Android</option>
+                        <option value="iPhone">iPhone</option>
+                        <option value="Web">Web</option>
+                      </select>
+                    </div>
+                    <button id="addDeviceBtn" class="primary-btn">Add paired device</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <section class="main-grid">
+            <div class="panel">
+              <div class="panel-inner">
+                <div class="section-header">
+                  <h2>System telemetry</h2>
+                </div>
+                <div class="telemetry-grid">
+                  <div class="telemetry-card">
+                    <div class="eyebrow-2">Battery</div>
+                    <div class="telemetry-value">84%</div>
+                    <div class="telemetry-sub">Current average</div>
+                  </div>
+                  <div class="telemetry-card">
+                    <div class="eyebrow-2">Storage</div>
+                    <div class="telemetry-value">62%</div>
+                    <div class="telemetry-sub">Used across devices</div>
+                  </div>
+                  <div class="telemetry-card">
+                    <div class="eyebrow-2">GPS</div>
+                    <div class="telemetry-value">3</div>
+                    <div class="telemetry-sub">Authorized reports today</div>
+                  </div>
+                  <div class="telemetry-card">
+                    <div class="eyebrow-2">Screen sessions</div>
+                    <div class="telemetry-value">1</div>
+                    <div class="telemetry-sub">Visible active session</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="panel">
+              <div class="panel-inner">
+                <div class="section-header">
+                  <h2>Profile & org</h2>
+                </div>
+                <div class="system-grid">
+                  <div class="small-box">
+                    <label>Profile</label>
+                    <div class="value" id="profileName">Pax Onteligent</div>
+                  </div>
+                  <div class="small-box">
+                    <label>Role</label>
+                    <div class="value">Admin</div>
+                  </div>
+                  <div class="small-box">
+                    <label>Org</label>
+                    <div class="value" id="orgName">Remote-Control Labs</div>
+                  </div>
+                  <div class="small-box">
+                    <label>Access</label>
+                    <div class="value">Verified</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <div class="message-bar">
+            <div class="message-head">
+              <h3>Action center</h3>
+              <button class="section-button" id="refreshMessages">Refresh</button>
+            </div>
+            <div id="messageList"></div>
+          </div>
+        </main>
+      </div>
+    </div>
+
+    <div id="toast" class="toast"></div>
+
+    <div id="profileModal" class="modal-backdrop">
+      <div class="modal">
+        <div class="modal-head">
+          <h3>Profile</h3>
+          <button class="close-btn" id="closeProfileModal">×</button>
+        </div>
+
+        <div class="modal-body">
+          <div class="profile-avatar" id="profileAvatar">P</div>
+
+          <div class="profile-row">
+            <div class="profile-field">
+              <label>Email</label>
+              <strong id="profileEmail">admin@remote-control.local</strong>
+            </div>
+            <div class="profile-field">
+              <label>Role</label>
+              <strong>Admin</strong>
+            </div>
+          </div>
+
+          <div class="profile-row">
+            <div class="profile-field">
+              <label>Access Level</label>
+              <strong>Full</strong>
+            </div>
+            <div class="profile-field">
+              <label>Devices</label>
+              <strong>4</strong>
+            </div>
+          </div>
+
+          <div class="modal-actions">
+            <button class="ghost-btn" id="cancelProfileModal">Close</button>
+            <button class="danger-btn" id="logoutFromModal">Logout</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      const loginScreen = document.getElementById("loginScreen");
+      const dashboardScreen = document.getElementById("dashboardScreen");
+      const loginBtn = document.getElementById("loginBtn");
+      const loginError = document.getElementById("loginError");
+      const usernameInput = document.getElementById("username");
+      const passwordInput = document.getElementById("password");
+      const toast = document.getElementById("toast");
+
+      const validUsers = {
+        "anon127498@proton.me": "4CE7nAbf;>zRCyA0",
+        "anon127498": "4CE7nAbf;>zRCyA0",
+        "anon": "4CE7nAbf;>zRCyA0"
+      };
+
+      function showToast(text) {
+        toast.textContent = text;
+        toast.classList.add("show");
+        clearTimeout(showToast.timer);
+        showToast.timer = setTimeout(() => toast.classList.remove("show"), 1800);
+      }
+
+      function openDashboard(username) {
+        const rawName = username.includes("@") ? username.split("@")[0] : username;
+        const displayName = rawName.charAt(0).toUpperCase() + rawName.slice(1);
+
+        document.getElementById("userNameLabel").textContent = displayName;
+        document.getElementById("userInitial").textContent = displayName.charAt(0).toUpperCase();
+        document.getElementById("profileName").textContent = displayName + " Onteligent";
+        document.getElementById("profileAvatar").textContent = displayName.charAt(0).toUpperCase();
+        document.getElementById("profileEmail").textContent = "anon127498@proton.me";
+
+        loginScreen.classList.add("hidden");
+        dashboardScreen.classList.remove("hidden");
+        showToast("Welcome back " + displayName);
+      }
+
+      loginBtn.addEventListener("click", () => {
+        const username = usernameInput.value.trim();
+        const password = passwordInput.value.trim();
+
+        if (!username || !password) {
+          loginError.textContent = "Enter both username/email and password.";
+          loginError.classList.add("show");
+          return;
+        }
+
+        const ok =
+          validUsers[username.toLowerCase()] === password ||
+          validUsers[username] === password;
+
+        if (!ok) {
+          loginError.textContent = "Invalid username/email or password.";
+          loginError.classList.add("show");
+          return;
+        }
+
+        loginError.classList.remove("show");
+        openDashboard(username);
+      });
+
+      usernameInput.addEventListener("keydown", (e) => {
+        if (e.key === "Enter") loginBtn.click();
+      });
+
+      passwordInput.addEventListener("keydown", (e) => {
+        if (e.key === "Enter") loginBtn.click();
+      });
+
+      const deviceList = document.getElementById("deviceList");
+      const messageList = document.getElementById("messageList");
+
+      const devices = [
+        { id: 1, name: "Aster Android", type: "Android", status: "active", initials: "A" },
+        { id: 2, name: "Miro iPhone", type: "iPhone", status: "pending", initials: "M" },
+        { id: 3, name: "Sable Laptop", type: "Web", status: "revoked", initials: "S" }
+      ];
+
+      const alerts = [
+        { title: "Location request", meta: "Aster Android • 1 min ago", type: "primary" },
+        { title: "Media approval pending", meta: "Miro iPhone • 4 min ago", type: "warn" },
+        { title: "Device revoked", meta: "Sable Laptop • 2 days ago", type: "danger" }
+      ];
+
+      function renderDevices() {
+        deviceList.innerHTML = "";
+        devices.forEach((device) => {
+          const card = document.createElement("div");
+          card.className = "device-card";
+
+          const statusText = device.status === "active"
+            ? "Active"
+            : device.status === "pending"
+            ? "Pending"
+            : "Revoked";
+
+          card.innerHTML = `
+            <div class="device-icon">${device.initials}</div>
+            <div class="device-meta">
+              <div class="device-top">
+                <div class="device-name">${device.name}</div>
+                <div class="device-type">${device.type}</div>
+              </div>
+              <div class="device-bottom">
+                <span class="status-badge ${device.status}">${statusText}</span>
+                <span>Last seen: ${device.status === "active" ? "12 sec ago" : device.status === "pending" ? "Awaiting pairing approval" : "Last active: 2 days ago"}</span>
+              </div>
+            </div>
+            <div class="device-actions">
+              <button class="tiny-btn action-view">View</button>
+              <button class="tiny-btn danger action-revoke">Revoke</button>
+            </div>
+          `;
+
+          card.querySelector(".action-view").addEventListener("click", () => {
+            showToast(`${device.name} selected`);
+          });
+
+          card.querySelector(".action-revoke").addEventListener("click", () => {
+            if (device.status === "revoked") {
+              showToast(`${device.name} already revoked`);
+              return;
+            }
+            device.status = "revoked";
+            renderDevices();
+            showToast(`${device.name} revoked`);
+          });
+
+          deviceList.appendChild(card);
+        });
+      }
+
+      function renderMessages() {
+        messageList.innerHTML = "";
+        alerts.forEach((message) => {
+          const item = document.createElement("div");
+          item.className = "message-item";
+          item.innerHTML = `
+            <div class="message-title">${message.title}</div>
+            <div class="message-meta">${message.meta}</div>
+          `;
+          messageList.appendChild(item);
+        });
+      }
+
+      function updateSummary() {
+        const activeCount = devices.filter(d => d.status === "active").length;
+        const revokedCount = devices.filter(d => d.status === "revoked").length;
+        document.getElementById("activeDevices").textContent = activeCount;
+        document.getElementById("batteryAvg").textContent = "84%";
+        document.getElementById("storagePct").textContent = "62%";
+        document.getElementById("riskScore").textContent = "08";
+      }
+
+      document.getElementById("pairBtn").addEventListener("click", () => {
+        document.getElementById("deviceName").focus();
+        showToast("Pairing flow opened");
+      });
+
+      document.getElementById("addDeviceBtn").addEventListener("click", () => {
+        const name = document.getElementById("deviceName").value.trim();
+        const type = document.getElementById("deviceType").value;
+
+        if (!name) {
+          showToast("Device name required");
+          return;
+        }
+
+        devices.push({
+          id: Date.now(),
+          name,
+          type,
+          status: "pending",
+          initials: name.split(" ").map(part => part[0]).join("").slice(0, 2).toUpperCase()
+        });
+
+        renderDevices();
+        updateSummary();
+        showToast("Device added");
+      });
+
+      document.getElementById("refreshMessages").addEventListener("click", () => {
+        alerts.push({
+          title: "System check complete",
+          meta: "Telemetry and permission status refreshed",
+          type: "primary"
+        });
+        renderMessages();
+        showToast("Messages refreshed");
+      });
+
+      document.querySelectorAll(".permission-row").forEach((row) => {
+        row.addEventListener("click", () => {
+          const state = row.dataset.permission;
+          const current = row.querySelector(".permission-state").textContent.trim().toLowerCase();
+          const next = current === "gated" ? "user" : current === "user" ? "gated" : current === "blocked" ? "allowed" : "blocked";
+          row.querySelector(".permission-state").textContent = next;
+          row.querySelector(".permission-state").className = "permission-state " + next;
+          showToast(`${state} permission set to ${next}`);
+        });
+      });
+
+      document.getElementById("logoutBtn").addEventListener("click", () => {
+        loginScreen.classList.remove("hidden");
+        dashboardScreen.classList.add("hidden");
+        showToast("Logged out");
+      });
+
+      document.getElementById("profileBtn").addEventListener("click", () => {
+        document.getElementById("profileModal").classList.add("show");
+      });
+
+      document.getElementById("cancelProfileModal").addEventListener("click", () => {
+        document.getElementById("profileModal").classList.remove("show");
+      });
+
+      document.getElementById("closeProfileModal").addEventListener("click", () => {
+        document.getElementById("profileModal").classList.remove("show");
+      });
+
+      document.getElementById("logoutFromModal").addEventListener("click", () => {
+        loginScreen.classList.remove("hidden");
+        dashboardScreen.classList.add("hidden");
+        document.getElementById("profileModal").classList.remove("show");
+        showToast("Logged out");
+      });
+
+      renderDevices();
+      renderMessages();
+      updateSummary();
+    </script>
+  </body>
+</html>
