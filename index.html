@@ -1,722 +1,1642 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Spyteligent - Cyber Intelligence Dashboard</title>
-  <!-- Google Fonts & Lucide Icons -->
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
-  <script src="https://unpkg.com/lucide@latest"></script>
-  <!-- Link to External Stylesheet -->
-  <link rel="stylesheet" href="styles.css">
-</head>
-<body>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Remote Control Monitor</title>
+    <meta
+      name="description"
+      content="RemoteControlSecretMonitor - professional control dashboard"
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap"
+      rel="stylesheet"
+    />
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+      :root {
+        --bg: #07111f;
+        --bg-soft: #0d1b2d;
+        --panel: rgba(14, 26, 43, 0.9);
+        --panel-strong: #101f33;
+        --panel-alt: #0d1524;
+        --border: rgba(148, 163, 184, 0.16);
+        --text: #e6edf8;
+        --text-soft: #9fb3cd;
+        --muted: #7990b3;
+        --blue: #4f8cff;
+        --blue-soft: rgba(79, 140, 255, 0.16);
+        --green: #2dd4bf;
+        --green-soft: rgba(45, 212, 191, 0.16);
+        --amber: #fbbf24;
+        --red: #f87171;
+        --purple: #a78bfa;
+        --shadow: 0 22px 60px rgba(2, 6, 23, 0.52);
+        --radius: 20px;
+      }
 
-  <!-- ==========================================
-       LOGIN VIEW / AUTHENTICATION INTERFACE
-  =========================================== -->
-  <div id="login-screen" class="auth-wrapper">
-    <div class="auth-card">
-      <div class="auth-header">
+      * { box-sizing: border-box; }
+
+      html, body {
+        margin: 0;
+        min-height: 100%;
+        font-family: "Inter", sans-serif;
+        background:
+          radial-gradient(circle at top, rgba(79, 140, 255, 0.16), transparent 28%),
+          linear-gradient(180deg, #030b14 0%, #0a1220 100%);
+        color: var(--text);
+      }
+
+      body {
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      a { text-decoration: none; }
+      button, input { font: inherit; }
+
+      .hidden { display: none !important; }
+
+      .auth-wrapper {
+        width: min(100%, 1200px);
+        min-height: 100vh;
+        display: grid;
+        place-items: center;
+        padding: 32px 20px;
+      }
+
+      .auth-card {
+        width: min(100%, 420px);
+        background: rgba(7, 17, 31, 0.82);
+        border: 1px solid var(--border);
+        border-radius: 28px;
+        padding: 32px 26px 26px;
+        box-shadow: var(--shadow);
+        backdrop-filter: blur(12px);
+      }
+
+      .auth-header {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 10px;
+        margin-bottom: 26px;
+      }
+
+      .brand {
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        font-weight: 700;
+        font-size: 1.3rem;
+        letter-spacing: 0.03em;
+      }
+
+      .brand i {
+        width: 20px;
+        height: 20px;
+        color: var(--blue);
+      }
+
+      .auth-subtitle {
+        margin: 0;
+        color: var(--text-soft);
+        font-size: 0.9rem;
+      }
+
+      .form-group {
+        margin-bottom: 18px;
+      }
+
+      label {
+        display: inline-block;
+        margin-bottom: 9px;
+        color: var(--text-soft);
+        font-weight: 500;
+        font-size: 0.9rem;
+      }
+
+      .input-wrapper {
+        position: relative;
+        display: flex;
+        align-items: center;
+        background: rgba(148, 163, 184, 0.06);
+        border: 1px solid rgba(148, 163, 184, 0.18);
+        border-radius: 14px;
+        padding: 0 12px 0 14px;
+        transition: border-color 0.25s ease, box-shadow 0.25s ease;
+      }
+
+      .input-wrapper:focus-within {
+        border-color: rgba(79, 140, 255, 0.7);
+        box-shadow: 0 0 0 4px rgba(79, 140, 255, 0.12);
+      }
+
+      .input-wrapper i {
+        width: 18px;
+        height: 18px;
+        color: var(--muted);
+      }
+
+      .input-wrapper input {
+        flex: 1;
+        border: 0;
+        outline: none;
+        background: transparent;
+        color: var(--text);
+        padding: 14px 12px 14px 12px;
+        font-size: 0.97rem;
+      }
+
+      .input-wrapper input::placeholder {
+        color: rgba(159, 179, 205, 0.75);
+      }
+
+      .pwd-toggle {
+        border: 0;
+        background: transparent;
+        color: var(--muted);
+        cursor: pointer;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 30px;
+        height: 30px;
+        border-radius: 10px;
+      }
+
+      .btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        border: 0;
+        border-radius: 12px;
+        cursor: pointer;
+        transition: transform 0.18s ease, filter 0.18s ease, opacity 0.18s ease;
+      }
+
+      .btn:hover { transform: translateY(-1px); }
+
+      .btn-primary {
+        width: 100%;
+        background: linear-gradient(135deg, var(--blue), #6ea7ff 100%);
+        color: white;
+        padding: 14px 18px;
+        font-weight: 600;
+        box-shadow: 0 12px 30px rgba(79, 140, 255, 0.26);
+      }
+
+      .dashboard-wrapper {
+        width: 100%;
+        min-height: 100vh;
+        background: rgba(5, 11, 20, 0.65);
+        color: var(--text);
+      }
+
+      .topbar {
+        position: sticky;
+        top: 0;
+        z-index: 30;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 18px;
+        padding: 18px 26px 16px;
+        border-bottom: 1px solid var(--border);
+        background: rgba(7, 17, 31, 0.76);
+        backdrop-filter: blur(14px);
+      }
+
+      .topbar .brand {
+        font-size: 1.08rem;
+      }
+
+      .search-bar {
+        flex: 1;
+        max-width: 520px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 10px 14px;
+        border-radius: 12px;
+        background: rgba(148, 163, 184, 0.06);
+        border: 1px solid var(--border);
+        color: var(--muted);
+      }
+
+      .search-bar input {
+        flex: 1;
+        background: transparent;
+        border: 0;
+        outline: none;
+        color: var(--text);
+      }
+
+      .search-bar input::placeholder {
+        color: var(--muted);
+      }
+
+      .topbar-right {
+        display: flex;
+        align-items: center;
+        gap: 16px;
+      }
+
+      .icon-btn {
+        position: relative;
+        width: 38px;
+        height: 38px;
+        display: grid;
+        place-items: center;
+        border-radius: 12px;
+        border: 1px solid var(--border);
+        background: rgba(148, 163, 184, 0.04);
+        color: var(--text-soft);
+        cursor: pointer;
+      }
+
+      .notification-badge {
+        position: absolute;
+        top: -4px;
+        right: -3px;
+        min-width: 18px;
+        height: 18px;
+        padding: 2px 5px;
+        display: grid;
+        place-items: center;
+        border-radius: 999px;
+        background: var(--red);
+        color: #fff;
+        font-size: 0.65rem;
+        font-weight: 700;
+      }
+
+      .user-menu {
+        position: relative;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        background: rgba(148, 163, 184, 0.04);
+        border: 1px solid var(--border);
+        border-radius: 14px;
+        padding: 8px 12px 8px 8px;
+        cursor: pointer;
+      }
+
+      .user-avatar-sm {
+        width: 32px;
+        height: 32px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, rgba(79,140,255,0.2), rgba(45,212,191,0.18));
+        display: grid;
+        place-items: center;
+        color: var(--text);
+      }
+
+      .user-info-sm {
+        display: flex;
+        flex-direction: column;
+        line-height: 1.2;
+      }
+
+      .user-title {
+        font-size: 0.7rem;
+        color: var(--text-soft);
+      }
+
+      .user-name {
+        font-size: 0.82rem;
+        font-weight: 600;
+      }
+
+      .dropdown-chevron {
+        color: var(--muted);
+      }
+
+      .user-dropdown {
+        position: absolute;
+        right: 0;
+        top: calc(100% + 12px);
+        min-width: 200px;
+        background: rgba(11, 17, 27, 0.99);
+        border: 1px solid var(--border);
+        border-radius: 14px;
+        overflow: hidden;
+        box-shadow: var(--shadow);
+      }
+
+      .user-dropdown a {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 12px 14px;
+        color: var(--text-soft);
+        border-bottom: 1px solid rgba(148, 163, 184, 0.08);
+      }
+
+      .user-dropdown a:last-child {
+        border-bottom: 0;
+      }
+
+      .user-dropdown a:hover {
+        background: rgba(148, 163, 184, 0.04);
+      }
+
+      .logout-link {
+        color: #ffd0d0 !important;
+      }
+
+      .dashboard-body {
+        display: flex;
+        gap: 18px;
+        padding: 18px 22px 30px;
+      }
+
+      .sidebar {
+        width: 290px;
+        flex-shrink: 0;
+        background: rgba(10, 20, 34, 0.84);
+        border: 1px solid var(--border);
+        border-radius: 22px;
+        padding: 18px 14px;
+      }
+
+      .sidebar-profile-card {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        background: linear-gradient(135deg, rgba(79,140,255,0.12), rgba(45,212,191,0.1));
+        border: 1px solid rgba(148,163,184,0.12);
+        border-radius: 16px;
+        padding: 14px 12px;
+      }
+
+      .avatar-lg {
+        width: 54px;
+        height: 54px;
+        display: grid;
+        place-items: center;
+        border-radius: 16px;
+        background: rgba(255,255,255,0.04);
+        color: var(--blue);
+      }
+
+      .profile-meta h4 {
+        margin: 0 0 4px;
+        font-size: 0.98rem;
+      }
+
+      .profile-meta p {
+        margin: 0 0 8px;
+        color: var(--text-soft);
+        font-size: 0.78rem;
+      }
+
+      .status-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 7px 10px;
+        border-radius: 999px;
+        font-size: 0.72rem;
+        font-weight: 600;
+      }
+
+      .status-online {
+        background: rgba(45, 212, 191, 0.12);
+        color: #8ff2e1;
+      }
+
+      .status-live {
+        background: rgba(248, 113, 113, 0.12);
+        color: #ffd1d1;
+      }
+
+      .dot, .dot-sm {
+        display: inline-block;
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        background: currentColor;
+      }
+
+      .sidebar-nav {
+        margin-top: 18px;
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+      }
+
+      .nav-item {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 12px 10px;
+        color: var(--text-soft);
+        border-radius: 12px;
+        border: 1px solid transparent;
+        transition: background 0.2s ease, border-color 0.2s ease, color 0.2s ease;
+      }
+
+      .nav-item i { width: 18px; height: 18px; }
+
+      .nav-item.active,
+      .nav-item:hover {
+        background: rgba(79, 140, 255, 0.12);
+        border-color: rgba(79, 140, 255, 0.18);
+        color: var(--text);
+      }
+
+      .main-content {
+        flex: 1;
+        min-width: 0;
+      }
+
+      .metrics-grid {
+        display: grid;
+        grid-template-columns: repeat(5, minmax(170px, 1fr));
+        gap: 16px;
+        margin-bottom: 18px;
+      }
+
+      .metric-card {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        background: rgba(11, 20, 32, 0.82);
+        border: 1px solid var(--border);
+        border-radius: 18px;
+        padding: 16px 14px;
+        min-height: 116px;
+      }
+
+      .metric-icon {
+        width: 50px;
+        height: 50px;
+        flex-shrink: 0;
+        border-radius: 14px;
+        display: grid;
+        place-items: center;
+        font-weight: 700;
+      }
+
+      .metric-icon i {
+        width: 22px;
+        height: 22px;
+      }
+
+      .metric-icon.blue { background: rgba(79, 140, 255, 0.16); color: var(--blue); }
+      .metric-icon.green { background: rgba(45, 212, 191, 0.16); color: var(--green); }
+      .metric-icon.blue-light { background: rgba(96, 165, 250, 0.12); color: #8cc0ff; }
+      .metric-icon.green-icon { background: rgba(45, 212, 191, 0.12); color: #93f4e5; }
+      .metric-icon.blue-dark { background: rgba(59, 130, 246, 0.12); color: #9ec2ff; }
+
+      .pulse-ring {
+        width: 12px;
+        height: 12px;
+        border-radius: 50%;
+        background: var(--green);
+        box-shadow: 0 0 0 0 rgba(45,212,191,0.7);
+        animation: pulse 2s infinite;
+      }
+
+      @keyframes pulse {
+        0% { box-shadow: 0 0 0 0 rgba(45,212,191,0.7); }
+        70% { box-shadow: 0 0 0 18px rgba(45,212,191,0); }
+        100% { box-shadow: 0 0 0 0 rgba(45,212,191,0); }
+      }
+
+      .metric-info {
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+      }
+
+      .metric-label {
+        color: var(--text-soft);
+        font-size: 0.74rem;
+      }
+
+      .metric-value {
+        font-size: clamp(1.2rem, 1.8vw, 1.6rem);
+        font-weight: 700;
+        letter-spacing: -0.03em;
+      }
+
+      .metric-sub {
+        color: var(--muted);
+        font-size: 0.72rem;
+      }
+
+      .green-text { color: var(--green); }
+      .text-md { font-size: 1.05rem; }
+
+      .grid-2-col {
+        display: grid;
+        grid-template-columns: 1.5fr 1fr;
+        gap: 18px;
+        margin-bottom: 18px;
+      }
+
+      .card {
+        background: rgba(11, 20, 32, 0.82);
+        border: 1px solid var(--border);
+        border-radius: 18px;
+        padding: 18px 18px 16px;
+      }
+
+      .card-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 10px;
+        margin-bottom: 16px;
+      }
+
+      .card-header h3 {
+        margin: 0;
+        font-size: 1.08rem;
+      }
+
+      .title-with-icon {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+
+      .title-with-icon i {
+        width: 18px;
+        height: 18px;
+        color: var(--blue);
+      }
+
+      .btn-sm, .btn-xs {
+        font-size: 0.74rem;
+        padding: 8px 12px;
+      }
+
+      .btn-secondary {
+        background: rgba(148, 163, 184, 0.07);
+        color: var(--text);
+        border: 1px solid var(--border);
+      }
+
+      .btn-outline {
+        background: transparent;
+        color: var(--text);
+        border: 1px solid rgba(148, 163, 184, 0.2);
+      }
+
+      .profile-content-split {
+        display: grid;
+        grid-template-columns: 1.2fr 0.8fr;
+        gap: 20px;
+      }
+
+      .apps-grid {
+        display: grid;
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        gap: 10px;
+      }
+
+      .app-item {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        min-height: 74px;
+        background: rgba(148, 163, 184, 0.03);
+        border: 1px solid rgba(148, 163, 184, 0.08);
+        border-radius: 14px;
+        padding: 10px 6px;
+        text-align: center;
+      }
+
+      .app-item span {
+        font-size: 0.72rem;
+        color: var(--text-soft);
+      }
+
+      .app-icon {
+        width: 32px;
+        height: 32px;
+        border-radius: 10px;
+        display: grid;
+        place-items: center;
+      }
+
+      .app-icon i {
+        width: 16px;
+        height: 16px;
+      }
+
+      .whatsapp { background: rgba(34,197,94,0.12); color: #4ade80; }
+      .instagram { background: rgba(236,72,153,0.12); color: #f9a8d4; }
+      .facebook { background: rgba(59,130,246,0.12); color: #93c5fd; }
+      .tiktok { background: rgba(236,72,153,0.12); color: #fbcfe8; }
+      .telegram { background: rgba(59,130,246,0.12); color: #bfdbfe; }
+      .discord { background: rgba(99,102,241,0.12); color: #c7d2fe; }
+      .twitter { background: rgba(14,165,233,0.12); color: #7dd3fc; }
+      .snapchat { background: rgba(250,204,21,0.12); color: #fef08a; }
+      .youtube { background: rgba(239,68,68,0.12); color: #fca5a5; }
+      .gmail { background: rgba(239,68,68,0.12); color: #fda4af; }
+      .linkedin { background: rgba(59,130,246,0.12); color: #bfdbfe; }
+      .pinterest { background: rgba(239,68,68,0.12); color: #fbcfe8; }
+      .messenger { background: rgba(59,130,246,0.12); color: #93c5fd; }
+      .spotify { background: rgba(16,185,129,0.12); color: #6ee7b7; }
+      .netflix { background: rgba(239,68,68,0.12); color: #fca5a5; }
+      .more-apps { background: rgba(148,163,184,0.12); color: var(--text); }
+
+      .user-details-list {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+      }
+
+      .detail-item {
+        display: flex;
+        align-items: flex-start;
+        gap: 12px;
+        padding: 12px 12px;
+        border: 1px solid rgba(148,163,184,0.08);
+        border-radius: 12px;
+        background: rgba(148,163,184,0.02);
+      }
+
+      .detail-item i {
+        width: 18px;
+        height: 18px;
+        color: var(--blue);
+        margin-top: 3px;
+      }
+
+      .detail-item label {
+        margin: 0 0 4px;
+        color: var(--muted);
+        font-size: 0.7rem;
+        display: block;
+      }
+
+      .detail-item p {
+        margin: 0;
+        font-size: 0.9rem;
+        color: var(--text);
+      }
+
+      .btn-full {
+        width: 100%;
+      }
+
+      .location-card .map-container {
+        background: linear-gradient(180deg, rgba(13, 27, 45, 0.8), rgba(9, 18, 30, 0.7));
+        border: 1px solid rgba(148,163,184,0.1);
+        border-radius: 16px;
+        overflow: hidden;
+      }
+
+      .map-graphic {
+        position: relative;
+        height: 200px;
+        background:
+          linear-gradient(rgba(79,140,255,0.04), rgba(79,140,255,0.02)),
+          linear-gradient(90deg, rgba(148,163,184,0.06) 1px, transparent 1px),
+          linear-gradient(rgba(148,163,184,0.06) 1px, transparent 1px),
+          radial-gradient(circle at center, rgba(45,212,191,0.2), rgba(5,11,20,0.25) 60%, rgba(5,11,20,0.9) 100%);
+        background-size: auto, 32px 32px, 32px 32px, auto;
+      }
+
+      .map-grid-lines {
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(0deg, rgba(79,140,255,0.08), transparent);
+      }
+
+      .map-pin-point {
+        position: absolute;
+        left: 58%;
+        top: 52%;
+        transform: translate(-50%, -50%);
+        display: grid;
+        place-items: center;
+        width: 54px;
+        height: 54px;
+      }
+
+      .map-pin-point i {
+        width: 28px;
+        height: 28px;
+        color: #f87171;
+        position: relative;
+        z-index: 2;
+      }
+
+      .pin-pulse {
+        position: absolute;
+        width: 54px;
+        height: 54px;
+        border-radius: 50%;
+        background: rgba(248,113,113,0.2);
+        animation: pulseRed 2s infinite;
+      }
+
+      @keyframes pulseRed {
+        0% { transform: scale(0.8); opacity: 1; }
+        70% { transform: scale(1.5); opacity: 0; }
+        100% { transform: scale(1.7); opacity: 0; }
+      }
+
+      .map-overlay-info {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 14px 16px 18px;
+      }
+
+      .map-overlay-info i {
+        width: 20px;
+        height: 20px;
+        color: var(--green);
+      }
+
+      .map-overlay-info strong {
+        display: block;
+        font-size: 0.95rem;
+        margin-bottom: 4px;
+      }
+
+      .map-overlay-info p {
+        margin: 0;
+        color: var(--text-soft);
+        font-size: 0.75rem;
+      }
+
+      .location-details-footer {
+        margin-top: 18px;
+      }
+
+      .location-details-footer h4 {
+        margin: 0 0 12px;
+        font-size: 0.96rem;
+      }
+
+      .loc-stats-grid {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 12px;
+      }
+
+      .loc-stat {
+        display: flex;
+        align-items: flex-start;
+        gap: 10px;
+        padding: 10px 10px;
+        border-radius: 12px;
+        border: 1px solid rgba(148,163,184,0.08);
+        background: rgba(148,163,184,0.02);
+      }
+
+      .loc-stat i {
+        width: 17px;
+        height: 17px;
+        color: var(--blue);
+        margin-top: 3px;
+      }
+
+      .loc-stat label {
+        display: block;
+        margin: 0 0 4px;
+        font-size: 0.7rem;
+        color: var(--muted);
+      }
+
+      .loc-stat p {
+        margin: 0;
+        font-size: 0.8rem;
+      }
+
+      .grid-4-col {
+        display: grid;
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        gap: 18px;
+      }
+
+      .grid-4-col .card {
+        display: flex;
+        flex-direction: column;
+        min-height: 330px;
+      }
+
+      .cloning-body {
+        display: flex;
+        align-items: center;
+        gap: 16px;
+        margin-bottom: 10px;
+      }
+
+      .phone-mockup {
+        width: 112px;
+        height: 160px;
+        border-radius: 26px;
+        background: linear-gradient(180deg, #101f34, #0b1728);
+        border: 1px solid rgba(148,163,184,0.2);
+        display: grid;
+        place-items: center;
+        box-shadow: inset 0 0 0 2px rgba(148,163,184,0.05);
+      }
+
+      .phone-screen-inner {
+        width: 80px;
+        height: 126px;
+        border-radius: 18px;
+        background: linear-gradient(180deg, rgba(79,140,255,0.12), rgba(45,212,191,0.08));
+        border: 1px solid rgba(148,163,184,0.08);
+        display: grid;
+        place-items: center;
+        color: var(--blue);
+      }
+
+      .phone-screen-inner i {
+        width: 32px;
+        height: 32px;
+      }
+
+      .clone-checklist {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        flex: 1;
+      }
+
+      .clone-checklist li {
+        display: flex;
+        align-items: flex-start;
+        gap: 8px;
+      }
+
+      .clone-checklist i {
+        width: 18px;
+        height: 18px;
+        margin-top: 2px;
+      }
+
+      .clone-checklist strong {
+        display: block;
+        font-size: 0.84rem;
+      }
+
+      .clone-checklist p {
+        margin: 3px 0 0;
+        font-size: 0.72rem;
+        color: var(--muted);
+      }
+
+      .mt-auto { margin-top: auto; }
+
+      .monitoring-list {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+      }
+
+      .monitor-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 12px;
+        padding: 10px 10px;
+        border-radius: 12px;
+        background: rgba(148,163,184,0.02);
+        border: 1px solid rgba(148,163,184,0.06);
+      }
+
+      .m-label {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        font-size: 0.84rem;
+        color: var(--text-soft);
+      }
+
+      .m-label i {
+        width: 16px;
+        height: 16px;
+      }
+
+      .m-status {
+        display: inline-flex;
+        align-items: center;
+        gap: 7px;
+        font-size: 0.72rem;
+        color: var(--green);
+      }
+
+      .card-footer-text {
+        margin-top: auto;
+        padding-top: 16px;
+        font-size: 0.75rem;
+        color: var(--muted);
+      }
+
+      .card-footer-text span { color: var(--text-soft); }
+
+      .remote-body {
+        display: flex;
+        flex-direction: column;
+        gap: 14px;
+      }
+
+      .remote-phone {
+        min-height: 150px;
+        border-radius: 20px;
+        background: linear-gradient(180deg, #101f34 0%, #081522 100%);
+        border: 1px solid rgba(148,163,184,0.12);
+        padding: 12px 12px 14px;
+      }
+
+      .phone-top-time {
+        font-family: "JetBrains Mono", monospace;
+        font-weight: 600;
+        color: var(--text);
+        font-size: 0.9rem;
+      }
+
+      .sub-date {
+        color: var(--muted);
+        font-size: 0.68rem;
+        margin-left: 8px;
+      }
+
+      .phone-app-icons {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 10px;
+        margin-top: 18px;
+      }
+
+      .p-icon {
+        height: 40px;
+        border-radius: 12px;
+        background: linear-gradient(180deg, rgba(79,140,255,0.16), rgba(45,212,191,0.08));
+        border: 1px solid rgba(148,163,184,0.1);
+      }
+
+      .remote-controls-list {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+      }
+
+      .remote-btn {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        width: 100%;
+        padding: 10px 12px;
+        text-align: left;
+        background: rgba(148,163,184,0.04);
+        border: 1px solid rgba(148,163,184,0.08);
+        border-radius: 12px;
+        color: var(--text-soft);
+        cursor: pointer;
+      }
+
+      .remote-btn i {
+        width: 16px;
+        height: 16px;
+      }
+
+      .btn-blue-bg {
+        background: rgba(79,140,255,0.12);
+        color: #cfe0ff;
+      }
+
+      .btn-danger-text {
+        color: #ffc4c4;
+      }
+
+      @media (max-width: 1180px) {
+        .metrics-grid {
+          grid-template-columns: repeat(2, minmax(180px, 1fr));
+        }
+
+        .grid-2-col {
+          grid-template-columns: 1fr;
+        }
+
+        .grid-4-col {
+          grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+      }
+
+      @media (max-width: 900px) {
+        .dashboard-body {
+          flex-direction: column;
+        }
+
+        .sidebar {
+          width: 100%;
+        }
+      }
+
+      @media (max-width: 640px) {
+        .topbar {
+          flex-wrap: wrap;
+          justify-content: center;
+        }
+
+        .search-bar {
+          order: 3;
+          width: 100%;
+          max-width: 100%;
+        }
+
+        .metrics-grid,
+        .grid-4-col,
+        .profile-content-split,
+        .loc-stats-grid {
+          grid-template-columns: 1fr;
+        }
+
+        .apps-grid {
+          grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div id="login-screen" class="auth-wrapper">
+      <div class="auth-card">
+        <div class="auth-header">
+          <div class="brand">
+            <i data-lucide="shield"></i>
+            <span>Remote Control Monitor</span>
+          </div>
+          <p class="auth-subtitle">Secure Control Center</p>
+        </div>
+
+        <form id="login-form" onsubmit="event.preventDefault(); handleLogin();">
+          <div class="form-group">
+            <label for="username">Username or Email</label>
+            <div class="input-wrapper">
+              <i data-lucide="user"></i>
+              <input type="text" id="username" value="admin" placeholder="username or email" required />
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="password">Security Password</label>
+            <div class="input-wrapper">
+              <i data-lucide="lock"></i>
+              <input type="password" id="password" value="securepass123" placeholder="••••••••••••" required />
+              <button type="button" class="pwd-toggle" id="toggle-password" onclick="togglePasswordVisibility()" aria-label="Toggle password visibility">
+                <i data-lucide="eye" id="pwd-icon"></i>
+              </button>
+            </div>
+          </div>
+
+          <button type="submit" class="btn btn-primary">
+            <span>Authorize Access</span>
+            <i data-lucide="arrow-right"></i>
+          </button>
+        </form>
+      </div>
+    </div>
+
+    <div id="dashboard-screen" class="dashboard-wrapper hidden">
+      <header class="topbar">
         <div class="brand">
           <i data-lucide="shield"></i>
-          <span>spyteligent</span>
-        </div>
-        <p class="auth-subtitle">Cyber Intelligence Control Center</p>
-      </div>
-
-      <form id="login-form" onsubmit="event.preventDefault(); handleLogin();">
-        <div class="form-group">
-          <label for="username">Username or Email</label>
-          <div class="input-wrapper">
-            <i data-lucide="user"></i>
-            <input type="text" id="username" placeholder="user123 or user@example.com" value="user123" required>
-          </div>
+          <span>Remote Control Monitor</span>
         </div>
 
-        <div class="form-group">
-          <label for="password">Security Password</label>
-          <div class="input-wrapper">
-            <i data-lucide="lock"></i>
-            <input type="password" id="password" placeholder="••••••••••••" value="securepass123" required>
-            <button type="button" class="pwd-toggle" id="toggle-password" onclick="togglePasswordVisibility()">
-              <i data-lucide="eye" id="pwd-icon"></i>
-            </button>
-          </div>
+        <div class="search-bar">
+          <i data-lucide="search"></i>
+          <input type="text" placeholder="Search device, app, or feature..." />
         </div>
 
-        <button type="submit" class="btn btn-primary btn-full">
-          <span>Authorize Access</span>
-          <i data-lucide="arrow-right"></i>
-        </button>
-      </form>
-    </div>
-  </div>
+        <div class="topbar-right">
+          <button class="icon-btn" aria-label="Notifications">
+            <i data-lucide="bell"></i>
+            <span class="notification-badge">1</span>
+          </button>
 
-  <!-- ==========================================
-       MAIN APP / PROFILE DASHBOARD VIEW
-  =========================================== -->
-  <div id="dashboard-screen" class="dashboard-wrapper hidden">
-    
-    <!-- TOP NAVIGATION BAR -->
-    <header class="topbar">
-      <div class="brand">
-        <i data-lucide="shield"></i>
-        <span>spyteligent</span>
-      </div>
-
-      <div class="search-bar">
-        <i data-lucide="search"></i>
-        <input type="text" placeholder="Search device, app, or feature...">
-      </div>
-
-      <div class="topbar-right">
-        <button class="icon-btn badge-btn">
-          <i data-lucide="bell"></i>
-          <span class="notification-badge">1</span>
-        </button>
-
-        <div class="user-menu" id="user-menu-trigger">
-          <div class="user-avatar-sm">
-            <i data-lucide="user"></i>
-          </div>
-          <div class="user-info-sm">
-            <span class="user-title">Welcome,</span>
-            <span class="user-name">User</span>
-          </div>
-          <i data-lucide="chevron-down" class="dropdown-chevron"></i>
-          
-          <div class="user-dropdown hidden" id="user-dropdown">
-            <a href="#profile"><i data-lucide="user"></i> Profile Info</a>
-            <a href="#settings"><i data-lucide="settings"></i> Settings</a>
-            <hr>
-            <a href="#" class="logout-link" onclick="handleLogout()"><i data-lucide="log-out"></i> Disconnect / Logout</a>
-          </div>
-        </div>
-      </div>
-    </header>
-
-    <!-- DASHBOARD BODY LAYOUT -->
-    <div class="dashboard-body">
-      
-      <!-- SIDE NAVIGATION BAR -->
-      <aside class="sidebar">
-        <!-- Profile Banner Card -->
-        <div class="sidebar-profile-card">
-          <div class="avatar-lg">
-            <i data-lucide="user"></i>
-          </div>
-          <div class="profile-meta">
-            <h4>User Profile</h4>
-            <p>user@example.com</p>
-            <span class="status-badge status-online">
-              <span class="dot"></span> Online
-            </span>
-          </div>
-        </div>
-
-        <!-- Sidebar Navigation Menu -->
-        <nav class="sidebar-nav">
-          <a href="#" class="nav-item active">
-            <i data-lucide="layout-dashboard"></i>
-            <span>Dashboard</span>
-          </a>
-          <a href="#" class="nav-item">
-            <i data-lucide="user"></i>
-            <span>Profile Information</span>
-          </a>
-          <a href="#" class="nav-item">
-            <i data-lucide="copy"></i>
-            <span>Cloning</span>
-          </a>
-          <a href="#" class="nav-item">
-            <i data-lucide="activity"></i>
-            <span>Monitoring</span>
-          </a>
-          <a href="#" class="nav-item">
-            <i data-lucide="smartphone"></i>
-            <span>Remote Control</span>
-          </a>
-          <a href="#" class="nav-item">
-            <i data-lucide="map-pin"></i>
-            <span>Location</span>
-          </a>
-          <a href="#" class="nav-item">
-            <i data-lucide="mail"></i>
-            <span>Messages</span>
-          </a>
-          <a href="#" class="nav-item">
-            <i data-lucide="folder"></i>
-            <span>Media Files</span>
-          </a>
-          <a href="#" class="nav-item">
-            <i data-lucide="history"></i>
-            <span>Logs & History</span>
-          </a>
-          <a href="#" class="nav-item">
-            <i data-lucide="settings"></i>
-            <span>Settings</span>
-          </a>
-        </nav>
-      </aside>
-
-      <!-- MAIN CONTENT GRID -->
-      <main class="main-content">
-        
-        <!-- ROW 1: QUICK METRICS CARDS -->
-        <div class="metrics-grid">
-          <!-- Total Apps -->
-          <div class="metric-card">
-            <div class="metric-icon blue">
-              <i data-lucide="grid"></i>
+          <div class="user-menu" id="user-menu-trigger">
+            <div class="user-avatar-sm">
+              <i data-lucide="user"></i>
             </div>
-            <div class="metric-info">
-              <span class="metric-label">Total Apps</span>
-              <span class="metric-value">42</span>
-              <span class="metric-sub">Installed</span>
+            <div class="user-info-sm">
+              <span class="user-title">Welcome,</span>
+              <span class="user-name">User</span>
             </div>
-          </div>
+            <i data-lucide="chevron-down" class="dropdown-chevron"></i>
 
-          <!-- Online Status -->
-          <div class="metric-card">
-            <div class="metric-icon green">
-              <span class="pulse-ring"></span>
-            </div>
-            <div class="metric-info">
-              <span class="metric-label">Online Status</span>
-              <span class="metric-value green-text">• Active</span>
-              <span class="metric-sub">Device Connected</span>
-            </div>
-          </div>
-
-          <!-- Location Summary -->
-          <div class="metric-card">
-            <div class="metric-icon blue-light">
-              <i data-lucide="map-pin"></i>
-            </div>
-            <div class="metric-info">
-              <span class="metric-label">Location</span>
-              <span class="metric-value text-md">Lagos, Nigeria</span>
-              <span class="metric-sub">Last Updated: 2 min ago</span>
-            </div>
-          </div>
-
-          <!-- Battery Level -->
-          <div class="metric-card">
-            <div class="metric-icon green-icon">
-              <i data-lucide="battery-charging"></i>
-            </div>
-            <div class="metric-info">
-              <span class="metric-label">Battery</span>
-              <span class="metric-value">78%</span>
-              <span class="metric-sub">Charging</span>
-            </div>
-          </div>
-
-          <!-- Storage Details -->
-          <div class="metric-card">
-            <div class="metric-icon blue-dark">
-              <i data-lucide="hard-drive"></i>
-            </div>
-            <div class="metric-info">
-              <span class="metric-label">Storage</span>
-              <span class="metric-value">128 GB</span>
-              <span class="metric-sub">Free: 64 GB</span>
+            <div class="user-dropdown hidden" id="user-dropdown">
+              <a href="#profile"><i data-lucide="user"></i> Profile Info</a>
+              <a href="#settings"><i data-lucide="settings"></i> Settings</a>
+              <a href="#" class="logout-link" onclick="handleLogout(); return false;">
+                <i data-lucide="log-out"></i> Disconnect / Logout
+              </a>
             </div>
           </div>
         </div>
+      </header>
 
-        <!-- ROW 2: PROFILE INFORMATION & LIVE LOCATION -->
-        <div class="grid-2-col">
-          
-          <!-- Profile Information Panel -->
-          <section class="card profile-info-card">
-            <div class="card-header">
-              <h3>Profile Information</h3>
-              <button class="btn btn-secondary btn-sm">
-                <i data-lucide="edit-3"></i> Edit
-              </button>
+      <div class="dashboard-body">
+        <aside class="sidebar">
+          <div class="sidebar-profile-card">
+            <div class="avatar-lg">
+              <i data-lucide="user"></i>
             </div>
-            
-            <div class="profile-content-split">
-              <!-- Installed Apps Grid -->
-              <div class="apps-grid">
-                <div class="app-item"><div class="app-icon whatsapp"><i data-lucide="message-circle"></i></div><span>WhatsApp</span></div>
-                <div class="app-item"><div class="app-icon instagram"><i data-lucide="instagram"></i></div><span>Instagram</span></div>
-                <div class="app-item"><div class="app-icon facebook"><i data-lucide="facebook"></i></div><span>Facebook</span></div>
-                <div class="app-item"><div class="app-icon tiktok"><i data-lucide="video"></i></div><span>TikTok</span></div>
-                <div class="app-item"><div class="app-icon telegram"><i data-lucide="send"></i></div><span>Telegram</span></div>
-                <div class="app-item"><div class="app-icon discord"><i data-lucide="message-square"></i></div><span>Discord</span></div>
-                <div class="app-item"><div class="app-icon twitter"><i data-lucide="twitter"></i></div><span>Twitter (X)</span></div>
-                <div class="app-item"><div class="app-icon snapchat"><i data-lucide="ghost"></i></div><span>Snapchat</span></div>
-                <div class="app-item"><div class="app-icon youtube"><i data-lucide="youtube"></i></div><span>YouTube</span></div>
-                <div class="app-item"><div class="app-icon gmail"><i data-lucide="mail"></i></div><span>Gmail</span></div>
-                <div class="app-item"><div class="app-icon linkedin"><i data-lucide="linkedin"></i></div><span>LinkedIn</span></div>
-                <div class="app-item"><div class="app-icon pinterest"><i data-lucide="bookmark"></i></div><span>Pinterest</span></div>
-                <div class="app-item"><div class="app-icon messenger"><i data-lucide="message-circle"></i></div><span>Messenger</span></div>
-                <div class="app-item"><div class="app-icon spotify"><i data-lucide="music"></i></div><span>Spotify</span></div>
-                <div class="app-item"><div class="app-icon netflix"><i data-lucide="tv"></i></div><span>Netflix</span></div>
-                <div class="app-item"><div class="app-icon more-apps"><i data-lucide="plus"></i></div><span>More Apps</span></div>
-              </div>
-
-              <!-- Key Account Info Details -->
-              <div class="user-details-list">
-                <div class="detail-item">
-                  <i data-lucide="phone"></i>
-                  <div>
-                    <label>Phone Number</label>
-                    <p>+234 801 234 5678</p>
-                  </div>
-                </div>
-
-                <div class="detail-item">
-                  <i data-lucide="mail"></i>
-                  <div>
-                    <label>Email</label>
-                    <p>user@example.com</p>
-                  </div>
-                </div>
-
-                <div class="detail-item">
-                  <i data-lucide="user"></i>
-                  <div>
-                    <label>Username</label>
-                    <p>user123</p>
-                  </div>
-                </div>
-
-                <div class="detail-item">
-                  <i data-lucide="globe"></i>
-                  <div>
-                    <label>Country</label>
-                    <p>Nigeria</p>
-                  </div>
-                </div>
-
-                <div class="detail-item">
-                  <i data-lucide="smartphone"></i>
-                  <div>
-                    <label>Device</label>
-                    <p>Android (13)</p>
-                  </div>
-                </div>
-
-                <button class="btn btn-outline btn-full">View All Information</button>
-              </div>
-            </div>
-          </section>
-
-          <!-- Live Location Panel -->
-          <section class="card location-card">
-            <div class="card-header">
-              <div class="title-with-icon">
-                <i data-lucide="map-pin" class="text-blue"></i>
-                <h3>Live Location</h3>
-              </div>
-              <span class="status-badge status-live">
-                <span class="dot"></span> Live
+            <div class="profile-meta">
+              <h4>User Profile</h4>
+              <p>user@example.com</p>
+              <span class="status-badge status-online">
+                <span class="dot"></span> Online
               </span>
             </div>
+          </div>
 
-            <div class="map-container">
-              <div class="map-graphic">
-                <div class="map-grid-lines"></div>
-                <div class="map-pin-point">
-                  <div class="pin-pulse"></div>
-                  <i data-lucide="map-pin"></i>
-                </div>
-              </div>
-              <div class="map-overlay-info">
-                <i data-lucide="map-pin" class="text-green"></i>
-                <div>
-                  <strong>Lagos, Nigeria</strong>
-                  <p>6.5244° N, 3.3792° E</p>
-                </div>
+          <nav class="sidebar-nav" aria-label="Sidebar navigation">
+            <a href="#" class="nav-item active"><i data-lucide="layout-dashboard"></i><span>Dashboard</span></a>
+            <a href="#" class="nav-item"><i data-lucide="user"></i><span>Profile Information</span></a>
+            <a href="#" class="nav-item"><i data-lucide="copy"></i><span>Cloning</span></a>
+            <a href="#" class="nav-item"><i data-lucide="activity"></i><span>Monitoring</span></a>
+            <a href="#" class="nav-item"><i data-lucide="smartphone"></i><span>Remote Control</span></a>
+            <a href="#" class="nav-item"><i data-lucide="map-pin"></i><span>Location</span></a>
+            <a href="#" class="nav-item"><i data-lucide="mail"></i><span>Messages</span></a>
+            <a href="#" class="nav-item"><i data-lucide="folder"></i><span>Media Files</span></a>
+            <a href="#" class="nav-item"><i data-lucide="history"></i><span>Logs &amp; History</span></a>
+            <a href="#" class="nav-item"><i data-lucide="settings"></i><span>Settings</span></a>
+          </nav>
+        </aside>
+
+        <main class="main-content">
+          <div class="metrics-grid">
+            <div class="metric-card">
+              <div class="metric-icon blue"><i data-lucide="grid"></i></div>
+              <div class="metric-info">
+                <span class="metric-label">Total Apps</span>
+                <span class="metric-value">42</span>
+                <span class="metric-sub">Installed</span>
               </div>
             </div>
 
-            <div class="location-details-footer">
-              <h4>Location Details</h4>
-              <div class="loc-stats-grid">
-                <div class="loc-stat">
-                  <i data-lucide="target"></i>
-                  <div>
-                    <label>Accuracy</label>
-                    <p>± 10 meters</p>
+            <div class="metric-card">
+              <div class="metric-icon green"><span class="pulse-ring"></span></div>
+              <div class="metric-info">
+                <span class="metric-label">Online Status</span>
+                <span class="metric-value green-text">• Active</span>
+                <span class="metric-sub">Device Connected</span>
+              </div>
+            </div>
+
+            <div class="metric-card">
+              <div class="metric-icon blue-light"><i data-lucide="map-pin"></i></div>
+              <div class="metric-info">
+                <span class="metric-label">Location</span>
+                <span class="metric-value text-md">Lagos, Nigeria</span>
+                <span class="metric-sub">Last Updated: 2 min ago</span>
+              </div>
+            </div>
+
+            <div class="metric-card">
+              <div class="metric-icon green-icon"><i data-lucide="battery-charging"></i></div>
+              <div class="metric-info">
+                <span class="metric-label">Battery</span>
+                <span class="metric-value">78%</span>
+                <span class="metric-sub">Charging</span>
+              </div>
+            </div>
+
+            <div class="metric-card">
+              <div class="metric-icon blue-dark"><i data-lucide="hard-drive"></i></div>
+              <div class="metric-info">
+                <span class="metric-label">Storage</span>
+                <span class="metric-value">128 GB</span>
+                <span class="metric-sub">Free: 64 GB</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="grid-2-col">
+            <section class="card profile-info-card">
+              <div class="card-header">
+                <h3>Profile Information</h3>
+                <button class="btn btn-secondary btn-sm">
+                  <i data-lucide="edit-3"></i> Edit
+                </button>
+              </div>
+
+              <div class="profile-content-split">
+                <div class="apps-grid">
+                  <div class="app-item"><div class="app-icon whatsapp"><i data-lucide="message-circle"></i></div><span>WhatsApp</span></div>
+                  <div class="app-item"><div class="app-icon instagram"><i data-lucide="instagram"></i></div><span>Instagram</span></div>
+                  <div class="app-item"><div class="app-icon facebook"><i data-lucide="facebook"></i></div><span>Facebook</span></div>
+                  <div class="app-item"><div class="app-icon tiktok"><i data-lucide="video"></i></div><span>TikTok</span></div>
+                  <div class="app-item"><div class="app-icon telegram"><i data-lucide="send"></i></div><span>Telegram</span></div>
+                  <div class="app-item"><div class="app-icon discord"><i data-lucide="message-square"></i></div><span>Discord</span></div>
+                  <div class="app-item"><div class="app-icon twitter"><i data-lucide="twitter"></i></div><span>Twitter (X)</span></div>
+                  <div class="app-item"><div class="app-icon snapchat"><i data-lucide="ghost"></i></div><span>Snapchat</span></div>
+                  <div class="app-item"><div class="app-icon youtube"><i data-lucide="youtube"></i></div><span>YouTube</span></div>
+                  <div class="app-item"><div class="app-icon gmail"><i data-lucide="mail"></i></div><span>Gmail</span></div>
+                  <div class="app-item"><div class="app-icon linkedin"><i data-lucide="linkedin"></i></div><span>LinkedIn</span></div>
+                  <div class="app-item"><div class="app-icon pinterest"><i data-lucide="bookmark"></i></div><span>Pinterest</span></div>
+                  <div class="app-item"><div class="app-icon messenger"><i data-lucide="message-circle"></i></div><span>Messenger</span></div>
+                  <div class="app-item"><div class="app-icon spotify"><i data-lucide="music"></i></div><span>Spotify</span></div>
+                  <div class="app-item"><div class="app-icon netflix"><i data-lucide="tv"></i></div><span>Netflix</span></div>
+                  <div class="app-item"><div class="app-icon more-apps"><i data-lucide="plus"></i></div><span>More Apps</span></div>
+                </div>
+
+                <div class="user-details-list">
+                  <div class="detail-item">
+                    <i data-lucide="phone"></i>
+                    <div>
+                      <label>Phone Number</label>
+                      <p>+234 801 234 5678</p>
+                    </div>
+                  </div>
+
+                  <div class="detail-item">
+                    <i data-lucide="mail"></i>
+                    <div>
+                      <label>Email</label>
+                      <p>user@example.com</p>
+                    </div>
+                  </div>
+
+                  <div class="detail-item">
+                    <i data-lucide="user"></i>
+                    <div>
+                      <label>Username</label>
+                      <p>user123</p>
+                    </div>
+                  </div>
+
+                  <div class="detail-item">
+                    <i data-lucide="globe"></i>
+                    <div>
+                      <label>Country</label>
+                      <p>Nigeria</p>
+                    </div>
+                  </div>
+
+                  <div class="detail-item">
+                    <i data-lucide="smartphone"></i>
+                    <div>
+                      <label>Device</label>
+                      <p>Android (13)</p>
+                    </div>
+                  </div>
+
+                  <button class="btn btn-outline btn-full">View All Information</button>
+                </div>
+              </div>
+            </section>
+
+            <section class="card location-card">
+              <div class="card-header">
+                <div class="title-with-icon">
+                  <i data-lucide="map-pin" class="text-blue"></i>
+                  <h3>Live Location</h3>
+                </div>
+                <span class="status-badge status-live">
+                  <span class="dot"></span> Live
+                </span>
+              </div>
+
+              <div class="map-container">
+                <div class="map-graphic">
+                  <div class="map-grid-lines"></div>
+                  <div class="map-pin-point">
+                    <div class="pin-pulse"></div>
+                    <i data-lucide="map-pin"></i>
                   </div>
                 </div>
-                <div class="loc-stat">
-                  <i data-lucide="wifi"></i>
+                <div class="map-overlay-info">
+                  <i data-lucide="map-pin" class="text-green"></i>
                   <div>
-                    <label>IP Address</label>
-                    <p>102.89.123.45</p>
-                  </div>
-                </div>
-                <div class="loc-stat">
-                  <i data-lucide="clock"></i>
-                  <div>
-                    <label>Last Updated</label>
-                    <p id="live-location-time">2 minutes ago</p>
+                    <strong>Lagos, Nigeria</strong>
+                    <p>6.5244° N, 3.3792° E</p>
                   </div>
                 </div>
               </div>
-            </div>
-          </section>
-        </div>
 
-        <!-- ROW 3: FOUR PANELS (Cloning, Monitoring, Remote Control, Device Status) -->
-        <div class="grid-4-col">
-          
-          <!-- 1. Cloning Section -->
-          <section class="card">
-            <div class="card-header">
-              <div class="title-with-icon">
-                <i data-lucide="copy" class="text-blue"></i>
-                <h3>Cloning Section</h3>
-              </div>
-              <button class="btn btn-secondary btn-xs">Clone</button>
-            </div>
-            
-            <div class="cloning-body">
-              <div class="phone-mockup">
-                <div class="phone-screen-inner">
-                  <i data-lucide="smartphone"></i>
-                </div>
-              </div>
-              
-              <ul class="clone-checklist">
-                <li>
-                  <i data-lucide="check-circle-2" class="text-green"></i>
-                  <div>
-                    <strong>Phone Data</strong>
-                    <p>Contacts, Call Logs, SMS</p>
+              <div class="location-details-footer">
+                <h4>Location Details</h4>
+                <div class="loc-stats-grid">
+                  <div class="loc-stat">
+                    <i data-lucide="target"></i>
+                    <div>
+                      <label>Accuracy</label>
+                      <p>± 10 meters</p>
+                    </div>
                   </div>
-                </li>
-                <li>
-                  <i data-lucide="check-circle-2" class="text-green"></i>
-                  <div>
-                    <strong>App Data</strong>
-                    <p>WhatsApp, Instagram, etc.</p>
+                  <div class="loc-stat">
+                    <i data-lucide="wifi"></i>
+                    <div>
+                      <label>IP Address</label>
+                      <p>102.89.123.45</p>
+                    </div>
                   </div>
-                </li>
-                <li>
-                  <i data-lucide="check-circle-2" class="text-green"></i>
-                  <div>
-                    <strong>Media Files</strong>
-                    <p>Photos, Videos, Documents</p>
+                  <div class="loc-stat">
+                    <i data-lucide="clock"></i>
+                    <div>
+                      <label>Last Updated</label>
+                      <p id="live-location-time">2 minutes ago</p>
+                    </div>
                   </div>
-                </li>
-                <li>
-                  <i data-lucide="check-circle-2" class="text-green"></i>
-                  <div>
-                    <strong>Device Settings</strong>
-                    <p>Wi-Fi, System, Browser</p>
+                </div>
+              </div>
+            </section>
+          </div>
+
+          <div class="grid-4-col">
+            <section class="card">
+              <div class="card-header">
+                <div class="title-with-icon">
+                  <i data-lucide="copy" class="text-blue"></i>
+                  <h3>Cloning Section</h3>
+                </div>
+                <button class="btn btn-secondary btn-xs">Clone</button>
+              </div>
+
+              <div class="cloning-body">
+                <div class="phone-mockup">
+                  <div class="phone-screen-inner">
+                    <i data-lucide="smartphone"></i>
                   </div>
-                </li>
-              </ul>
-            </div>
+                </div>
 
-            <button class="btn btn-primary btn-full mt-auto">Start Cloning</button>
-          </section>
+                <ul class="clone-checklist">
+                  <li>
+                    <i data-lucide="check-circle-2" class="text-green"></i>
+                    <div>
+                      <strong>Phone Data</strong>
+                      <p>Contacts, Call Logs, SMS</p>
+                    </div>
+                  </li>
+                  <li>
+                    <i data-lucide="check-circle-2" class="text-green"></i>
+                    <div>
+                      <strong>App Data</strong>
+                      <p>WhatsApp, Instagram, etc.</p>
+                    </div>
+                  </li>
+                  <li>
+                    <i data-lucide="check-circle-2" class="text-green"></i>
+                    <div>
+                      <strong>Media Files</strong>
+                      <p>Photos, Videos, Documents</p>
+                    </div>
+                  </li>
+                  <li>
+                    <i data-lucide="check-circle-2" class="text-green"></i>
+                    <div>
+                      <strong>Device Settings</strong>
+                      <p>Wi-Fi, System, Browser</p>
+                    </div>
+                  </li>
+                </ul>
+              </div>
 
-          <!-- 2. Monitoring -->
-          <section class="card">
-            <div class="card-header">
-              <div class="title-with-icon">
-                <i data-lucide="activity" class="text-blue"></i>
-                <h3>Monitoring</h3>
-              </div>
-              <span class="status-badge status-live"><span class="dot"></span> Live</span>
-            </div>
+              <button class="btn btn-primary btn-full mt-auto">Start Cloning</button>
+            </section>
 
-            <div class="monitoring-list">
-              <div class="monitor-row">
-                <span class="m-label"><i data-lucide="phone-call"></i> Calls</span>
-                <span class="m-status"><span class="dot-sm"></span> Monitoring</span>
+            <section class="card">
+              <div class="card-header">
+                <div class="title-with-icon">
+                  <i data-lucide="activity" class="text-blue"></i>
+                  <h3>Monitoring</h3>
+                </div>
+                <span class="status-badge status-live"><span class="dot"></span> Live</span>
               </div>
-              <div class="monitor-row">
-                <span class="m-label"><i data-lucide="message-square"></i> Messages</span>
-                <span class="m-status"><span class="dot-sm"></span> Monitoring</span>
-              </div>
-              <div class="monitor-row">
-                <span class="m-label"><i data-lucide="share-2"></i> Social Media</span>
-                <span class="m-status"><span class="dot-sm"></span> Monitoring</span>
-              </div>
-              <div class="monitor-row">
-                <span class="m-label"><i data-lucide="globe"></i> Browser History</span>
-                <span class="m-status"><span class="dot-sm"></span> Monitoring</span>
-              </div>
-              <div class="monitor-row">
-                <span class="m-label"><i data-lucide="monitor"></i> Screen Activity</span>
-                <span class="m-status"><span class="dot-sm"></span> Monitoring</span>
-              </div>
-              <div class="monitor-row">
-                <span class="m-label"><i data-lucide="keyboard"></i> Keystrokes</span>
-                <span class="m-status"><span class="dot-sm"></span> Monitoring</span>
-              </div>
-            </div>
 
-            <div class="card-footer-text">
-              Last Activity: <span>2 min ago</span>
-            </div>
-          </section>
-
-          <!-- 3. Remote Control -->
-          <section class="card">
-            <div class="card-header">
-              <div class="title-with-icon">
-                <i data-lucide="smartphone" class="text-blue"></i>
-                <h3>Remote Control</h3>
-              </div>
-              <span class="status-badge status-live"><span class="dot"></span> Connected</span>
-            </div>
-
-            <div class="remote-body">
-              <div class="remote-phone">
-                <div class="phone-top-time">10:24 <span class="sub-date">Mon, Apr 28</span></div>
-                <div class="phone-app-icons">
-                  <div class="p-icon"></div>
-                  <div class="p-icon"></div>
-                  <div class="p-icon"></div>
-                  <div class="p-icon"></div>
+              <div class="monitoring-list">
+                <div class="monitor-row">
+                  <span class="m-label"><i data-lucide="phone-call"></i> Calls</span>
+                  <span class="m-status"><span class="dot-sm"></span> Monitoring</span>
+                </div>
+                <div class="monitor-row">
+                  <span class="m-label"><i data-lucide="message-square"></i> Messages</span>
+                  <span class="m-status"><span class="dot-sm"></span> Monitoring</span>
+                </div>
+                <div class="monitor-row">
+                  <span class="m-label"><i data-lucide="share-2"></i> Social Media</span>
+                  <span class="m-status"><span class="dot-sm"></span> Monitoring</span>
+                </div>
+                <div class="monitor-row">
+                  <span class="m-label"><i data-lucide="globe"></i> Browser History</span>
+                  <span class="m-status"><span class="dot-sm"></span> Monitoring</span>
+                </div>
+                <div class="monitor-row">
+                  <span class="m-label"><i data-lucide="monitor"></i> Screen Activity</span>
+                  <span class="m-status"><span class="dot-sm"></span> Monitoring</span>
+                </div>
+                <div class="monitor-row">
+                  <span class="m-label"><i data-lucide="keyboard"></i> Keystrokes</span>
+                  <span class="m-status"><span class="dot-sm"></span> Monitoring</span>
                 </div>
               </div>
 
-              <div class="remote-controls-list">
-                <button class="remote-btn btn-blue-bg"><i data-lucide="monitor"></i> Screen View</button>
-                <button class="remote-btn"><i data-lucide="camera"></i> Take Screenshot</button>
-                <button class="remote-btn"><i data-lucide="video"></i> Start Recording</button>
-                <button class="remote-btn"><i data-lucide="sliders"></i> Control Device</button>
-                <button class="remote-btn btn-danger-text"><i data-lucide="power"></i> Power Options</button>
+              <div class="card-footer-text">
+                Last Activity: <span>2 min ago</span>
               </div>
-            </div>
-          </section>
+            </section>
 
-          <!-- 4. Device Status -->
-          <section class="card">
-            <div class="card-header">
-              <h3>Device Status</h3>
-              <span class="status-badge status-live"><span class="dot"></span> Online</span>
-            </div>
+            <section class="card">
+              <div class="card-header">
+                <div class="title-with-icon">
+                  <i data-lucide="smartphone" class="text-blue"></i>
+                  <h3>Remote Control</h3>
+                </div>
+                <span class="status-badge status-live"><span class="dot"></span> Connected</span>
+              </div>
 
-            <div class="status-list">
-              <div class="status-row">
-                <span class="s-left"><i data-lucide="wifi"></i> Network</span>
-                <span class="s-right green-text">Connected (Wi-Fi)</span>
-              </div>
-              <div class="status-row">
-                <span class="s-left"><i data-lucide="navigation"></i> GPS</span>
-                <span class="s-right green-text">Active</span>
-              </div>
-              <div class="status-row">
-                <span class="s-left"><i data-lucide="bluetooth"></i> Bluetooth</span>
-                <span class="s-right">On</span>
-              </div>
-              <div class="status-row">
-                <span class="s-left"><i data-lucide="bell-off"></i> Do Not Disturb</span>
-                <span class="s-right">Off</span>
-              </div>
-              <div class="status-row">
-                <span class="s-left"><i data-lucide="refresh-cw"></i> Auto Sync</span>
-                <span class="s-right">On</span>
-              </div>
-              <div class="status-row">
-                <span class="s-left"><i data-lucide="shield-check"></i> App Permissions</span>
-                <span class="s-right green-text">Granted</span>
-              </div>
-            </div>
-          </section>
+              <div class="remote-body">
+                <div class="remote-phone">
+                  <div class="phone-top-time">10:24 <span class="sub-date">Mon, Apr 28</span></div>
+                  <div class="phone-app-icons">
+                    <div class="p-icon"></div>
+                    <div class="p-icon"></div>
+                    <div class="p-icon"></div>
+                    <div class="p-icon"></div>
+                  </div>
+                </div>
 
-        </div>
-
-        <!-- ROW 4: FOUR LOWER PANELS (Recent Activity, Media Files, System Info, Quick Actions) -->
-        <div class="grid-4-col">
-          
-          <!-- Recent Activity -->
-          <section class="card">
-            <div class="card-header">
-              <div class="title-with-icon">
-                <i data-lucide="clock" class="text-blue"></i>
-                <h3>Recent Activity</h3>
-              </div>
-              <a href="#" class="link-btn">View All</a>
-            </div>
-
-            <div class="activity-feed">
-              <div class="activity-item">
-                <div class="act-icon green"><i data-lucide="message-square"></i></div>
-                <div class="act-details">
-                  <strong>New message detected</strong>
-                  <p>WhatsApp - 2 min ago</p>
+                <div class="remote-controls-list">
+                  <button class="remote-btn btn-blue-bg"><i data-lucide="monitor"></i> Screen View</button>
+                  <button class="remote-btn"><i data-lucide="camera"></i> Take Screenshot</button>
+                  <button class="remote-btn"><i data-lucide="video"></i> Start Recording</button>
+                  <button class="remote-btn"><i data-lucide="sliders"></i> Control Device</button>
+                  <button class="remote-btn btn-danger-text"><i data-lucide="power"></i> Power Options</button>
                 </div>
               </div>
+            </section>
 
-              <div class="activity-item">
-                <div class="act-icon blue"><i data-lucide="map-pin"></i></div>
-                <div class="act-details">
-                  <strong>Location updated</strong>
-                  <p>Lagos, Nigeria - 5 min ago</p>
+            <section class="card">
+              <div class="card-header">
+                <h3>Device Status</h3>
+                <span class="status-badge status-online"><span class="dot"></span> Healthy</span>
+              </div>
+
+              <div class="monitoring-list">
+                <div class="monitor-row">
+                  <span class="m-label"><i data-lucide="cpu"></i> Processor</span>
+                  <span class="m-status"><span class="dot-sm"></span> Stable</span>
+                </div>
+                <div class="monitor-row">
+                  <span class="m-label"><i data-lucide="memory-stick"></i> Memory</span>
+                  <span class="m-status"><span class="dot-sm"></span> 72%</span>
+                </div>
+                <div class="monitor-row">
+                  <span class="m-label"><i data-lucide="battery"></i> Charge</span>
+                  <span class="m-status"><span class="dot-sm"></span> 78%</span>
+                </div>
+                <div class="monitor-row">
+                  <span class="m-label"><i data-lucide="wifi"></i> Signal</span>
+                  <span class="m-status"><span class="dot-sm"></span> Strong</span>
+                </div>
+                <div class="monitor-row">
+                  <span class="m-label"><i data-lucide="thermometer"></i> Temperature</span>
+                  <span class="m-status"><span class="dot-sm"></span> 33°C</span>
                 </div>
               </div>
-
-              <div class="activity-item">
-                <div class="act-icon dark"><i data-lucide="download"></i></div>
-                <div class="act-details">
-                  <strong>App installed</strong>
-                  <p>TikTok - 12 min ago</p>
-                </div>
-              </div>
-
-              <div class="activity-item">
-                <div class="act-icon blue-light"><i data-lucide="camera"></i></div>
-                <div class="act-details">
-                  <strong>Screenshot captured</strong>
-                  <p>Screen - 18 min ago</p>
-                </div>
-              </div>
-            </div>
-          </section>
-
-          <!-- Media Files -->
-          <section class="card">
-            <div class="card-header">
-              <div class="title-with-icon">
-                <i data-lucide="folder" class="text-blue"></i>
-                <h3>Media Files</h3>
-              </div>
-              <a href="#" class="link-btn">View All</a>
-            </div>
-
-            <div class="media-grid-preview">
-              <div class="media-box photo-box">
-                <i data-lucide="image"></i>
-                <div class="media-info">
-                  <strong>Photos</strong>
-                  <span>1,248</span>
-                </div>
-              </div>
-
-              <div class="media-box video-box">
-                <i data-lucide="play-circle"></i>
-                <div class="media-info">
-                  <strong>Videos</strong>
-                  <span>324</span>
-                </div>
-              </div>
-
-              <div class="media-box audio-box">
-                <i data-lucide="music"></i>
-                <div class="media-info">
-                  <strong>Audio</strong>
-                  <span>87</span>
-                </div>
-              </div>
-
-              <div class="media-box doc-box">
-                <i data-lucide="file-text"></i>
-                <div class="media-info">
-                  <strong>Documents</strong>
-                  <span>219</span>
-                </div>
-              </div>
-            </div>
-          </section>
-
-          <!-- System Information -->
-          <section class="card">
-            <div class="card-header">
-              <div class="title-with-icon">
-                <i data-lucide="settings" class="text-blue"></i>
-                <h3>System Information</h3>
-              </div>
-            </div>
-
-            <div class="sys-info-list">
-              <div class="sys-row">
-                <span><i data-lucide="cpu"></i> Android Version</span>
-                <strong>13</strong>
-              </div>
-              <div class="sys-row">
-                <span><i data-lucide="smartphone"></i> Device Model</span>
-                <strong>SM-A536B</strong>
-              </div>
-              <div class="sys-row">
-                <span><i data-lucide="code"></i> Build Number</span>
-                <strong>TP1A.220624.014</strong>
-              </div>
-              <div class="sys-row">
-                <span><i data-lucide="terminal"></i> Kernel Version</span>
-                <strong>4.19.113-24557570</strong>
-              </div>
-              <div class="sys-row">
-                <span><i data-lucide="clock"></i> Uptime</span>
-                <strong id="uptime-display">5 days, 12 hours</strong>
-              </div>
-            </div>
-          </section>
-
-          <!-- Quick Actions -->
-          <section class="card">
-            <div class="card-header">
-              <div class="title-with-icon">
-                <i data-lucide="zap" class="text-blue"></i>
-                <h3>Quick Actions</h3>
-              </div>
-            </div>
-
-            <div class="quick-actions-btns">
-              <button class="action-btn btn-primary">
-                <i data-lucide="refresh-cw"></i>
-                <span>Update Location</span>
-              </button>
-
-              <button class="action-btn btn-navy">
-                <i data-lucide="trash-2"></i>
-                <span>Clear Logs</span>
-              </button>
-
-              <button class="action-btn btn-warning">
-                <i data-lucide="rotate-ccw"></i>
-                <span>Reset Device</span>
-              </button>
-
-              <button class="action-btn btn-danger">
-                <i data-lucide="lock"></i>
-                <span>Lock Device</span>
-              </button>
-            </div>
-          </section>
-
-        </div>
-
-      </main>
+            </section>
+          </div>
+        </main>
+      </div>
     </div>
 
-    <!-- BOTTOM MOBILE / GLOBAL FOOTER NAV -->
-    <footer class="bottom-nav">
-      <a href="#" class="b-nav-item active"><i data-lucide="home"></i><span>Home</span></a>
-      <a href="#" class="b-nav-item"><i data-lucide="user"></i><span>Profile</span></a>
-      <a href="#" class="b-nav-item"><i data-lucide="copy"></i><span>Cloning</span></a>
-      <a href="#" class="b-nav-item"><i data-lucide="activity"></i><span>Monitoring</span></a>
-      <a href="#" class="b-nav-item"><i data-lucide="smartphone"></i><span>Remote Control</span></a>
-      <a href="#" class="b-nav-item"><i data-lucide="map-pin"></i><span>Location</span></a>
-      <a href="#" class="b-nav-item"><i data-lucide="mail"></i><span>Messages</span></a>
-      <a href="#" class="b-nav-item"><i data-lucide="folder"></i><span>Media</span></a>
-      <a href="#" class="b-nav-item"><i data-lucide="history"></i><span>Logs</span></a>
-      <a href="#" class="b-nav-item"><i data-lucide="settings"></i><span>Settings</span></a>
-    </footer>
+    <script>
+      document.addEventListener('DOMContentLoaded', () => {
+        initializeIcons();
+        setupUserDropdown();
+        startUptimeCounter();
+        startLocationTimer();
+      });
 
-    <!-- SYSTEM STATUS STRIP -->
-    <div class="system-status-bar">
-      <span><strong>spyteligent</strong> | Secure • Monitor • Control</span>
-      <span class="status-online-text"><span class="dot-sm green"></span> System Online</span>
-    </div>
+      function initializeIcons() {
+        if (window.lucide) {
+          window.lucide.createIcons();
+        }
+      }
 
-  </div>
+      function togglePasswordVisibility() {
+        const pwdInput = document.getElementById('password');
+        const pwdIcon = document.getElementById('pwd-icon');
 
-  <!-- Link to External JavaScript File -->
-  <script src="script.js"></script>
-</body>
+        if (!pwdInput || !pwdIcon) return;
+
+        if (pwdInput.type === 'password') {
+          pwdInput.type = 'text';
+          pwdIcon.setAttribute('data-lucide', 'eye-off');
+        } else {
+          pwdInput.type = 'password';
+          pwdIcon.setAttribute('data-lucide', 'eye');
+        }
+
+        initializeIcons();
+      }
+
+      function handleLogin() {
+        const usernameInput = document.getElementById('username');
+        const passwordInput = document.getElementById('password');
+        const loginScreen = document.getElementById('login-screen');
+        const dashboardScreen = document.getElementById('dashboard-screen');
+
+        if (!usernameInput || !passwordInput) return;
+
+        const username = usernameInput.value.trim();
+        const password = passwordInput.value.trim();
+
+        if (!username || !password) {
+          alert('Please enter both your username and password.');
+          return;
+        }
+
+        if (loginScreen && dashboardScreen) {
+          loginScreen.classList.add('hidden');
+          dashboardScreen.classList.remove('hidden');
+
+          const userNames = document.querySelectorAll('.user-name, .profile-meta h4');
+          userNames.forEach((el) => {
+            el.textContent = username;
+          });
+
+          initializeIcons();
+        }
+      }
+
+      function handleLogout() {
+        const loginScreen = document.getElementById('login-screen');
+        const dashboardScreen = document.getElementById('dashboard-screen');
+
+        if (loginScreen && dashboardScreen) {
+          dashboardScreen.classList.add('hidden');
+          loginScreen.classList.remove('hidden');
+
+          const userDropdown = document.getElementById('user-dropdown');
+          if (userDropdown) {
+            userDropdown.classList.add('hidden');
+          }
+
+          initializeIcons();
+        }
+      }
+
+      function setupUserDropdown() {
+        const menuTrigger = document.getElementById('user-menu-trigger');
+        const dropdown = document.getElementById('user-dropdown');
+
+        if (!menuTrigger || !dropdown) return;
+
+        menuTrigger.addEventListener('click', (e) => {
+          e.stopPropagation();
+          dropdown.classList.toggle('hidden');
+        });
+
+        document.addEventListener('click', (e) => {
+          if (!menuTrigger.contains(e.target)) {
+            dropdown.classList.add('hidden');
+          }
+        });
+      }
+
+      function startUptimeCounter() {
+        const uptimeEl = document.getElementById('uptime-display');
+        if (!uptimeEl) return;
+
+        let totalSeconds = (5 * 24 * 3600) + (12 * 3600);
+
+        setInterval(() => {
+          totalSeconds++;
+          const days = Math.floor(totalSeconds / (24 * 3600));
+          const hours = Math.floor((totalSeconds % (24 * 3600)) / 3600);
+          const minutes = Math.floor((totalSeconds % 3600) / 60);
+          uptimeEl.textContent = `${days} days, ${hours} hrs, ${minutes} mins`;
+        }, 60000);
+      }
+
+      function startLocationTimer() {
+        const locationTimeEl = document.getElementById('live-location-time');
+        if (!locationTimeEl) return;
+
+        let minutesAgo = 2;
+
+        setInterval(() => {
+          minutesAgo++;
+          locationTimeEl.textContent = `${minutesAgo} minutes ago`;
+        }, 60000);
+      }
+    </script>
+  </body>
 </html>
