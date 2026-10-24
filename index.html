@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -153,7 +152,30 @@ h3 { font-size: 15px; font-weight: 500; margin: 0 0 8px; }
 }
 .app-tile:hover { border-color: #91cde7; }
 .app-tile.locked { background: #f8fafc; color: #758196; }
-.app-icon { width: 39px; height: 39px; display: grid; place-items: center; margin: 0 auto 7px; border-radius: 12px; background: #5368a9; color: white; font-size: 17px; }
+.app-icon {
+  width: 46px;
+  height: 46px;
+  display: grid;
+  place-items: center;
+  margin: 0 auto 7px;
+  border-radius: 14px;
+  overflow: hidden;
+  box-shadow: inset 0 1px 1px rgba(255,255,255,0.2), 0 5px 10px rgba(0,0,0,0.08);
+}
+.app-icon svg {
+  display: block;
+  width: 24px;
+  height: 24px;
+}
+.whatsapp-logo {
+  background: linear-gradient(180deg, #25d366 0%, #1ebc5a 100%);
+}
+.instagram-logo {
+  background: linear-gradient(135deg, #feda75 0%, #fa7e1e 18%, #d62976 48%, #962fbf 70%, #4f5bd5 100%);
+}
+.facebook-logo {
+  background: linear-gradient(180deg, #1877f2 0%, #0c63d9 100%);
+}
 .app-name { display: block; font-size: 12px; }
 .app-tile small { display: block; color: var(--muted); font-size: 10px; margin-top: 4px; }
 
@@ -187,13 +209,72 @@ h3 { font-size: 15px; font-weight: 500; margin: 0 0 8px; }
 
 .notice { padding: 14px; margin-bottom: 15px; border: 1px solid #e4eaf1; border-radius: 12px; background: #f8fafc; color: #526076; font-size: 12px; }
 .chat-list { display: grid; gap: 9px; }
-.chat-row { display: flex; align-items: center; gap: 11px; padding: 12px; border: 1px solid var(--line); border-radius: 12px; }
-.chat-avatar { flex: 0 0 39px; width: 39px; height: 39px; display: grid; place-items: center; border-radius: 50%; background: #e8edf5; color: #5b6a81; }
+.chat-row {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  padding: 12px;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  background: white;
+  box-shadow: 0 1px 0 rgba(15,23,42,0.02);
+}
+.chat-avatar {
+  flex: 0 0 40px;
+  width: 40px;
+  height: 40px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  color: #fff;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+}
+.chat-avatar.whatsapp { background: linear-gradient(180deg, #23c26a 0%, #159a59 100%); }
+.chat-avatar.instagram { background: linear-gradient(135deg, #feda75 0%, #fa7e1e 18%, #d62976 48%, #962fbf 70%, #4f5bd5 100%); }
+.chat-avatar.facebook { background: linear-gradient(180deg, #1877f2 0%, #105ed8 100%); }
 .chat-body { flex: 1; min-width: 0; }
-.chat-name { display: block; font-size: 12px; }
-.chat-message { margin: 4px 0 0; color: var(--muted); font-size: 11px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.blurred { filter: blur(4px); user-select: none; }
-.chat-time { color: var(--muted); font-size: 10px; }
+.chat-name {
+  display: block;
+  font-size: 12px;
+  font-weight: 700;
+  color: #1d2634;
+}
+.chat-message {
+  margin: 4px 0 0;
+  color: #242f3d;
+  font-size: 11px;
+  line-height: 1.35;
+  white-space: normal;
+  overflow: visible;
+  text-overflow: unset;
+  display: block;
+  font-weight: 500;
+  letter-spacing: 0.01em;
+}
+.chip {
+  display: inline-flex;
+  align-items: center;
+  padding: 2px 6px;
+  border-radius: 999px;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  color: #fff;
+  margin-left: 6px;
+}
+.chip.whatsapp { background: #25d366; }
+.chip.instagram { background: #e1306c; }
+.chip.facebook { background: #1877f2; }
+.chat-time {
+  color: #7a8799;
+  font-size: 10px;
+  align-self: flex-start;
+  margin-top: 2px;
+  white-space: nowrap;
+}
+.blurred { filter: none; user-select: text; }
 .button { padding: 10px 13px; border: 1px solid #d8e1ec; border-radius: 9px; background: white; color: #35445b; font-size: 12px; }
 .bottom-nav { display: none; }
 .toast { display: none; position: fixed; z-index: 10; bottom: 80px; left: 50%; transform: translateX(-50%); max-width: 90vw; padding: 11px 15px; border-radius: 10px; background: #263247; color: white; font-size: 12px; }
@@ -297,9 +378,38 @@ h3 { font-size: 15px; font-weight: 500; margin: 0 0 8px; }
           </div>
           <div class="profile-grid">
             <div class="apps" id="mainApps">
-              <button class="app-tile" data-app="WhatsApp"><span class="app-icon" style="background:#20b86a">W</span><span class="app-name">WhatsApp</span><small>Account details</small></button>
-              <button class="app-tile" data-app="Instagram"><span class="app-icon" style="background:#c14e91">IG</span><span class="app-name">Instagram</span><small>Account details</small></button>
-              <button class="app-tile" data-app="Facebook"><span class="app-icon" style="background:#1877f2">f</span><span class="app-name">Facebook</span><small>Account details</small></button>
+              <button class="app-tile" data-app="WhatsApp">
+                <span class="app-icon whatsapp-logo" aria-label="WhatsApp logo">
+                  <svg viewBox="0 0 64 64" aria-hidden="true">
+                    <path fill="white" d="M32 12.8C21.3 12.8 12.8 20.4 12.8 30.1c0 4.1 1.2 8.1 3.4 11.5L14 52l10.8-2.7c3.2 1.8 6.8 2.7 10.7 2.7 10.8 0 19.5-7.7 19.5-17.3 0-9.7-8.7-17.4-19.5-17.4Zm10.6 23.6c-.4 1.1-2.1 2.1-3 2.3-.9.2-2 .2-5.6-1.2-4.8-1.7-7.9-6.1-8.1-6.4-.3-.3-2-2.7-2-5.2 0-2.5 1.3-3.7 1.8-4.2.6-.5 1.3-.6 1.8-.6h.9c.3 0 .8.1 1.3.9.5 1.1 1.7 3.9 1.8 4.1.2.3.3.7.1 1.2-.2.6-.4.9-.8 1.3-.4.5-.8 1-.9 1.2-.3.3-.6.7-.3 1.3.3.6 1.5 2.5 3.2 4 2.2 2 4.1 2.6 4.8 2.9.7.3 1.1.2 1.4-.2.4-.5 1.4-1.6 1.8-2.2.4-.6.7-.5 1.3-.3.6.2 3 1.4 3.6 1.7.6.3 1.1.4 1.3.7.2.3.2 1.6-.2 2.8Z"/>
+                  </svg>
+                </span>
+                <span class="app-name">WhatsApp</span>
+                <small>Account details</small>
+              </button>
+
+              <button class="app-tile" data-app="Instagram">
+                <span class="app-icon instagram-logo" aria-label="Instagram logo">
+                  <svg viewBox="0 0 64 64" aria-hidden="true">
+                    <rect x="14" y="14" width="36" height="36" rx="9" fill="none" stroke="white" stroke-width="3"/>
+                    <circle cx="32" cy="32" r="9" fill="none" stroke="white" stroke-width="3"/>
+                    <circle cx="43" cy="21" r="2.8" fill="white"/>
+                  </svg>
+                </span>
+                <span class="app-name">Instagram</span>
+                <small>Account details</small>
+              </button>
+
+              <button class="app-tile" data-app="Facebook">
+                <span class="app-icon facebook-logo" aria-label="Facebook logo">
+                  <svg viewBox="0 0 64 64" aria-hidden="true">
+                    <path fill="white" d="M35.5 51V34.8h6.1l.9-7h-7v-4.7c0-2 .6-3.5 3.6-3.5h3.8V13c-.7-.1-2.8-.3-5.3-.3-5.2 0-8.8 3.2-8.8 9.1V27.8H20v7h6.4V51h9.1Z"/>
+                  </svg>
+                </span>
+                <span class="app-name">Facebook</span>
+                <small>Account details</small>
+              </button>
+
               <button class="app-tile locked" data-app="TikTok"><span class="app-icon">♪</span><span class="app-name">TikTok</span><small>Unavailable</small></button>
               <button class="app-tile locked" data-app="Telegram"><span class="app-icon">➤</span><span class="app-name">Telegram</span><small>Unavailable</small></button>
               <button class="app-tile locked" data-app="Discord"><span class="app-icon">◉</span><span class="app-name">Discord</span><small>Unavailable</small></button>
@@ -403,9 +513,27 @@ h3 { font-size: 15px; font-weight: 500; margin: 0 0 8px; }
           <div class="card-head"><h2>Messages</h2><span class="pill blue">3 applications</span></div>
           <p class="subtle">Choose an application to open its message-list interface.</p>
           <div class="apps">
-            <button class="app-tile" data-message-app="WhatsApp"><span class="app-icon" style="background:#20b86a">W</span><span class="app-name">WhatsApp</span><small>Message list</small></button>
-            <button class="app-tile" data-message-app="Instagram"><span class="app-icon" style="background:#c14e91">IG</span><span class="app-name">Instagram</span><small>Message list</small></button>
-            <button class="app-tile" data-message-app="Facebook"><span class="app-icon" style="background:#1877f2">f</span><span class="app-name">Facebook</span><small>Message list</small></button>
+            <button class="app-tile" data-message-app="WhatsApp">
+              <span class="app-icon whatsapp-logo" aria-label="WhatsApp logo">
+                <svg viewBox="0 0 64 64" aria-hidden="true"><path fill="white" d="M32 12.8C21.3 12.8 12.8 20.4 12.8 30.1c0 4.1 1.2 8.1 3.4 11.5L14 52l10.8-2.7c3.2 1.8 6.8 2.7 10.7 2.7 10.8 0 19.5-7.7 19.5-17.3 0-9.7-8.7-17.4-19.5-17.4Zm10.6 23.6c-.4 1.1-2.1 2.1-3 2.3-.9.2-2 .2-5.6-1.2-4.8-1.7-7.9-6.1-8.1-6.4-.3-.3-2-2.7-2-5.2 0-2.5 1.3-3.7 1.8-4.2.6-.5 1.3-.6 1.8-.6h.9c.3 0 .8.1 1.3.9.5 1.1 1.7 3.9 1.8 4.1.2.3.3.7.1 1.2-.2.6-.4.9-.8 1.3-.4.5-.8 1-.9 1.2-.3.3-.6.7-.3 1.3.3.6 1.5 2.5 3.2 4 2.2 2 4.1 2.6 4.8 2.9.7.3 1.1.2 1.4-.2.4-.5 1.4-1.6 1.8-2.2.4-.6.7-.5 1.3-.3.6.2 3 1.4 3.6 1.7.6.3 1.1.4 1.3.7.2.3.2 1.6-.2 2.8Z"/></svg>
+              </span>
+              <span class="app-name">WhatsApp</span>
+              <small>Message list</small>
+            </button>
+            <button class="app-tile" data-message-app="Instagram">
+              <span class="app-icon instagram-logo" aria-label="Instagram logo">
+                <svg viewBox="0 0 64 64" aria-hidden="true"><rect x="14" y="14" width="36" height="36" rx="9" fill="none" stroke="white" stroke-width="3"/><circle cx="32" cy="32" r="9" fill="none" stroke="white" stroke-width="3"/><circle cx="43" cy="21" r="2.8" fill="white"/></svg>
+              </span>
+              <span class="app-name">Instagram</span>
+              <small>Message list</small>
+            </button>
+            <button class="app-tile" data-message-app="Facebook">
+              <span class="app-icon facebook-logo" aria-label="Facebook logo">
+                <svg viewBox="0 0 64 64" aria-hidden="true"><path fill="white" d="M35.5 51V34.8h6.1l.9-7h-7v-4.7c0-2 .6-3.5 3.6-3.5h3.8V13c-.7-.1-2.8-.3-5.3-.3-5.2 0-8.8 3.2-8.8 9.1V27.8H20v7h6.4V51h9.1Z"/></svg>
+              </span>
+              <span class="app-name">Facebook</span>
+              <small>Message list</small>
+            </button>
           </div>
         </div>
 
@@ -415,13 +543,7 @@ h3 { font-size: 15px; font-weight: 500; margin: 0 0 8px; }
             <h3>Access notice</h3>
             Message access is not connected to a real account. This display is an interface preview; no payment is required to view the sample layout.
           </div>
-          <div class="chat-list">
-            <div class="chat-row"><div class="chat-avatar">A</div><div class="chat-body"><span class="chat-name blurred">Alex Morgan</span><p class="chat-message blurred">Hey, are we still meeting later today?</p></div><span class="chat-time">10:42</span></div>
-            <div class="chat-row"><div class="chat-avatar">J</div><div class="chat-body"><span class="chat-name blurred">Jordan Lee</span><p class="chat-message blurred">I sent you the details yesterday.</p></div><span class="chat-time">09:18</span></div>
-            <div class="chat-row"><div class="chat-avatar">M</div><div class="chat-body"><span class="chat-name blurred">Morgan Taylor</span><p class="chat-message blurred">Thanks! I'll check and get back to you.</p></div><span class="chat-time">Yesterday</span></div>
-            <div class="chat-row"><div class="chat-avatar">S</div><div class="chat-body"><span class="chat-name blurred">Sam Rivera</span><p class="chat-message blurred">Can you call me when you have a moment?</p></div><span class="chat-time">Yesterday</span></div>
-            <div class="chat-row"><div class="chat-avatar">C</div><div class="chat-body"><span class="chat-name blurred">Casey</span><p class="chat-message blurred">Photo · 2 attachments</p></div><span class="chat-time">Monday</span></div>
-          </div>
+          <div class="chat-list" id="chatList"></div>
         </div>
       </section>
 
@@ -495,8 +617,6 @@ const bottomNav = document.getElementById("bottomNav");
 
 loginForm.addEventListener("submit", function(event) {
   event.preventDefault();
-
-  // Local interface entry only; this is not external authentication.
   loginScreen.classList.add("hidden");
   dashboard.classList.remove("hidden");
   bottomNav.classList.remove("hidden");
@@ -551,7 +671,6 @@ document.querySelectorAll("#mainApps [data-app]").forEach(button => {
   button.addEventListener("click", () => selectApp(button.dataset.app));
 });
 
-/* Duplicate application cards into the full app directory. */
 const appDirectory = document.getElementById("appDirectory");
 
 document.querySelectorAll("#mainApps [data-app]").forEach(original => {
@@ -560,17 +679,52 @@ document.querySelectorAll("#mainApps [data-app]").forEach(original => {
   appDirectory.appendChild(copy);
 });
 
-/* Select one of the three message-list interfaces. */
+const messageTemplates = {
+  WhatsApp: [
+    { name: "Maya Chen", preview: "Can we move the call to 4:00 PM today?", time: "3:42 PM", tone: "whatsapp" },
+    { name: "Emma Brooks", preview: "I just sent the updated files from the meeting.", time: "2:18 PM", tone: "whatsapp" },
+    { name: "Lucas Reed", preview: "Let me know when you get home safely.", time: "Yesterday", tone: "whatsapp" }
+  ],
+  Instagram: [
+    { name: "@luna.night", preview: "Your photo is live and getting a lot of likes!", time: "5:11 PM", tone: "instagram" },
+    { name: "Ariana S.", preview: "I shared the reel draft for your feedback.", time: "4:05 PM", tone: "instagram" },
+    { name: "@city.frames", preview: "The new post is up. Check the captions now.", time: "Jun 24", tone: "instagram" }
+  ],
+  Facebook: [
+    { name: "David Cole", preview: "I found the restaurant you asked about downtown.", time: "8:30 AM", tone: "facebook" },
+    { name: "Sarah Nguyen", preview: "Let's meet for coffee after work this Friday.", time: "Yesterday", tone: "facebook" },
+    { name: "The Parker Group", preview: "Updated the event notes and attached the schedule.", time: "Mon", tone: "facebook" }
+  ]
+};
+
+const chatList = document.getElementById("chatList");
+
+function renderMessages(appName) {
+  const rows = messageTemplates[appName] || messageTemplates.WhatsApp;
+  chatList.innerHTML = rows.map(row => `
+    <div class="chat-row">
+      <div class="chat-avatar ${row.tone}">${row.name.charAt(0).toUpperCase()}</div>
+      <div class="chat-body">
+        <span class="chat-name blurred">${row.name}</span>
+        <p class="chat-message blurred">${row.preview}</p>
+      </div>
+      <span class="chat-time">${row.time}</span>
+    </div>
+  `).join("");
+}
+
 document.querySelectorAll("[data-message-app]").forEach(button => {
   button.addEventListener("click", () => {
     const name = button.dataset.messageApp;
     document.getElementById("chatTitle").textContent = name + " message list";
+    renderMessages(name);
     document.getElementById("chatCard").classList.remove("hidden");
     showSection("messages");
   });
 });
 
-/* Media category navigation. */
+renderMessages("WhatsApp");
+
 document.querySelectorAll("[data-media]").forEach(button => {
   button.addEventListener("click", () => {
     document.getElementById("mediaTitle").textContent = button.dataset.media;
