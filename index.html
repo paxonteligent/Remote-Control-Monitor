@@ -4,1151 +4,579 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="theme-color" content="#080d19">
-<title>Spyteligent</title>
+<meta name="theme-color" content="#f4f7fb">
+<title>Spyteligent Dashboard</title>
 
 <style>
 :root {
-  --bg:#080d19;
-  --panel:#111a2b;
-  --panel2:#172238;
-  --border:#26334b;
-  --text:#edf3ff;
-  --muted:#91a1bb;
-  --accent:#6d8cff;
-  --green:#42d6a4;
+  --blue: #0787bd;
+  --blue-light: #eaf5fc;
+  --green: #35ad75;
+  --ink: #192438;
+  --muted: #68768b;
+  --line: #e4eaf1;
+  --panel: #ffffff;
+  --page: #f4f7fb;
 }
-
-* {
-  box-sizing:border-box;
-  margin:0;
-  padding:0;
-}
-
+* { box-sizing: border-box; }
 body {
-  min-height:100vh;
-  background:var(--bg);
-  color:var(--text);
-  font-family:Inter,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
-  line-height:1.5;
+  margin: 0;
+  color: var(--ink);
+  background: var(--page);
+  font: 14px/1.5 -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif;
 }
-
-button,input {
-  font:inherit;
+button, input { font: inherit; }
+button { cursor: pointer; }
+button:focus-visible, input:focus-visible {
+  outline: 2px solid var(--blue);
+  outline-offset: 3px;
 }
-
-button {
-  cursor:pointer;
-}
-
-.hidden {
-  display:none!important;
-}
+.hidden { display: none !important; }
 
 .login-screen {
-  min-height:100vh;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  padding:24px;
-  background:
-    radial-gradient(ellipse at top,#1c2d53 0%,transparent 55%),
-    var(--bg);
+  min-height: 100vh;
+  display: grid;
+  place-items: center;
+  padding: 22px;
 }
-
 .login-card {
-  width:100%;
-  max-width:420px;
-  padding:36px;
-  background:var(--panel);
-  border:1px solid var(--border);
-  border-radius:20px;
-  box-shadow:0 24px 80px #0005;
+  width: min(100%, 410px);
+  padding: 28px;
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 20px;
+  box-shadow: 0 12px 45px #2632470c;
 }
-
-.brand {
-  display:flex;
-  align-items:center;
-  gap:12px;
-  font-size:22px;
-  font-weight:750;
-  letter-spacing:-.6px;
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  margin-bottom: 28px;
+  font-size: 23px;
 }
-
-.brand-mark {
-  width:42px;
-  height:42px;
-  display:grid;
-  place-items:center;
-  border-radius:13px;
-  background:linear-gradient(135deg,#7795ff,#5368e8);
-  color:white;
-  font-size:23px;
+.logo-icon {
+  width: 43px;
+  height: 43px;
+  display: grid;
+  place-items: center;
+  border-radius: 13px;
+  color: var(--blue);
+  background: var(--blue-light);
 }
-
-.login-card h1 {
-  margin-top:32px;
-  font-size:28px;
-  letter-spacing:-.8px;
-}
-
-.subtitle {
-  color:var(--muted);
-  font-size:14px;
-  margin:8px 0 26px;
-}
-
-.field {
-  margin-bottom:18px;
-}
-
-.field label {
-  display:block;
-  margin-bottom:8px;
-  color:#d7e0f2;
-  font-size:13px;
-}
-
+.login-card h1 { font-size: 24px; font-weight: 500; margin-bottom: 5px; }
+.subtle { color: var(--muted); }
+.field { display: grid; gap: 7px; margin: 17px 0; }
+.field label { color: var(--muted); font-size: 12px; }
 .field input {
-  width:100%;
-  padding:13px 14px;
-  color:var(--text);
-  background:#0b1220;
-  border:1px solid var(--border);
-  border-radius:10px;
-  outline:none;
+  width: 100%;
+  padding: 12px;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: white;
+  color: var(--ink);
 }
-
-.field input:focus {
-  border-color:var(--accent);
-  box-shadow:0 0 0 3px #6d8cff20;
+.primary {
+  background: var(--blue);
+  color: white;
+  border: 1px solid var(--blue);
 }
-
-.primary-btn {
-  width:100%;
-  padding:13px 16px;
-  border:0;
-  border-radius:10px;
-  background:var(--accent);
-  color:white;
-  font-weight:700;
-  transition:filter .2s;
+.action {
+  padding: 11px 15px;
+  border-radius: 10px;
+  font-size: 13px;
 }
+.full { width: 100%; }
+.login-note { font-size: 11px; color: var(--muted); margin-top: 15px; }
 
-.primary-btn:hover {
-  filter:brightness(1.12);
-}
-
-.login-message {
-  min-height:20px;
-  margin-top:10px;
-  color:#ff9ba9;
-  font-size:13px;
-}
-
-.login-footer {
-  margin-top:20px;
-  text-align:center;
-  color:var(--muted);
-  font-size:12px;
-}
-
-.app {
-  min-height:100vh;
-  display:flex;
-}
-
-.sidebar {
-  width:245px;
-  flex-shrink:0;
-  padding:24px 16px;
-  background:#0d1423;
-  border-right:1px solid var(--border);
-  display:flex;
-  flex-direction:column;
-}
-
-.sidebar .brand {
-  padding:0 8px 30px;
-  font-size:19px;
-}
-
-.nav-label {
-  padding:10px 12px;
-  color:#71819d;
-  text-transform:uppercase;
-  letter-spacing:1.4px;
-  font-size:10px;
-  font-weight:700;
-}
-
-.nav-btn {
-  width:100%;
-  display:flex;
-  align-items:center;
-  gap:12px;
-  padding:12px;
-  margin:3px 0;
-  color:#a9b7ce;
-  background:transparent;
-  border:0;
-  border-radius:9px;
-  text-align:left;
-  font-size:14px;
-}
-
-.nav-btn:hover,
-.nav-btn.active {
-  background:#1a2740;
-  color:white;
-}
-
-.nav-btn.active {
-  box-shadow:inset 3px 0 var(--accent);
-}
-
-.nav-icon {
-  width:20px;
-  text-align:center;
-}
-
-.sidebar-bottom {
-  margin-top:auto;
-  padding:16px 8px 0;
-}
-
-.user-mini {
-  display:flex;
-  align-items:center;
-  gap:10px;
-  padding:12px 0;
-  border-top:1px solid var(--border);
-}
-
-.avatar {
-  width:36px;
-  height:36px;
-  display:grid;
-  place-items:center;
-  border-radius:50%;
-  background:#26385d;
-  color:#dce5ff;
-  font-weight:700;
-}
-
-.user-mini strong {
-  display:block;
-  font-size:13px;
-}
-
-.user-mini small {
-  color:var(--muted);
-  font-size:11px;
-}
-
-.main {
-  flex:1;
-  min-width:0;
-}
-
+.app-shell { max-width: 1250px; margin: auto; padding: 17px 15px 100px; }
 .topbar {
-  min-height:76px;
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  gap:16px;
-  padding:18px 30px;
-  border-bottom:1px solid var(--border);
-  background:#0b1120;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 15px;
+  padding: 14px 18px;
+  background: white;
+  border: 1px solid var(--line);
+  border-radius: 15px;
+  margin-bottom: 15px;
 }
-
-.topbar h2 {
-  font-size:19px;
+.brand { display: flex; align-items: center; gap: 10px; font-size: 22px; }
+.top-meta { text-align: right; color: var(--muted); font-size: 11px; }
+.layout { display: grid; grid-template-columns: 220px minmax(0, 1fr); gap: 15px; }
+.sidebar, .card, .stat {
+  background: white;
+  border: 1px solid var(--line);
+  border-radius: 15px;
 }
-
-.topbar-right {
-  display:flex;
-  align-items:center;
-  gap:12px;
+.sidebar { padding: 13px; align-self: start; position: sticky; top: 12px; }
+.user { display: flex; align-items: center; gap: 10px; padding: 7px 3px 16px; margin-bottom: 12px; border-bottom: 1px solid var(--line); }
+.avatar { width: 41px; height: 41px; flex-shrink: 0; display: grid; place-items: center; border-radius: 50%; background: #e8f1fa; color: #27648a; }
+.email { font-size: 11px; overflow-wrap: anywhere; }
+.nav { display: grid; gap: 4px; }
+.nav button {
+  padding: 11px;
+  text-align: left;
+  border: 0;
+  border-radius: 9px;
+  background: transparent;
+  color: #536176;
 }
+.nav button.active, .nav button:hover { background: var(--blue-light); color: #0875a8; }
+main { min-width: 0; }
+.stats { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 9px; margin-bottom: 14px; }
+.stat { padding: 12px; min-width: 0; }
+.stat-label { display: block; color: var(--muted); font-size: 11px; margin-bottom: 5px; }
+.stat-value { overflow-wrap: anywhere; }
+.dot { display: inline-block; width: 8px; height: 8px; border-radius: 50%; background: var(--green); margin-right: 5px; }
 
-.status-pill {
-  display:flex;
-  align-items:center;
-  gap:7px;
-  padding:7px 11px;
-  border:1px solid #275643;
-  border-radius:20px;
-  color:var(--green);
-  font-size:12px;
+.card { padding: 18px; margin-bottom: 14px; }
+.card-head { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px; margin-bottom: 17px; }
+h2 { font-size: 19px; font-weight: 500; margin: 0; }
+h3 { font-size: 15px; font-weight: 500; margin: 0 0 8px; }
+.muted { color: var(--muted); }
+.small { font-size: 11px; }
+.pill { padding: 5px 9px; border-radius: 20px; background: #eaf8ef; color: #258252; font-size: 11px; }
+.pill.blue { background: var(--blue-light); color: #126da6; }
+.section { display: none; }
+.section.active { display: block; }
+.profile-grid { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 19px; }
+
+.apps { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 9px; }
+.app-tile {
+  min-width: 0;
+  padding: 12px 5px;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: white;
+  color: var(--ink);
+  text-align: center;
 }
+.app-tile:hover { border-color: #91cde7; }
+.app-tile.locked { background: #f8fafc; color: #758196; }
+.app-icon { width: 39px; height: 39px; display: grid; place-items: center; margin: 0 auto 7px; border-radius: 12px; background: #5368a9; color: white; font-size: 17px; }
+.app-name { display: block; font-size: 12px; }
+.app-tile small { display: block; color: var(--muted); font-size: 10px; margin-top: 4px; }
 
-.status-dot {
-  width:7px;
-  height:7px;
-  border-radius:50%;
-  background:var(--green);
+.details { display: grid; }
+.detail { display: flex; justify-content: space-between; gap: 12px; padding: 10px 0; border-bottom: 1px solid var(--line); }
+.detail:last-child { border-bottom: 0; }
+.detail-label { color: var(--muted); font-size: 12px; }
+.detail-value { max-width: 62%; text-align: right; font-size: 12px; overflow-wrap: anywhere; }
+
+.report { padding: 15px; margin: 12px 0 18px; border: 1px solid #e9edf3; border-radius: 14px; background: #f7f8fa; }
+.report-head { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 9px; }
+.check { width: 28px; height: 28px; display: inline-grid; place-items: center; border-radius: 50%; background: #dcf5e8; color: #2aa96d; }
+.code-dots { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 7px; margin: 14px 0; }
+.code-dots span { height: 43px; display: grid; place-items: center; border: 1px solid var(--line); border-radius: 10px; background: white; color: #536176; font-size: 18px; }
+.report-foot { display: flex; justify-content: space-between; flex-wrap: wrap; gap: 8px; color: var(--muted); font-size: 11px; }
+
+.archive { padding-top: 17px; border-top: 1px solid var(--line); }
+.archive-title { display: flex; justify-content: space-between; flex-wrap: wrap; gap: 10px; margin-bottom: 17px; font-size: 16px; }
+.archive-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+.archive-item span { display: block; color: var(--muted); font-size: 12px; margin-bottom: 5px; }
+.amount { font-size: 17px; }
+.progress { height: 8px; margin: 12px 0 8px; border-radius: 20px; background: #e0e8f0; overflow: hidden; }
+.progress span { display: block; width: 100%; height: 100%; background: var(--blue); }
+.progress-meta { display: flex; justify-content: space-between; flex-wrap: wrap; gap: 8px; color: var(--muted); font-size: 11px; }
+.file-list { display: grid; margin-top: 15px; }
+.file { display: flex; align-items: center; gap: 11px; padding: 11px 0; border-bottom: 1px solid var(--line); }
+.file-icon { flex: 0 0 36px; width: 36px; height: 40px; display: grid; place-items: center; border-radius: 7px; background: #e6f7eb; color: #25864e; font-size: 10px; }
+.file-info { flex: 1; min-width: 0; }
+.file-name { display: block; font-size: 12px; overflow-wrap: anywhere; }
+.file-info small, .file-size { color: var(--muted); font-size: 10px; }
+
+.notice { padding: 14px; margin-bottom: 15px; border: 1px solid #e4eaf1; border-radius: 12px; background: #f8fafc; color: #526076; font-size: 12px; }
+.chat-list { display: grid; gap: 9px; }
+.chat-row { display: flex; align-items: center; gap: 11px; padding: 12px; border: 1px solid var(--line); border-radius: 12px; }
+.chat-avatar { flex: 0 0 39px; width: 39px; height: 39px; display: grid; place-items: center; border-radius: 50%; background: #e8edf5; color: #5b6a81; }
+.chat-body { flex: 1; min-width: 0; }
+.chat-name { display: block; font-size: 12px; }
+.chat-message { margin: 4px 0 0; color: var(--muted); font-size: 11px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.blurred { filter: blur(4px); user-select: none; }
+.chat-time { color: var(--muted); font-size: 10px; }
+.button { padding: 10px 13px; border: 1px solid #d8e1ec; border-radius: 9px; background: white; color: #35445b; font-size: 12px; }
+.bottom-nav { display: none; }
+.toast { display: none; position: fixed; z-index: 10; bottom: 80px; left: 50%; transform: translateX(-50%); max-width: 90vw; padding: 11px 15px; border-radius: 10px; background: #263247; color: white; font-size: 12px; }
+
+@media (max-width: 850px) {
+  .layout { grid-template-columns: 1fr; }
+  .sidebar { display: none; }
+  .bottom-nav { position: fixed; z-index: 5; right: 0; bottom: 0; left: 0; display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); padding: 7px 8px calc(7px + env(safe-area-inset-bottom)); border-top: 1px solid var(--line); background: white; }
+  .bottom-nav button { display: grid; justify-items: center; gap: 3px; padding: 5px 2px; border: 0; background: transparent; color: #65748a; font-size: 10px; }
+  .bottom-nav button span { font-size: 18px; }
+  .bottom-nav button.active { color: var(--blue); }
+  .profile-grid { grid-template-columns: 1fr; }
+  .stats { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 }
-
-.logout-btn,
-.secondary-btn {
-  padding:9px 13px;
-  border:1px solid var(--border);
-  border-radius:9px;
-  background:var(--panel);
-  color:var(--text);
-  font-size:13px;
-}
-
-.content {
-  max-width:1500px;
-  margin:auto;
-  padding:30px;
-}
-
-.page-heading {
-  display:flex;
-  align-items:flex-start;
-  justify-content:space-between;
-  gap:20px;
-  margin-bottom:26px;
-}
-
-.page-heading h1 {
-  font-size:27px;
-  letter-spacing:-.8px;
-}
-
-.page-heading p {
-  margin-top:5px;
-  color:var(--muted);
-  font-size:14px;
-}
-
-.stats-grid {
-  display:grid;
-  grid-template-columns:repeat(4,minmax(0,1fr));
-  gap:18px;
-  margin-bottom:24px;
-}
-
-.stat-card,
-.panel {
-  background:var(--panel);
-  border:1px solid var(--border);
-  border-radius:15px;
-}
-
-.stat-card {
-  padding:20px;
-}
-
-.stat-top {
-  display:flex;
-  justify-content:space-between;
-  gap:10px;
-  color:var(--muted);
-  font-size:13px;
-}
-
-.stat-icon {
-  width:36px;
-  height:36px;
-  display:grid;
-  place-items:center;
-  border-radius:10px;
-  background:#25345a;
-  color:#a7b8ff;
-  font-size:18px;
-}
-
-.stat-number {
-  margin-top:20px;
-  font-size:29px;
-  font-weight:750;
-  letter-spacing:-.8px;
-}
-
-.stat-note {
-  margin-top:5px;
-  color:var(--muted);
-  font-size:12px;
-}
-
-.dashboard-grid {
-  display:grid;
-  grid-template-columns:minmax(0,1.5fr) minmax(280px,1fr);
-  gap:20px;
-}
-
-.panel {
-  min-width:0;
-  overflow:hidden;
-}
-
-.panel-header {
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  gap:14px;
-  padding:20px;
-  border-bottom:1px solid var(--border);
-}
-
-.panel-header h3 {
-  font-size:15px;
-}
-
-.panel-header p {
-  margin-top:4px;
-  color:var(--muted);
-  font-size:12px;
-}
-
-.panel-body {
-  padding:20px;
-}
-
-.chart {
-  height:210px;
-  display:flex;
-  align-items:flex-end;
-  justify-content:space-around;
-  gap:12px;
-  padding-top:12px;
-}
-
-.chart-item {
-  flex:1;
-  max-width:50px;
-  height:100%;
-  display:flex;
-  flex-direction:column;
-  align-items:center;
-  justify-content:flex-end;
-  gap:10px;
-}
-
-.chart-bar {
-  width:100%;
-  max-width:38px;
-  min-height:5px;
-  border-radius:7px 7px 2px 2px;
-  background:linear-gradient(180deg,#849bff,#4c63d6);
-}
-
-.chart-label {
-  color:var(--muted);
-  font-size:11px;
-}
-
-.activity-list {
-  list-style:none;
-}
-
-.activity-item {
-  display:flex;
-  gap:12px;
-  padding:15px 0;
-  border-bottom:1px solid var(--border);
-}
-
-.activity-item:last-child {
-  border-bottom:0;
-}
-
-.activity-symbol {
-  width:35px;
-  height:35px;
-  flex-shrink:0;
-  display:grid;
-  place-items:center;
-  border-radius:10px;
-  background:#202f4a;
-}
-
-.activity-item strong {
-  display:block;
-  font-size:13px;
-  font-weight:600;
-}
-
-.activity-item p {
-  margin-top:3px;
-  color:var(--muted);
-  font-size:12px;
-}
-
-.section-page {
-  display:none;
-}
-
-.section-page.active {
-  display:block;
-}
-
-.table-wrap {
-  overflow-x:auto;
-}
-
-table {
-  width:100%;
-  border-collapse:collapse;
-  text-align:left;
-  white-space:nowrap;
-}
-
-th,td {
-  padding:15px 20px;
-  border-bottom:1px solid var(--border);
-  font-size:13px;
-}
-
-th {
-  color:var(--muted);
-  font-size:11px;
-  font-weight:600;
-  text-transform:uppercase;
-  letter-spacing:.7px;
-}
-
-td {
-  color:#dce5f4;
-}
-
-.tag {
-  display:inline-block;
-  padding:4px 8px;
-  border-radius:20px;
-  background:#1d3b35;
-  color:var(--green);
-  font-size:11px;
-}
-
-.empty-state {
-  padding:45px 20px;
-  text-align:center;
-  color:var(--muted);
-}
-
-.empty-state .big-icon {
-  margin-bottom:12px;
-  font-size:34px;
-}
-
-.empty-state h3 {
-  margin-bottom:6px;
-  color:var(--text);
-}
-
-.settings-form {
-  max-width:550px;
-}
-
-.settings-form .field {
-  margin-bottom:20px;
-}
-
-.mobile-menu {
-  display:none;
-  width:40px;
-  height:40px;
-  border:1px solid var(--border);
-  border-radius:9px;
-  background:var(--panel);
-  color:white;
-  font-size:20px;
-}
-
-.toast {
-  position:fixed;
-  right:20px;
-  bottom:20px;
-  z-index:20;
-  max-width:calc(100% - 40px);
-  padding:13px 18px;
-  background:#1b352e;
-  border:1px solid #326c59;
-  border-radius:10px;
-  color:#b8ffe5;
-  font-size:13px;
-  box-shadow:0 12px 35px #0005;
-}
-
-@media(max-width:1100px) {
-  .stats-grid {
-    grid-template-columns:repeat(2,minmax(0,1fr));
-  }
-
-  .dashboard-grid {
-    grid-template-columns:1fr;
-  }
-}
-
-@media(max-width:760px) {
-  .sidebar {
-    position:fixed;
-    z-index:10;
-    top:0;
-    bottom:0;
-    left:0;
-    width:260px;
-    transform:translateX(-100%);
-    transition:transform .25s ease;
-    box-shadow:15px 0 50px #0005;
-  }
-
-  .sidebar.open {
-    transform:translateX(0);
-  }
-
-  .mobile-menu {
-    display:block;
-    flex-shrink:0;
-  }
-
-  .topbar {
-    padding:14px 18px;
-  }
-
-  .topbar h2 {
-    font-size:16px;
-  }
-
-  .status-pill {
-    display:none;
-  }
-
-  .content {
-    padding:22px 16px;
-  }
-
-  .page-heading h1 {
-    font-size:23px;
-  }
-
-  .stat-card {
-    padding:16px;
-  }
-
-  .stat-number {
-    font-size:25px;
-  }
-
-  .login-card {
-    padding:27px 22px;
-  }
-}
-
-@media(max-width:420px) {
-  .stats-grid {
-    grid-template-columns:1fr;
-  }
-
-  .topbar-right {
-    gap:7px;
-  }
-
-  .logout-btn {
-    padding:8px 10px;
-  }
-
-  .page-heading {
-    flex-direction:column;
-  }
-
-  .chart {
-    gap:6px;
-  }
+@media (max-width: 460px) {
+  .app-shell { padding: 10px 9px 95px; }
+  .card { padding: 14px; }
+  .brand { font-size: 19px; }
+  .top-meta { max-width: 120px; }
+  .code-dots { gap: 4px; }
+  .code-dots span { height: 37px; }
+  .detail-value { max-width: 58%; }
 }
 </style>
 </head>
 
 <body>
 
+<!-- LOGIN -->
 <section class="login-screen" id="loginScreen">
-  <div class="login-card">
-    <div class="brand">
-      <div class="brand-mark">S</div>
-      <span>Spyteligent</span>
+  <form class="login-card" id="loginForm">
+    <div class="logo">
+      <span class="logo-icon">✦</span>
+      <span>spyteligent</span>
+    </div>
+    <h1>Welcome back</h1>
+    <p class="subtle">Sign in to view the profile dashboard.</p>
+
+    <div class="field">
+      <label for="email">Email address</label>
+      <input id="email" type="email" value="anon127498@proton.me" required autocomplete="username">
     </div>
 
-    <h1>Welcome back</h1>
-    <p class="subtitle">Sign in to access your workspace.</p>
+    <div class="field">
+      <label for="password">Password</label>
+      <input id="password" type="password" placeholder="Enter dashboard password" required autocomplete="current-password">
+    </div>
 
-    <form id="loginForm">
-      <div class="field">
-        <label for="username">Email or username</label>
-        <input id="username" name="username" type="text"
-          placeholder="Enter your username"
-          autocomplete="username" required>
-      </div>
-
-      <div class="field">
-        <label for="password">Password</label>
-        <input id="password" name="password" type="password"
-          placeholder="Enter your password"
-          autocomplete="current-password" required>
-      </div>
-
-      <button class="primary-btn" type="submit">Sign in</button>
-      <p class="login-message" id="loginMessage" role="status"></p>
-    </form>
-
-    <p class="login-footer">Spyteligent</p>
-  </div>
+    <button class="action primary full" type="submit">Sign in</button>
+    <p class="login-note">Local dashboard interface. Sign-in does not authenticate with an external account.</p>
+  </form>
 </section>
 
-<div class="app hidden" id="app">
-  <aside class="sidebar" id="sidebar">
+<!-- DASHBOARD -->
+<div class="app-shell hidden" id="dashboard">
+  <header class="topbar">
     <div class="brand">
-      <div class="brand-mark">S</div>
-      <span>Spyteligent</span>
+      <span class="logo-icon">✦</span>
+      <span>spyteligent</span>
     </div>
+    <div class="top-meta">
+      Profile dashboard<br>
+      October 24, 2026
+    </div>
+  </header>
 
-    <div class="nav-label">Workspace</div>
-
-    <button class="nav-btn active" data-page="overview">
-      <span class="nav-icon">▦</span> Overview
-    </button>
-
-    <button class="nav-btn" data-page="devices">
-      <span class="nav-icon">▣</span> Devices
-    </button>
-
-    <button class="nav-btn" data-page="activity">
-      <span class="nav-icon">◷</span> Activity
-    </button>
-
-    <button class="nav-btn" data-page="reports">
-      <span class="nav-icon">▤</span> Reports
-    </button>
-
-    <div class="nav-label">Preferences</div>
-
-    <button class="nav-btn" data-page="settings">
-      <span class="nav-icon">⚙</span> Settings
-    </button>
-
-    <div class="sidebar-bottom">
-      <div class="user-mini">
-        <div class="avatar" id="avatar">U</div>
+  <div class="layout">
+    <aside class="sidebar">
+      <div class="user">
+        <div class="avatar">A</div>
         <div>
-          <strong id="displayUser">User</strong>
-          <small>Account</small>
+          <div class="email">anon127498@proton.me</div>
+          <div class="subtle small">Profile information</div>
         </div>
       </div>
-    </div>
-  </aside>
+      <nav class="nav">
+        <button class="active" data-section="overview">⌂　Dashboard</button>
+        <button data-section="profile">♙　Profile information</button>
+        <button data-section="apps">▣　Applications</button>
+        <button data-section="messages">✉　Messages · 3</button>
+        <button data-section="media">▧　Media files</button>
+        <button data-section="monitor">◉　Monitoring</button>
+        <button data-section="devices">▣　Device status</button>
+      </nav>
+    </aside>
 
-  <main class="main">
-    <header class="topbar">
-      <div style="display:flex;align-items:center;gap:12px">
-        <button class="mobile-menu" id="mobileMenu"
-          aria-label="Open navigation">☰</button>
-        <h2 id="topbarTitle">Overview</h2>
+    <main>
+      <div class="stats">
+        <div class="stat"><span class="stat-label">Profile</span><div class="stat-value">WhatsApp</div></div>
+        <div class="stat"><span class="stat-label">Network</span><div class="stat-value">Omnipoint</div></div>
+        <div class="stat"><span class="stat-label">Last activity</span><div class="stat-value"><span class="dot"></span>14 min ago</div></div>
+        <div class="stat"><span class="stat-label">Listed devices</span><div class="stat-value">6 devices</div></div>
       </div>
 
-      <div class="topbar-right">
-        <div class="status-pill">
-          <span class="status-dot"></span>
-          Active
-        </div>
-        <button class="logout-btn" id="logoutBtn">Sign out</button>
-      </div>
-    </header>
+      <!-- OVERVIEW -->
+      <section class="section active" id="overview">
+        <div class="card">
+          <div class="card-head">
+            <h2>Profile information</h2>
+            <span class="pill blue">Account details</span>
+          </div>
+          <div class="profile-grid">
+            <div class="apps" id="mainApps">
+              <button class="app-tile" data-app="WhatsApp"><span class="app-icon" style="background:#20b86a">W</span><span class="app-name">WhatsApp</span><small>Account details</small></button>
+              <button class="app-tile" data-app="Instagram"><span class="app-icon" style="background:#c14e91">IG</span><span class="app-name">Instagram</span><small>Account details</small></button>
+              <button class="app-tile" data-app="Facebook"><span class="app-icon" style="background:#1877f2">f</span><span class="app-name">Facebook</span><small>Account details</small></button>
+              <button class="app-tile locked" data-app="TikTok"><span class="app-icon">♪</span><span class="app-name">TikTok</span><small>Unavailable</small></button>
+              <button class="app-tile locked" data-app="Telegram"><span class="app-icon">➤</span><span class="app-name">Telegram</span><small>Unavailable</small></button>
+              <button class="app-tile locked" data-app="Discord"><span class="app-icon">◉</span><span class="app-name">Discord</span><small>Unavailable</small></button>
+              <button class="app-tile locked" data-app="X / Twitter"><span class="app-icon">X</span><span class="app-name">X / Twitter</span><small>Unavailable</small></button>
+              <button class="app-tile locked" data-app="Snapchat"><span class="app-icon">S</span><span class="app-name">Snapchat</span><small>Unavailable</small></button>
+              <button class="app-tile locked" data-app="More apps"><span class="app-icon">＋</span><span class="app-name">More apps</span><small>Unavailable</small></button>
+            </div>
 
-    <div class="content">
-
-      <section class="section-page active" id="page-overview">
-        <div class="page-heading">
-          <div>
-            <h1>Dashboard overview</h1>
-            <p>Welcome to your Spyteligent workspace.</p>
+            <div class="details">
+              <div class="detail"><span class="detail-label">Email</span><span class="detail-value">anon127498@proton.me</span></div>
+              <div class="detail"><span class="detail-label">WhatsApp number</span><span class="detail-value">+1 917-536-4180</span></div>
+              <div class="detail"><span class="detail-label">Country</span><span class="detail-value">United States</span></div>
+              <div class="detail"><span class="detail-label">Region / city</span><span class="detail-value">New York City, New York</span></div>
+              <div class="detail"><span class="detail-label">Network</span><span class="detail-value">Omnipoint</span></div>
+              <div class="detail"><span class="detail-label">Carrier data</span><span class="detail-value">4.3 GB</span></div>
+              <div class="detail"><span class="detail-label">Date</span><span class="detail-value">October 24, 2026</span></div>
+              <div class="detail"><span class="detail-label">Last activity</span><span class="detail-value">Online 14 min ago</span></div>
+              <div class="detail"><span class="detail-label">Connected devices</span><span class="detail-value">6 devices</span></div>
+              <div class="detail"><span class="detail-label">Phone types</span><span class="detail-value">iPhone · iPhone</span></div>
+            </div>
           </div>
         </div>
 
-        <div class="stats-grid">
-          <article class="stat-card">
-            <div class="stat-top">
-              <span>Total devices</span>
-              <span class="stat-icon">▣</span>
+        <div class="card">
+          <div class="card-head">
+            <h2 id="reportTitle">WhatsApp account</h2>
+            <span class="pill">Account report</span>
+          </div>
+          <div class="report">
+            <div class="report-head">
+              <span style="display:flex;align-items:center;gap:9px"><span class="check">✓</span>Account information</span>
+              <span id="reportApp">WHATSAPP</span>
             </div>
-            <div class="stat-number">12</div>
-            <p class="stat-note">Device overview</p>
-          </article>
+            <div class="code-dots"><span>•</span><span>•</span><span>•</span><span>•</span><span>•</span><span>•</span></div>
+            <div class="report-foot"><span>Account status</span><span>Profile view</span></div>
+          </div>
 
-          <article class="stat-card">
-            <div class="stat-top">
-              <span>Active sessions</span>
-              <span class="stat-icon">◉</span>
+          <div class="archive">
+            <div class="archive-title"><span>📁 Profile archive</span><span>Size: 4.3 GB</span></div>
+            <div class="archive-grid">
+              <div class="archive-item"><span>Chat messages</span><div class="amount">583 MB</div></div>
+              <div class="archive-item"><span>Photos &amp; Videos</span><div class="amount">0.92 GB</div></div>
+              <div class="archive-item"><span>Logs &amp; Contacts</span><div class="amount">835 KB</div></div>
+              <div class="archive-item"><span>Login / Password</span><div class="amount">Not listed</div></div>
             </div>
-            <div class="stat-number">08</div>
-            <p class="stat-note">Session overview</p>
-          </article>
-
-          <article class="stat-card">
-            <div class="stat-top">
-              <span>Reports</span>
-              <span class="stat-icon">▤</span>
+            <div style="display:flex;justify-content:space-between;gap:10px;margin-top:20px"><span>Archive status</span><span style="color:var(--blue)">Profile report</span></div>
+            <div class="progress"><span></span></div>
+            <div class="progress-meta"><span>4.3 GB · Supplied figure</span><span>Archive information</span></div>
+            <div class="file-list">
+              <div class="file"><div class="file-icon">TXT</div><div class="file-info"><span class="file-name">profile_summary.txt</span><small>Profile information</small></div><span class="file-size">TXT</span></div>
+              <div class="file"><div class="file-icon">JSON</div><div class="file-info"><span class="file-name">device_list.json</span><small>Device inventory fields</small></div><span class="file-size">JSON</span></div>
+              <div class="file"><div class="file-icon">INFO</div><div class="file-info"><span class="file-name">archive_manifest.info</span><small>Archive information</small></div><span class="file-size">INFO</span></div>
             </div>
-            <div class="stat-number">24</div>
-            <p class="stat-note">Report overview</p>
-          </article>
-
-          <article class="stat-card">
-            <div class="stat-top">
-              <span>Notifications</span>
-              <span class="stat-icon">♧</span>
-            </div>
-            <div class="stat-number">03</div>
-            <p class="stat-note">Recent notifications</p>
-          </article>
-        </div>
-
-        <div class="dashboard-grid">
-          <article class="panel">
-            <div class="panel-header">
-              <div>
-                <h3>Weekly activity</h3>
-                <p>Activity overview</p>
-              </div>
-              <span class="tag">This week</span>
-            </div>
-
-            <div class="panel-body">
-              <div class="chart">
-                <div class="chart-item">
-                  <div class="chart-bar" style="height:38%"></div>
-                  <span class="chart-label">Mon</span>
-                </div>
-                <div class="chart-item">
-                  <div class="chart-bar" style="height:62%"></div>
-                  <span class="chart-label">Tue</span>
-                </div>
-                <div class="chart-item">
-                  <div class="chart-bar" style="height:48%"></div>
-                  <span class="chart-label">Wed</span>
-                </div>
-                <div class="chart-item">
-                  <div class="chart-bar" style="height:82%"></div>
-                  <span class="chart-label">Thu</span>
-                </div>
-                <div class="chart-item">
-                  <div class="chart-bar" style="height:57%"></div>
-                  <span class="chart-label">Fri</span>
-                </div>
-                <div class="chart-item">
-                  <div class="chart-bar" style="height:94%"></div>
-                  <span class="chart-label">Sat</span>
-                </div>
-                <div class="chart-item">
-                  <div class="chart-bar" style="height:43%"></div>
-                  <span class="chart-label">Sun</span>
-                </div>
-              </div>
-            </div>
-          </article>
-
-          <article class="panel">
-            <div class="panel-header">
-              <div>
-                <h3>Recent activity</h3>
-                <p>Latest workspace events</p>
-              </div>
-            </div>
-
-            <div class="panel-body">
-              <ul class="activity-list">
-                <li class="activity-item">
-                  <div class="activity-symbol">↗</div>
-                  <div>
-                    <strong>Workspace opened</strong>
-                    <p>Overview section</p>
-                  </div>
-                </li>
-                <li class="activity-item">
-                  <div class="activity-symbol">▤</div>
-                  <div>
-                    <strong>Reports section</strong>
-                    <p>Report overview</p>
-                  </div>
-                </li>
-                <li class="activity-item">
-                  <div class="activity-symbol">⚙</div>
-                  <div>
-                    <strong>Account settings</strong>
-                    <p>Preferences</p>
-                  </div>
-                </li>
-              </ul>
-            </div>
-          </article>
-        </div>
-      </section>
-
-      <section class="section-page" id="page-devices">
-        <div class="page-heading">
-          <div>
-            <h1>Devices</h1>
-            <p>Device inventory</p>
           </div>
         </div>
 
-        <div class="panel">
-          <div class="panel-header">
-            <h3>Device inventory</h3>
-          </div>
-          <div class="table-wrap">
-            <table>
-              <thead>
-                <tr>
-                  <th>Device</th>
-                  <th>Type</th>
-                  <th>Status</th>
-                  <th>Last updated</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td>Workspace device 01</td>
-                  <td>Mobile</td>
-                  <td><span class="tag">Listed</span></td>
-                  <td>—</td>
-                </tr>
-                <tr>
-                  <td>Workspace device 02</td>
-                  <td>Desktop</td>
-                  <td><span class="tag">Listed</span></td>
-                  <td>—</td>
-                </tr>
-                <tr>
-                  <td>Workspace device 03</td>
-                  <td>Tablet</td>
-                  <td><span class="tag">Listed</span></td>
-                  <td>—</td>
-                </tr>
-              </tbody>
-            </table>
+        <div class="card">
+          <div class="card-head"><h2>Location &amp; device information</h2><span class="pill">Location details</span></div>
+          <div class="details">
+            <div class="detail"><span class="detail-label">Country</span><span class="detail-value">🇺🇸 United States</span></div>
+            <div class="detail"><span class="detail-label">Region / city</span><span class="detail-value">New York · New York City</span></div>
+            <div class="detail"><span class="detail-label">Street address</span><span class="detail-value">Not supplied</span></div>
+            <div class="detail"><span class="detail-label">Coordinates</span><span class="detail-value">Not supplied</span></div>
+            <div class="detail"><span class="detail-label">Cell information</span><span class="detail-value">LAC 48978 · Cell 48572</span></div>
+            <div class="detail"><span class="detail-label">Wi-Fi / base stations</span><span class="detail-value">14 Wi-Fi · 5 base stations</span></div>
+            <div class="detail"><span class="detail-label">GPS information</span><span class="detail-value">A-GPS · HDOP 1.1</span></div>
+            <div class="detail"><span class="detail-label">Phone types</span><span class="detail-value">Two iPhones</span></div>
           </div>
         </div>
       </section>
 
-      <section class="section-page" id="page-activity">
-        <div class="page-heading">
-          <div>
-            <h1>Activity</h1>
-            <p>Workspace activity history</p>
-          </div>
-        </div>
-
-        <div class="panel">
-          <div class="panel-header">
-            <h3>Activity history</h3>
-          </div>
-          <div class="panel-body">
-            <ul class="activity-list">
-              <li class="activity-item">
-                <div class="activity-symbol">↗</div>
-                <div>
-                  <strong>Workspace accessed</strong>
-                  <p>Overview section</p>
-                </div>
-              </li>
-              <li class="activity-item">
-                <div class="activity-symbol">▤</div>
-                <div>
-                  <strong>Reports viewed</strong>
-                  <p>Reports section</p>
-                </div>
-              </li>
-              <li class="activity-item">
-                <div class="activity-symbol">⚙</div>
-                <div>
-                  <strong>Settings opened</strong>
-                  <p>Preferences section</p>
-                </div>
-              </li>
-            </ul>
+      <!-- PROFILE INFORMATION -->
+      <section class="section" id="profile">
+        <div class="card">
+          <div class="card-head"><h2>Profile information</h2><span class="pill blue">Account details</span></div>
+          <div class="details">
+            <div class="detail"><span class="detail-label">Email</span><span class="detail-value">anon127498@proton.me</span></div>
+            <div class="detail"><span class="detail-label">WhatsApp number</span><span class="detail-value">+1 917-536-4180</span></div>
+            <div class="detail"><span class="detail-label">Country</span><span class="detail-value">United States</span></div>
+            <div class="detail"><span class="detail-label">City</span><span class="detail-value">New York City</span></div>
+            <div class="detail"><span class="detail-label">Network / carrier</span><span class="detail-value">Omnipoint</span></div>
+            <div class="detail"><span class="detail-label">Carrier data</span><span class="detail-value">4.3 GB</span></div>
+            <div class="detail"><span class="detail-label">Date</span><span class="detail-value">October 24, 2026</span></div>
+            <div class="detail"><span class="detail-label">Last activity</span><span class="detail-value">Online 14 min ago</span></div>
+            <div class="detail"><span class="detail-label">Phone types</span><span class="detail-value">iPhone · iPhone</span></div>
           </div>
         </div>
       </section>
 
-      <section class="section-page" id="page-reports">
-        <div class="page-heading">
-          <div>
-            <h1>Reports</h1>
-            <p>Reports overview</p>
+      <!-- APPLICATIONS -->
+      <section class="section" id="apps">
+        <div class="card">
+          <div class="card-head"><h2>Applications</h2><span class="pill">App directory</span></div>
+          <div class="apps" id="appDirectory"></div>
+        </div>
+      </section>
+
+      <!-- MESSAGES -->
+      <section class="section" id="messages">
+        <div class="card">
+          <div class="card-head"><h2>Messages</h2><span class="pill blue">3 applications</span></div>
+          <p class="subtle">Choose an application to open its message-list interface.</p>
+          <div class="apps">
+            <button class="app-tile" data-message-app="WhatsApp"><span class="app-icon" style="background:#20b86a">W</span><span class="app-name">WhatsApp</span><small>Message list</small></button>
+            <button class="app-tile" data-message-app="Instagram"><span class="app-icon" style="background:#c14e91">IG</span><span class="app-name">Instagram</span><small>Message list</small></button>
+            <button class="app-tile" data-message-app="Facebook"><span class="app-icon" style="background:#1877f2">f</span><span class="app-name">Facebook</span><small>Message list</small></button>
           </div>
         </div>
 
-        <div class="panel">
-          <div class="panel-header">
-            <h3>Available reports</h3>
+        <div class="card hidden" id="chatCard">
+          <div class="card-head"><h2 id="chatTitle">Message list</h2><span class="pill">Illustrative layout</span></div>
+          <div class="notice">
+            <h3>Access notice</h3>
+            Message access is not connected to a real account. This display is an interface preview; no payment is required to view the sample layout.
           </div>
-          <div class="empty-state">
-            <div class="big-icon">▤</div>
-            <h3>No reports available</h3>
+          <div class="chat-list">
+            <div class="chat-row"><div class="chat-avatar">A</div><div class="chat-body"><span class="chat-name blurred">Alex Morgan</span><p class="chat-message blurred">Hey, are we still meeting later today?</p></div><span class="chat-time">10:42</span></div>
+            <div class="chat-row"><div class="chat-avatar">J</div><div class="chat-body"><span class="chat-name blurred">Jordan Lee</span><p class="chat-message blurred">I sent you the details yesterday.</p></div><span class="chat-time">09:18</span></div>
+            <div class="chat-row"><div class="chat-avatar">M</div><div class="chat-body"><span class="chat-name blurred">Morgan Taylor</span><p class="chat-message blurred">Thanks! I'll check and get back to you.</p></div><span class="chat-time">Yesterday</span></div>
+            <div class="chat-row"><div class="chat-avatar">S</div><div class="chat-body"><span class="chat-name blurred">Sam Rivera</span><p class="chat-message blurred">Can you call me when you have a moment?</p></div><span class="chat-time">Yesterday</span></div>
+            <div class="chat-row"><div class="chat-avatar">C</div><div class="chat-body"><span class="chat-name blurred">Casey</span><p class="chat-message blurred">Photo · 2 attachments</p></div><span class="chat-time">Monday</span></div>
           </div>
         </div>
       </section>
 
-      <section class="section-page" id="page-settings">
-        <div class="page-heading">
-          <div>
-            <h1>Settings</h1>
-            <p>Account preferences</p>
+      <!-- MEDIA FILES -->
+      <section class="section" id="media">
+        <div class="card">
+          <div class="card-head"><h2>Media files</h2><span class="pill">File categories</span></div>
+          <div class="apps">
+            <button class="app-tile" data-media="Pictures"><span class="app-icon" style="background:#4f8a75">▧</span><span class="app-name">Pictures</span><small>Files</small></button>
+            <button class="app-tile" data-media="Videos"><span class="app-icon" style="background:#7662bc">▶</span><span class="app-name">Videos</span><small>Files</small></button>
+            <button class="app-tile" data-media="Audio"><span class="app-icon" style="background:#c16a91">♫</span><span class="app-name">Audio</span><small>Files</small></button>
+            <button class="app-tile" data-media="Documents"><span class="app-icon" style="background:#4d82bd">▤</span><span class="app-name">Documents</span><small>Files</small></button>
           </div>
-        </div>
-
-        <div class="panel">
-          <div class="panel-header">
-            <h3>Account preferences</h3>
-          </div>
-          <div class="panel-body">
-            <form class="settings-form" id="settingsForm">
-              <div class="field">
-                <label for="accountName">Display name</label>
-                <input id="accountName" type="text"
-                  maxlength="60" required>
-              </div>
-
-              <div class="field">
-                <label for="accountEmail">Email address</label>
-                <input id="accountEmail" type="email"
-                  placeholder="you@example.com">
-              </div>
-
-              <button class="primary-btn" type="submit">
-                Save preferences
-              </button>
-            </form>
+          <div class="hidden" id="mediaDetails" style="margin-top:18px">
+            <div class="notice">This category is an interface preview. No device files are retrieved.</div>
+            <div class="detail"><span class="detail-label">Selected category</span><span class="detail-value" id="mediaTitle">Pictures</span></div>
+            <div class="detail"><span class="detail-label">Files</span><span class="detail-value">No files connected</span></div>
           </div>
         </div>
       </section>
 
-    </div>
-  </main>
+      <!-- MONITORING -->
+      <section class="section" id="monitor">
+        <div class="card">
+          <div class="card-head"><h2>Monitoring overview</h2><span class="pill">Status</span></div>
+          <div class="details">
+            <div class="detail"><span class="detail-label">Last activity</span><span class="detail-value">Online 14 min ago · supplied information</span></div>
+            <div class="detail"><span class="detail-label">Listed devices</span><span class="detail-value">6 devices</span></div>
+            <div class="detail"><span class="detail-label">Network</span><span class="detail-value">Omnipoint</span></div>
+            <div class="detail"><span class="detail-label">Location</span><span class="detail-value">New York City, US</span></div>
+            <div class="detail"><span class="detail-label">GPS status</span><span class="detail-value">No live reading connected</span></div>
+            <div class="detail"><span class="detail-label">Remote control</span><span class="detail-value">Not connected</span></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- DEVICES -->
+      <section class="section" id="devices">
+        <div class="card">
+          <div class="card-head"><h2>Device status</h2><span class="pill">Device list</span></div>
+          <div class="details">
+            <div class="detail"><span class="detail-label">Phone 1</span><span class="detail-value">iPhone</span></div>
+            <div class="detail"><span class="detail-label">Phone 2</span><span class="detail-value">iPhone</span></div>
+            <div class="detail"><span class="detail-label">Network status</span><span class="detail-value">Not connected</span></div>
+            <div class="detail"><span class="detail-label">Remote control</span><span class="detail-value">Not configured</span></div>
+            <div class="detail"><span class="detail-label">Connected device records</span><span class="detail-value">6 supplied records</span></div>
+          </div>
+          <p class="subtle small" style="margin:15px 0 0">Device controls are display-only and do not issue commands to phones.</p>
+        </div>
+      </section>
+    </main>
+  </div>
 </div>
 
-<div class="toast hidden" id="toast" role="status"></div>
+<!-- MOBILE BOTTOM NAVIGATION -->
+<nav class="bottom-nav hidden" id="bottomNav" aria-label="Main navigation">
+  <button class="active" data-section="overview"><span>⌂</span>Home</button>
+  <button data-section="profile"><span>♙</span>Profile</button>
+  <button data-section="apps"><span>▣</span>Apps</button>
+  <button data-section="messages"><span>✉</span>Messages</button>
+  <button data-section="media"><span>▧</span>Media</button>
+</nav>
+
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
 
 <script>
-const loginScreen = document.getElementById("loginScreen");
 const loginForm = document.getElementById("loginForm");
-const loginMessage = document.getElementById("loginMessage");
-const app = document.getElementById("app");
-const sidebar = document.getElementById("sidebar");
-const toast = document.getElementById("toast");
-
-let toastTimer;
-
-function showToast(message) {
-  toast.textContent = message;
-  toast.classList.remove("hidden");
-  clearTimeout(toastTimer);
-  toastTimer = setTimeout(() => {
-    toast.classList.add("hidden");
-  }, 2600);
-}
-
-function openDashboard(username) {
-  const displayName = username.includes("@")
-    ? username.split("@")[0]
-    : username;
-
-  document.getElementById("displayUser").textContent = displayName;
-  document.getElementById("avatar").textContent =
-    displayName.charAt(0).toUpperCase() || "U";
-  document.getElementById("accountName").value = displayName;
-
-  loginScreen.classList.add("hidden");
-  app.classList.remove("hidden");
-  showPage("overview");
-}
+const loginScreen = document.getElementById("loginScreen");
+const dashboard = document.getElementById("dashboard");
+const bottomNav = document.getElementById("bottomNav");
 
 loginForm.addEventListener("submit", function(event) {
   event.preventDefault();
 
-  const username = document.getElementById("username").value.trim();
-  const password = document.getElementById("password").value;
+  // Local interface entry only; this is not external authentication.
+  loginScreen.classList.add("hidden");
+  dashboard.classList.remove("hidden");
+  bottomNav.classList.remove("hidden");
+  window.scrollTo({ top: 0, behavior: "smooth" });
+});
 
-  if (!username || !password) {
-    loginMessage.textContent = "Please complete both fields.";
+const sections = [...document.querySelectorAll(".section")];
+const navigation = [...document.querySelectorAll("[data-section]")];
+
+function showSection(id) {
+  sections.forEach(section => {
+    section.classList.toggle("active", section.id === id);
+  });
+
+  navigation.forEach(button => {
+    button.classList.toggle("active", button.dataset.section === id);
+  });
+
+  window.scrollTo({ top: 0, behavior: "smooth" });
+}
+
+navigation.forEach(button => {
+  button.addEventListener("click", () => showSection(button.dataset.section));
+});
+
+let toastTimer;
+
+function notify(message) {
+  const toast = document.getElementById("toast");
+  toast.textContent = message;
+  toast.style.display = "block";
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => {
+    toast.style.display = "none";
+  }, 2400);
+}
+
+function selectApp(name) {
+  const available = ["WhatsApp", "Instagram", "Facebook"];
+
+  if (!available.includes(name)) {
+    notify(name + " is unavailable.");
     return;
   }
 
-  loginMessage.textContent = "";
-  loginForm.reset();
-  openDashboard(username);
-});
-
-function showPage(pageName) {
-  document.querySelectorAll(".section-page").forEach(section => {
-    section.classList.remove("active");
-  });
-
-  const target = document.getElementById("page-" + pageName);
-  if (target) target.classList.add("active");
-
-  document.querySelectorAll(".nav-btn").forEach(button => {
-    button.classList.toggle(
-      "active",
-      button.dataset.page === pageName
-    );
-  });
-
-  const titles = {
-    overview: "Overview",
-    devices: "Devices",
-    activity: "Activity",
-    reports: "Reports",
-    settings: "Settings"
-  };
-
-  document.getElementById("topbarTitle").textContent =
-    titles[pageName] || "Overview";
-
-  sidebar.classList.remove("open");
+  document.getElementById("reportTitle").textContent = name + " account";
+  document.getElementById("reportApp").textContent = name.toUpperCase();
+  showSection("overview");
 }
 
-document.querySelectorAll(".nav-btn").forEach(button => {
+document.querySelectorAll("#mainApps [data-app]").forEach(button => {
+  button.addEventListener("click", () => selectApp(button.dataset.app));
+});
+
+/* Duplicate application cards into the full app directory. */
+const appDirectory = document.getElementById("appDirectory");
+
+document.querySelectorAll("#mainApps [data-app]").forEach(original => {
+  const copy = original.cloneNode(true);
+  copy.addEventListener("click", () => selectApp(copy.dataset.app));
+  appDirectory.appendChild(copy);
+});
+
+/* Select one of the three message-list interfaces. */
+document.querySelectorAll("[data-message-app]").forEach(button => {
   button.addEventListener("click", () => {
-    showPage(button.dataset.page);
+    const name = button.dataset.messageApp;
+    document.getElementById("chatTitle").textContent = name + " message list";
+    document.getElementById("chatCard").classList.remove("hidden");
+    showSection("messages");
   });
 });
 
-document.getElementById("mobileMenu").addEventListener("click", () => {
-  sidebar.classList.toggle("open");
+/* Media category navigation. */
+document.querySelectorAll("[data-media]").forEach(button => {
+  button.addEventListener("click", () => {
+    document.getElementById("mediaTitle").textContent = button.dataset.media;
+    document.getElementById("mediaDetails").classList.remove("hidden");
+  });
 });
-
-document.getElementById("logoutBtn").addEventListener("click", () => {
-  app.classList.add("hidden");
-  loginScreen.classList.remove("hidden");
-  loginMessage.textContent = "";
-  loginForm.reset();
-});
-
-document.getElementById("settingsForm").addEventListener(
-  "submit",
-  event => {
-    event.preventDefault();
-
-    const name = document.getElementById("accountName").value.trim();
-
-    if (!name) {
-      showToast("Please enter a display name.");
-      return;
-    }
-
-    document.getElementById("displayUser").textContent = name;
-    document.getElementById("avatar").textContent =
-      name.charAt(0).toUpperCase();
-
-    showToast("Preferences updated.");
-  }
-);
 </script>
-
 </body>
 </html>
