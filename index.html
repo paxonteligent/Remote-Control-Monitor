@@ -1,801 +1,736 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="theme-color" content="#f4f7fb">
-<title>Spyteligent Dashboard</title>
-
-<style>
-:root {
-  --blue: #0787bd;
-  --blue-light: #eaf5fc;
-  --green: #35ad75;
-  --ink: #192438;
-  --muted: #68768b;
-  --line: #e4eaf1;
-  --panel: #ffffff;
-  --page: #eef4fb;
-  --page-2: #f8fbff;
-  --shadow: 0 18px 40px rgba(20, 36, 58, 0.08);
-}
-* { box-sizing: border-box; }
-html { scroll-behavior: smooth; }
-body {
-  margin: 0;
-  color: var(--ink);
-  background:
-    radial-gradient(circle at top left, rgba(117, 169, 255, 0.18), transparent 28%),
-    radial-gradient(circle at bottom right, rgba(30, 192, 116, 0.12), transparent 30%),
-    linear-gradient(180deg, var(--page-2) 0%, var(--page) 100%);
-  font: 14px/1.5 -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif;
-}
-button, input { font: inherit; }
-button { cursor: pointer; }
-button:focus-visible, input:focus-visible {
-  outline: 2px solid var(--blue);
-  outline-offset: 3px;
-}
-.hidden { display: none !important; }
-
-.login-screen {
-  min-height: 100vh;
-  display: grid;
-  place-items: center;
-  padding: 22px;
-}
-.login-card {
-  width: min(100%, 410px);
-  padding: 28px;
-  background: rgba(255,255,255,0.9);
-  border: 1px solid rgba(17, 25, 40, 0.06);
-  border-radius: 22px;
-  box-shadow: var(--shadow);
-  backdrop-filter: blur(12px);
-}
-.logo {
-  display: flex;
-  align-items: center;
-  gap: 11px;
-  margin-bottom: 28px;
-  font-size: 23px;
-}
-.logo-icon {
-  width: 43px;
-  height: 43px;
-  display: grid;
-  place-items: center;
-  border-radius: 13px;
-  color: var(--blue);
-  background: linear-gradient(180deg, var(--blue-light), #dfeefb);
-  box-shadow: inset 0 1px 0 rgba(255,255,255,0.7), 0 8px 18px rgba(7, 135, 189, 0.12);
-}
-.login-card h1 { font-size: 24px; font-weight: 600; margin-bottom: 5px; }
-.subtle { color: var(--muted); }
-.field { display: grid; gap: 7px; margin: 17px 0; }
-.field label { color: var(--muted); font-size: 12px; }
-.field input {
-  width: 100%;
-  padding: 12px 13px;
-  border: 1px solid #dfe7f0;
-  border-radius: 10px;
-  background: white;
-  color: var(--ink);
-  box-shadow: inset 0 1px 0 rgba(0,0,0,0.02);
-}
-.primary {
-  background: linear-gradient(180deg, #0d96d4, #0787bd);
-  color: white;
-  border: 1px solid #0787bd;
-  box-shadow: 0 12px 20px rgba(7, 135, 189, 0.14);
-}
-.action {
-  padding: 11px 15px;
-  border-radius: 10px;
-  font-size: 13px;
-}
-.full { width: 100%; }
-.login-note { font-size: 11px; color: var(--muted); margin-top: 15px; }
-
-.app-shell { max-width: 1250px; margin: auto; padding: 17px 15px 100px; }
-.topbar {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 15px;
-  padding: 14px 18px;
-  background: rgba(255,255,255,0.88);
-  border: 1px solid rgba(17, 25, 40, 0.06);
-  border-radius: 18px;
-  margin-bottom: 15px;
-  box-shadow: 0 12px 26px rgba(20, 36, 58, 0.04);
-  backdrop-filter: blur(8px);
-}
-.brand { display: flex; align-items: center; gap: 10px; font-size: 22px; }
-.top-meta { text-align: right; color: var(--muted); font-size: 11px; }
-.layout { display: grid; grid-template-columns: 220px minmax(0, 1fr); gap: 15px; }
-.sidebar, .card, .stat {
-  background: rgba(255,255,255,0.9);
-  border: 1px solid rgba(17, 25, 40, 0.06);
-  border-radius: 18px;
-  box-shadow: 0 10px 25px rgba(24, 35, 52, 0.04);
-}
-.sidebar { padding: 13px; align-self: start; position: sticky; top: 12px; }
-.user { display: flex; align-items: center; gap: 10px; padding: 7px 3px 16px; margin-bottom: 12px; border-bottom: 1px solid var(--line); }
-.avatar { width: 41px; height: 41px; flex-shrink: 0; display: grid; place-items: center; border-radius: 50%; background: linear-gradient(180deg, #edf6ff, #ddefff); color: #27648a; font-weight: 600; }
-.email { font-size: 11px; overflow-wrap: anywhere; }
-.nav { display: grid; gap: 4px; }
-.nav button {
-  padding: 11px 12px;
-  text-align: left;
-  border: 0;
-  border-radius: 10px;
-  background: transparent;
-  color: #536176;
-  transition: all .2s ease;
-}
-.nav button.active, .nav button:hover {
-  background: linear-gradient(180deg, #edf7ff, #e8f4ff);
-  color: #0875a8;
-  box-shadow: inset 0 0 0 1px rgba(8, 117, 168, 0.06);
-}
-main { min-width: 0; }
-.stats { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 9px; margin-bottom: 14px; }
-.stat { padding: 12px; min-width: 0; }
-.stat-label { display: block; color: var(--muted); font-size: 11px; margin-bottom: 5px; }
-.stat-value { overflow-wrap: anywhere; }
-.dot { display: inline-block; width: 8px; height: 8px; border-radius: 50%; background: var(--green); margin-right: 5px; }
-
-.card { padding: 18px; margin-bottom: 14px; }
-.card-head { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px; margin-bottom: 17px; }
-h2 { font-size: 19px; font-weight: 600; margin: 0; }
-h3 { font-size: 15px; font-weight: 600; margin: 0 0 8px; }
-.muted { color: var(--muted); }
-.small { font-size: 11px; }
-.pill { padding: 5px 9px; border-radius: 20px; background: #eaf8ef; color: #258252; font-size: 11px; }
-.pill.blue { background: var(--blue-light); color: #126da6; }
-.section { display: none; }
-.section.active { display: block; }
-.profile-grid { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 19px; }
-
-.apps { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 9px; }
-.app-tile {
-  min-width: 0;
-  padding: 12px 5px;
-  border: 1px solid var(--line);
-  border-radius: 12px;
-  background: rgba(255,255,255,0.88);
-  color: var(--ink);
-  text-align: center;
-  transition: transform .18s ease, border-color .18s ease, box-shadow .18s ease;
-}
-.app-tile:hover {
-  border-color: rgba(24, 119, 242, 0.25);
-  box-shadow: 0 10px 18px rgba(20, 36, 58, 0.06);
-  transform: translateY(-1px);
-}
-.app-tile.locked { background: #f8fafc; color: #758196; }
-.app-icon {
-  width: 46px;
-  height: 46px;
-  display: grid;
-  place-items: center;
-  margin: 0 auto 7px;
-  border-radius: 14px;
-  overflow: hidden;
-  box-shadow: inset 0 1px 1px rgba(255,255,255,0.18), 0 6px 12px rgba(15, 23, 42, 0.08);
-}
-.app-icon svg {
-  display: block;
-  width: 24px;
-  height: 24px;
-}
-.whatsapp-logo { background: linear-gradient(180deg, #25d366 0%, #1ebc5a 100%); }
-.instagram-logo { background: linear-gradient(135deg, #feda75 0%, #fa7e1e 18%, #d62976 48%, #962fbf 70%, #4f5bd5 100%); }
-.facebook-logo { background: linear-gradient(180deg, #1877f2 0%, #0c63d9 100%); }
-.tiktok-logo { background: linear-gradient(180deg, #000000, #1a1a1a); }
-.telegram-logo { background: linear-gradient(180deg, #38bdf8, #0ea5e9); }
-.discord-logo { background: linear-gradient(180deg, #5865F2, #4757d4); }
-.x-logo { background: linear-gradient(180deg, #101010, #1b1b1b); }
-.snapchat-logo { background: linear-gradient(180deg, #ffe94a, #f7cc16); }
-.more-logo { background: linear-gradient(180deg, #7c8aa3, #5e6f8d); }
-.app-name { display: block; font-size: 12px; }
-.app-tile small { display: block; color: var(--muted); font-size: 10px; margin-top: 4px; }
-
-.details { display: grid; }
-.detail { display: flex; justify-content: space-between; gap: 12px; padding: 10px 0; border-bottom: 1px solid var(--line); }
-.detail:last-child { border-bottom: 0; }
-.detail-label { color: var(--muted); font-size: 12px; }
-.detail-value { max-width: 62%; text-align: right; font-size: 12px; overflow-wrap: anywhere; }
-
-.report { padding: 15px; margin: 12px 0 18px; border: 1px solid #e9edf3; border-radius: 14px; background: #f7f8fa; }
-.report-head { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 9px; }
-.check { width: 28px; height: 28px; display: inline-grid; place-items: center; border-radius: 50%; background: #dcf5e8; color: #2aa96d; }
-.code-dots { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 7px; margin: 14px 0; }
-.code-dots span { height: 43px; display: grid; place-items: center; border: 1px solid var(--line); border-radius: 10px; background: white; color: #536176; font-size: 18px; }
-.report-foot { display: flex; justify-content: space-between; flex-wrap: wrap; gap: 8px; color: var(--muted); font-size: 11px; }
-
-.archive { padding-top: 17px; border-top: 1px solid var(--line); }
-.archive-title { display: flex; justify-content: space-between; flex-wrap: wrap; gap: 10px; margin-bottom: 17px; font-size: 16px; }
-.archive-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
-.archive-item span { display: block; color: var(--muted); font-size: 12px; margin-bottom: 5px; }
-.amount { font-size: 17px; }
-.progress { height: 8px; margin: 12px 0 8px; border-radius: 20px; background: #e0e8f0; overflow: hidden; }
-.progress span { display: block; width: 100%; height: 100%; background: var(--blue); }
-.progress-meta { display: flex; justify-content: space-between; flex-wrap: wrap; gap: 8px; color: var(--muted); font-size: 11px; }
-.file-list { display: grid; margin-top: 15px; }
-.file { display: flex; align-items: center; gap: 11px; padding: 11px 0; border-bottom: 1px solid var(--line); }
-.file-icon { flex: 0 0 36px; width: 36px; height: 40px; display: grid; place-items: center; border-radius: 7px; background: #e6f7eb; color: #25864e; font-size: 10px; }
-.file-info { flex: 1; min-width: 0; }
-.file-name { display: block; font-size: 12px; overflow-wrap: anywhere; }
-.file-info small, .file-size { color: var(--muted); font-size: 10px; }
-
-.notice { padding: 14px; margin-bottom: 15px; border: 1px solid #e4eaf1; border-radius: 12px; background: #f8fafc; color: #526076; font-size: 12px; }
-.chat-list { display: grid; gap: 9px; }
-.chat-row {
-  display: flex;
-  align-items: center;
-  gap: 11px;
-  padding: 12px;
-  border: 1px solid var(--line);
-  border-radius: 14px;
-  background: white;
-  box-shadow: 0 1px 0 rgba(15,23,42,0.02);
-}
-.chat-row[data-tone="whatsapp"] { border-left: 4px solid #25d366; background: linear-gradient(180deg, #ffffff, #f7fff9); }
-.chat-row[data-tone="instagram"] { border-left: 4px solid #d62976; background: linear-gradient(180deg, #ffffff, #fff8fc); }
-.chat-row[data-tone="facebook"] { border-left: 4px solid #1877f2; background: linear-gradient(180deg, #ffffff, #f6faff); }
-.chat-avatar {
-  flex: 0 0 40px;
-  width: 40px;
-  height: 40px;
-  display: grid;
-  place-items: center;
-  border-radius: 50%;
-  color: #fff;
-  font-size: 12px;
-  font-weight: 700;
-  letter-spacing: 0.02em;
-}
-.chat-avatar.whatsapp { background: linear-gradient(180deg, #23c26a 0%, #159a59 100%); }
-.chat-avatar.instagram { background: linear-gradient(135deg, #feda75 0%, #fa7e1e 18%, #d62976 48%, #962fbf 70%, #4f5bd5 100%); }
-.chat-avatar.facebook { background: linear-gradient(180deg, #1877f2 0%, #105ed8 100%); }
-.chat-body { flex: 1; min-width: 0; }
-.chat-name {
-  display: block;
-  font-size: 12px;
-  font-weight: 700;
-  color: #1d2634;
-}
-.chat-message {
-  margin: 4px 0 0;
-  color: #242f3d;
-  font-size: 11px;
-  line-height: 1.35;
-  white-space: normal;
-  overflow: visible;
-  text-overflow: unset;
-  display: block;
-  font-weight: 500;
-  letter-spacing: 0.01em;
-}
-.chat-time {
-  color: #7a8799;
-  font-size: 10px;
-  align-self: flex-start;
-  margin-top: 2px;
-  white-space: nowrap;
-}
-.blurred { filter: none; user-select: text; }
-.button { padding: 10px 13px; border: 1px solid #d8e1ec; border-radius: 9px; background: white; color: #35445b; font-size: 12px; }
-.bottom-nav { display: none; }
-.toast { display: none; position: fixed; z-index: 10; bottom: 80px; left: 50%; transform: translateX(-50%); max-width: 90vw; padding: 11px 15px; border-radius: 10px; background: rgba(38,50,71,0.94); color: white; font-size: 12px; }
-
-@media (max-width: 850px) {
-  .layout { grid-template-columns: 1fr; }
-  .sidebar { display: none; }
-  .bottom-nav { position: fixed; z-index: 5; right: 0; bottom: 0; left: 0; display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); padding: 7px 8px calc(7px + env(safe-area-inset-bottom)); border-top: 1px solid var(--line); background: rgba(255,255,255,0.96); backdrop-filter: blur(12px); }
-  .bottom-nav button { display: grid; justify-items: center; gap: 3px; padding: 5px 2px; border: 0; background: transparent; color: #65748a; font-size: 10px; }
-  .bottom-nav button span { font-size: 18px; }
-  .bottom-nav button.active { color: var(--blue); }
-  .profile-grid { grid-template-columns: 1fr; }
-  .stats { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-}
-@media (max-width: 460px) {
-  .app-shell { padding: 10px 9px 95px; }
-  .card { padding: 14px; }
-  .brand { font-size: 19px; }
-  .top-meta { max-width: 120px; }
-  .code-dots { gap: 4px; }
-  .code-dots span { height: 37px; }
-  .detail-value { max-width: 58%; }
-}
-</style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Spyteligent - Cyber Intelligence Dashboard</title>
+  <!-- Google Fonts & Lucide Icons -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <!-- Link to External Stylesheet -->
+  <link rel="stylesheet" href="styles.css">
 </head>
-
 <body>
 
-<!-- LOGIN -->
-<section class="login-screen" id="loginScreen">
-  <form class="login-card" id="loginForm">
-    <div class="logo">
-      <span class="logo-icon">✦</span>
-      <span>spyteligent</span>
-    </div>
-    <h1>Welcome back</h1>
-    <p class="subtle">Sign in to view the profile dashboard.</p>
-
-    <div class="field">
-      <label for="email">Email address</label>
-      <input id="email" type="email" value="anon127498@proton.me" required autocomplete="username">
-    </div>
-
-    <div class="field">
-      <label for="password">Password</label>
-      <input id="password" type="password" placeholder="Enter dashboard password" required autocomplete="current-password">
-    </div>
-
-    <button class="action primary full" type="submit">Sign in</button>
-    <p class="login-note">Local dashboard interface. Sign-in does not authenticate with an external account.</p>
-  </form>
-</section>
-
-<!-- DASHBOARD -->
-<div class="app-shell hidden" id="dashboard">
-  <header class="topbar">
-    <div class="brand">
-      <span class="logo-icon">✦</span>
-      <span>spyteligent</span>
-    </div>
-    <div class="top-meta">
-      Profile dashboard<br>
-      October 24, 2026
-    </div>
-  </header>
-
-  <div class="layout">
-    <aside class="sidebar">
-      <div class="user">
-        <div class="avatar">A</div>
-        <div>
-          <div class="email">anon127498@proton.me</div>
-          <div class="subtle small">Profile information</div>
+  <!-- ==========================================
+       LOGIN VIEW / AUTHENTICATION INTERFACE
+  =========================================== -->
+  <div id="login-screen" class="auth-wrapper">
+    <div class="auth-card">
+      <div class="auth-header">
+        <div class="brand">
+          <i data-lucide="shield"></i>
+          <span>spyteligent</span>
         </div>
-      </div>
-      <nav class="nav">
-        <button class="active" data-section="overview">⌂　Dashboard</button>
-        <button data-section="profile">♙　Profile information</button>
-        <button data-section="apps">▣　Applications</button>
-        <button data-section="messages">✉　Messages · 3</button>
-        <button data-section="media">▧　Media files</button>
-        <button data-section="monitor">◉　Monitoring</button>
-        <button data-section="devices">▣　Device status</button>
-      </nav>
-    </aside>
-
-    <main>
-      <div class="stats">
-        <div class="stat"><span class="stat-label">Profile</span><div class="stat-value">WhatsApp</div></div>
-        <div class="stat"><span class="stat-label">Network</span><div class="stat-value">Omnipoint</div></div>
-        <div class="stat"><span class="stat-label">Last activity</span><div class="stat-value"><span class="dot"></span>14 min ago</div></div>
-        <div class="stat"><span class="stat-label">Listed devices</span><div class="stat-value">6 devices</div></div>
+        <p class="auth-subtitle">Cyber Intelligence Control Center</p>
       </div>
 
-      <!-- OVERVIEW -->
-      <section class="section active" id="overview">
-        <div class="card">
-          <div class="card-head">
-            <h2>Profile information</h2>
-            <span class="pill blue">Account details</span>
-          </div>
-          <div class="profile-grid">
-            <div class="apps" id="mainApps">
-              <button class="app-tile" data-app="WhatsApp">
-                <span class="app-icon whatsapp-logo" aria-label="WhatsApp logo">
-                  <svg viewBox="0 0 64 64" aria-hidden="true">
-                    <path fill="white" d="M32 12.8C21.3 12.8 12.8 20.4 12.8 30.1c0 4.1 1.2 8.1 3.4 11.5L14 52l10.8-2.7c3.2 1.8 6.8 2.7 10.7 2.7 10.8 0 19.5-7.7 19.5-17.3 0-9.7-8.7-17.4-19.5-17.4Zm10.6 23.6c-.4 1.1-2.1 2.1-3 2.3-.9.2-2 .2-5.6-1.2-4.8-1.7-7.9-6.1-8.1-6.4-.3-.3-2-2.7-2-5.2 0-2.5 1.3-3.7 1.8-4.2.6-.5 1.3-.6 1.8-.6h.9c.3 0 .8.1 1.3.9.5 1.1 1.7 3.9 1.8 4.1.2.3.3.7.1 1.2-.2.6-.4.9-.8 1.3-.4.5-.8 1-.9 1.2-.3.3-.6.7-.3 1.3.3.6 1.5 2.5 3.2 4 2.2 2 4.1 2.6 4.8 2.9.7.3 1.1.2 1.4-.2.4-.5 1.4-1.6 1.8-2.2.4-.6.7-.5 1.3-.3.6.2 3 1.4 3.6 1.7.6.3 1.1.4 1.3.7.2.3.2 1.6-.2 2.8Z"/>
-                  </svg>
-                </span>
-                <span class="app-name">WhatsApp</span>
-                <small>Account details</small>
-              </button>
-
-              <button class="app-tile" data-app="Instagram">
-                <span class="app-icon instagram-logo" aria-label="Instagram logo">
-                  <svg viewBox="0 0 64 64" aria-hidden="true">
-                    <rect x="14" y="14" width="36" height="36" rx="9" fill="none" stroke="white" stroke-width="3"/>
-                    <circle cx="32" cy="32" r="9" fill="none" stroke="white" stroke-width="3"/>
-                    <circle cx="43" cy="21" r="2.8" fill="white"/>
-                  </svg>
-                </span>
-                <span class="app-name">Instagram</span>
-                <small>Account details</small>
-              </button>
-
-              <button class="app-tile" data-app="Facebook">
-                <span class="app-icon facebook-logo" aria-label="Facebook logo">
-                  <svg viewBox="0 0 64 64" aria-hidden="true">
-                    <path fill="white" d="M35.5 51V34.8h6.1l.9-7h-7v-4.7c0-2 .6-3.5 3.6-3.5h3.8V13c-.7-.1-2.8-.3-5.3-.3-5.2 0-8.8 3.2-8.8 9.1V27.8H20v7h6.4V51h9.1Z"/>
-                  </svg>
-                </span>
-                <span class="app-name">Facebook</span>
-                <small>Account details</small>
-              </button>
-
-              <button class="app-tile locked" data-app="TikTok">
-                <span class="app-icon tiktok-logo" aria-label="TikTok logo">
-                  <svg viewBox="0 0 64 64" aria-hidden="true">
-                    <path fill="#ffffff" d="M40.8 13.5c1.7 1.8 3.8 2.9 6.2 3.2v6.6c-2.8-.1-5.1-1.1-7.2-3.2v17.5c0 7.3-5.7 12.8-12.8 12.8-7 0-12.7-5.7-12.7-12.7s5.7-12.7 12.7-12.7c1.4 0 2.7.2 4 .7v7.1c-1.1-.5-2.2-.7-3.4-.7-3.3 0-5.9 2.7-5.9 6 0 3.3 2.7 5.9 5.9 5.9 3.4 0 6.1-2.8 6.1-6.2V13.5h6.1Z"/>
-                  </svg>
-                </span>
-                <span class="app-name">TikTok</span>
-                <small>Unavailable</small>
-              </button>
-
-              <button class="app-tile locked" data-app="Telegram">
-                <span class="app-icon telegram-logo" aria-label="Telegram logo">
-                  <svg viewBox="0 0 64 64" aria-hidden="true">
-                    <path fill="white" d="M49.5 17.1 15.1 30.5c-2.1 1-2.1 2.7-.4 3.3l8.6 2.7 3.2 10.3c.4 1.2 1.7 1.5 2.6.7l4.9-4.9 9.7 7.3c1.8 1.2 3.1.6 3.6-1.7l5.2-24.5c.7-3.1-.5-4.5-3.2-3.6Zm-9.8 14.4-13.6 12.4c-.8.7-1.5.3-1.1-.9l2.9-11.8c.2-.8.9-1.3 1.6-1.3h9.7c1.4 0 1.7.8.5 1.6Zm-4.3-7.7L24.7 30c-.9-.5-1.4-.4-1.8.3l-1.8 5.7c-.2.7.1 1.1.8 1l8.7-2.6c.8-.2 1.1-.9.5-1.6Z"/>
-                  </svg>
-                </span>
-                <span class="app-name">Telegram</span>
-                <small>Unavailable</small>
-              </button>
-
-              <button class="app-tile locked" data-app="Discord">
-                <span class="app-icon discord-logo" aria-label="Discord logo">
-                  <svg viewBox="0 0 64 64" aria-hidden="true">
-                    <path fill="white" d="M47.8 20.3c-2.8-1.9-6.1-3.3-9.5-4.2l-1.1 2.4c3 .7 5.8 1.8 8.4 3.3-4.4-2.2-9.7-3.5-15.2-3.5s-10.8 1.3-15.2 3.5c2.6-1.5 5.4-2.6 8.4-3.3L25.7 16c-3.4.9-6.7 2.3-9.5 4.2C12.6 26.7 11 34.1 11 41.4c5.7 4.3 12.1 6.8 18.9 7.8h2.2c6.8-1 13.2-3.5 18.9-7.8 0-7.3-1.6-14.7-6.2-21.1ZM27.5 39.1c-1.7 0-3.1-1.5-3.1-3.3s1.4-3.3 3.1-3.3c1.8 0 3.2 1.5 3.2 3.3s-1.4 3.3-3.2 3.3Zm9.1 0c-1.7 0-3.1-1.5-3.1-3.3s1.4-3.3 3.1-3.3 3.2 1.5 3.2 3.3-1.4 3.3-3.2 3.3Z"/>
-                  </svg>
-                </span>
-                <span class="app-name">Discord</span>
-                <small>Unavailable</small>
-              </button>
-
-              <button class="app-tile locked" data-app="X / Twitter">
-                <span class="app-icon x-logo" aria-label="X logo">
-                  <svg viewBox="0 0 64 64" aria-hidden="true">
-                    <path fill="white" d="M47.8 15.4h7.1l-15.6 17.7 18.4 25.5H40.8L29 41.5 15.8 58.6H8.7l16.6-18.9L7.8 15.4h17.1l10.3 14.2 12.6-14.2Zm-2.5 38.5h3.9L20.4 18.7h-4.2l29.1 35.2Z"/>
-                  </svg>
-                </span>
-                <span class="app-name">X / Twitter</span>
-                <small>Unavailable</small>
-              </button>
-
-              <button class="app-tile locked" data-app="Snapchat">
-                <span class="app-icon snapchat-logo" aria-label="Snapchat logo">
-                  <svg viewBox="0 0 64 64" aria-hidden="true">
-                    <path fill="#0d1b2a" d="M49.8 25.4c-.6-2.7-2.9-4.8-5.9-5.9-3.3-1.2-6.6-.8-9.8-.4-2.5.3-4.4 1.8-6.1 3.7-1.8-1.9-3.6-3.4-6.1-3.7-3.2-.4-6.5-.8-9.8.4-3 .9-5.3 3.2-5.9 5.9-.7 3.2.2 6.5 2.3 8.7 1.8 1.8 4.1 3 6.5 4.1 1.5.7 2.5 1.5 3 2.7.4 1 .1 2.2-.7 3.2-.9 1.2-2.3 1.8-3.7 2.4-2.3 1-4.1 1.7-4.5 3.3-.2.9.2 1.7.8 2.3 1.1 1.1 2.9 1.5 4.6 1.3 2.6-.3 4.7-1.1 6.3-2.5 1.6 1.4 3.7 2.2 6.3 2.5 1.7.2 3.5-.2 4.6-1.3.6-.6 1-1.4.8-2.3-.4-1.6-2.2-2.3-4.5-3.3-1.4-.6-2.8-1.2-3.7-2.4-.8-1-.9-2.2-.7-3.2.5-1.2 1.5-2 3-2.7 2.4-1.1 4.7-2.3 6.5-4.1 2.1-2.2 3.1-5.5 2.3-8.7Z"/>
-                  </svg>
-                </span>
-                <span class="app-name">Snapchat</span>
-                <small>Unavailable</small>
-              </button>
-
-              <button class="app-tile locked" data-app="More apps">
-                <span class="app-icon more-logo" aria-label="More apps icon">
-                  <svg viewBox="0 0 64 64" aria-hidden="true">
-                    <path fill="white" d="M22 31.5h20a2.5 2.5 0 0 1 0 5H22a2.5 2.5 0 0 1 0-5Zm-9.5-9.5h39a2.5 2.5 0 0 1 0 5h-39a2.5 2.5 0 0 1 0-5Zm19.5-9.5h0a2.5 2.5 0 0 1 0 5h-20a2.5 2.5 0 0 1 0-5h20Z"/>
-                  </svg>
-                </span>
-                <span class="app-name">More apps</span>
-                <small>Unavailable</small>
-              </button>
-            </div>
-
-            <div class="details">
-              <div class="detail"><span class="detail-label">Email</span><span class="detail-value">anon127498@proton.me</span></div>
-              <div class="detail"><span class="detail-label">WhatsApp number</span><span class="detail-value">+1 917-536-4180</span></div>
-              <div class="detail"><span class="detail-label">Country</span><span class="detail-value">United States</span></div>
-              <div class="detail"><span class="detail-label">Region / city</span><span class="detail-value">New York City, New York</span></div>
-              <div class="detail"><span class="detail-label">Network</span><span class="detail-value">Omnipoint</span></div>
-              <div class="detail"><span class="detail-label">Carrier data</span><span class="detail-value">4.3 GB</span></div>
-              <div class="detail"><span class="detail-label">Date</span><span class="detail-value">October 24, 2026</span></div>
-              <div class="detail"><span class="detail-label">Last activity</span><span class="detail-value">Online 14 min ago</span></div>
-              <div class="detail"><span class="detail-label">Connected devices</span><span class="detail-value">6 devices</span></div>
-              <div class="detail"><span class="detail-label">Phone types</span><span class="detail-value">iPhone · iPhone</span></div>
-            </div>
+      <form id="login-form" onsubmit="event.preventDefault(); handleLogin();">
+        <div class="form-group">
+          <label for="username">Username or Email</label>
+          <div class="input-wrapper">
+            <i data-lucide="user"></i>
+            <input type="text" id="username" placeholder="user123 or user@example.com" value="user123" required>
           </div>
         </div>
 
-        <div class="card">
-          <div class="card-head">
-            <h2 id="reportTitle">WhatsApp account</h2>
-            <span class="pill">Account report</span>
-          </div>
-          <div class="report">
-            <div class="report-head">
-              <span style="display:flex;align-items:center;gap:9px"><span class="check">✓</span>Account information</span>
-              <span id="reportApp">WHATSAPP</span>
-            </div>
-            <div class="code-dots"><span>•</span><span>•</span><span>•</span><span>•</span><span>•</span><span>•</span></div>
-            <div class="report-foot"><span>Account status</span><span>Profile view</span></div>
-          </div>
-
-          <div class="archive">
-            <div class="archive-title"><span>📁 Profile archive</span><span>Size: 4.3 GB</span></div>
-            <div class="archive-grid">
-              <div class="archive-item"><span>Chat messages</span><div class="amount">583 MB</div></div>
-              <div class="archive-item"><span>Photos &amp; Videos</span><div class="amount">0.92 GB</div></div>
-              <div class="archive-item"><span>Logs &amp; Contacts</span><div class="amount">835 KB</div></div>
-              <div class="archive-item"><span>Login / Password</span><div class="amount">Not listed</div></div>
-            </div>
-            <div style="display:flex;justify-content:space-between;gap:10px;margin-top:20px"><span>Archive status</span><span style="color:var(--blue)">Profile report</span></div>
-            <div class="progress"><span></span></div>
-            <div class="progress-meta"><span>4.3 GB · Supplied figure</span><span>Archive information</span></div>
-            <div class="file-list">
-              <div class="file"><div class="file-icon">TXT</div><div class="file-info"><span class="file-name">profile_summary.txt</span><small>Profile information</small></div><span class="file-size">TXT</span></div>
-              <div class="file"><div class="file-icon">JSON</div><div class="file-info"><span class="file-name">device_list.json</span><small>Device inventory fields</small></div><span class="file-size">JSON</span></div>
-              <div class="file"><div class="file-icon">INFO</div><div class="file-info"><span class="file-name">archive_manifest.info</span><small>Archive information</small></div><span class="file-size">INFO</span></div>
-            </div>
-          </div>
-        </div>
-
-        <div class="card">
-          <div class="card-head"><h2>Location &amp; device information</h2><span class="pill">Location details</span></div>
-          <div class="details">
-            <div class="detail"><span class="detail-label">Country</span><span class="detail-value">🇺🇸 United States</span></div>
-            <div class="detail"><span class="detail-label">Region / city</span><span class="detail-value">New York · New York City</span></div>
-            <div class="detail"><span class="detail-label">Street address</span><span class="detail-value">Not supplied</span></div>
-            <div class="detail"><span class="detail-label">Coordinates</span><span class="detail-value">Not supplied</span></div>
-            <div class="detail"><span class="detail-label">Cell information</span><span class="detail-value">LAC 48978 · Cell 48572</span></div>
-            <div class="detail"><span class="detail-label">Wi-Fi / base stations</span><span class="detail-value">14 Wi-Fi · 5 base stations</span></div>
-            <div class="detail"><span class="detail-label">GPS information</span><span class="detail-value">A-GPS · HDOP 1.1</span></div>
-            <div class="detail"><span class="detail-label">Phone types</span><span class="detail-value">Two iPhones</span></div>
-          </div>
-        </div>
-      </section>
-
-      <!-- PROFILE INFORMATION -->
-      <section class="section" id="profile">
-        <div class="card">
-          <div class="card-head"><h2>Profile information</h2><span class="pill blue">Account details</span></div>
-          <div class="details">
-            <div class="detail"><span class="detail-label">Email</span><span class="detail-value">anon127498@proton.me</span></div>
-            <div class="detail"><span class="detail-label">WhatsApp number</span><span class="detail-value">+1 917-536-4180</span></div>
-            <div class="detail"><span class="detail-label">Country</span><span class="detail-value">United States</span></div>
-            <div class="detail"><span class="detail-label">City</span><span class="detail-value">New York City</span></div>
-            <div class="detail"><span class="detail-label">Network / carrier</span><span class="detail-value">Omnipoint</span></div>
-            <div class="detail"><span class="detail-label">Carrier data</span><span class="detail-value">4.3 GB</span></div>
-            <div class="detail"><span class="detail-label">Date</span><span class="detail-value">October 24, 2026</span></div>
-            <div class="detail"><span class="detail-label">Last activity</span><span class="detail-value">Online 14 min ago</span></div>
-            <div class="detail"><span class="detail-label">Phone types</span><span class="detail-value">iPhone · iPhone</span></div>
-          </div>
-        </div>
-      </section>
-
-      <!-- APPLICATIONS -->
-      <section class="section" id="apps">
-        <div class="card">
-          <div class="card-head"><h2>Applications</h2><span class="pill">App directory</span></div>
-          <div class="apps" id="appDirectory"></div>
-        </div>
-      </section>
-
-      <!-- MESSAGES -->
-      <section class="section" id="messages">
-        <div class="card">
-          <div class="card-head"><h2>Messages</h2><span class="pill blue">3 applications</span></div>
-          <p class="subtle">Choose an application to open its message-list interface.</p>
-          <div class="apps">
-            <button class="app-tile" data-message-app="WhatsApp">
-              <span class="app-icon whatsapp-logo" aria-label="WhatsApp logo">
-                <svg viewBox="0 0 64 64" aria-hidden="true"><path fill="white" d="M32 12.8C21.3 12.8 12.8 20.4 12.8 30.1c0 4.1 1.2 8.1 3.4 11.5L14 52l10.8-2.7c3.2 1.8 6.8 2.7 10.7 2.7 10.8 0 19.5-7.7 19.5-17.3 0-9.7-8.7-17.4-19.5-17.4Zm10.6 23.6c-.4 1.1-2.1 2.1-3 2.3-.9.2-2 .2-5.6-1.2-4.8-1.7-7.9-6.1-8.1-6.4-.3-.3-2-2.7-2-5.2 0-2.5 1.3-3.7 1.8-4.2.6-.5 1.3-.6 1.8-.6h.9c.3 0 .8.1 1.3.9.5 1.1 1.7 3.9 1.8 4.1.2.3.3.7.1 1.2-.2.6-.4.9-.8 1.3-.4.5-.8 1-.9 1.2-.3.3-.6.7-.3 1.3.3.6 1.5 2.5 3.2 4 2.2 2 4.1 2.6 4.8 2.9.7.3 1.1.2 1.4-.2.4-.5 1.4-1.6 1.8-2.2.4-.6.7-.5 1.3-.3.6.2 3 1.4 3.6 1.7.6.3 1.1.4 1.3.7.2.3.2 1.6-.2 2.8Z"/></svg>
-              </span>
-              <span class="app-name">WhatsApp</span>
-              <small>Message list</small>
-            </button>
-            <button class="app-tile" data-message-app="Instagram">
-              <span class="app-icon instagram-logo" aria-label="Instagram logo">
-                <svg viewBox="0 0 64 64" aria-hidden="true"><rect x="14" y="14" width="36" height="36" rx="9" fill="none" stroke="white" stroke-width="3"/><circle cx="32" cy="32" r="9" fill="none" stroke="white" stroke-width="3"/><circle cx="43" cy="21" r="2.8" fill="white"/></svg>
-              </span>
-              <span class="app-name">Instagram</span>
-              <small>Message list</small>
-            </button>
-            <button class="app-tile" data-message-app="Facebook">
-              <span class="app-icon facebook-logo" aria-label="Facebook logo">
-                <svg viewBox="0 0 64 64" aria-hidden="true"><path fill="white" d="M35.5 51V34.8h6.1l.9-7h-7v-4.7c0-2 .6-3.5 3.6-3.5h3.8V13c-.7-.1-2.8-.3-5.3-.3-5.2 0-8.8 3.2-8.8 9.1V27.8H20v7h6.4V51h9.1Z"/></svg>
-              </span>
-              <span class="app-name">Facebook</span>
-              <small>Message list</small>
+        <div class="form-group">
+          <label for="password">Security Password</label>
+          <div class="input-wrapper">
+            <i data-lucide="lock"></i>
+            <input type="password" id="password" placeholder="••••••••••••" value="securepass123" required>
+            <button type="button" class="pwd-toggle" id="toggle-password" onclick="togglePasswordVisibility()">
+              <i data-lucide="eye" id="pwd-icon"></i>
             </button>
           </div>
         </div>
 
-        <div class="card hidden" id="chatCard">
-          <div class="card-head"><h2 id="chatTitle">Message list</h2><span class="pill">Illustrative layout</span></div>
-          <div class="notice">
-            <h3>Access notice</h3>
-            Message access is not connected to a real account. This display is an interface preview; no payment is required to view the sample layout.
-          </div>
-          <div class="chat-list" id="chatList"></div>
+        <div class="form-actions">
+          <label class="checkbox-container">
+            <input type="checkbox" checked>
+            <span class="checkmark"></span>
+            Remember Device
+          </label>
+          <a href="#" class="forgot-link">Forgot Key?</a>
         </div>
-      </section>
 
-      <!-- MEDIA FILES -->
-      <section class="section" id="media">
-        <div class="card">
-          <div class="card-head"><h2>Media files</h2><span class="pill">File categories</span></div>
-          <div class="apps">
-            <button class="app-tile" data-media="Pictures"><span class="app-icon" style="background:#4f8a75">▧</span><span class="app-name">Pictures</span><small>Files</small></button>
-            <button class="app-tile" data-media="Videos"><span class="app-icon" style="background:#7662bc">▶</span><span class="app-name">Videos</span><small>Files</small></button>
-            <button class="app-tile" data-media="Audio"><span class="app-icon" style="background:#c16a91">♫</span><span class="app-name">Audio</span><small>Files</small></button>
-            <button class="app-tile" data-media="Documents"><span class="app-icon" style="background:#4d82bd">▤</span><span class="app-name">Documents</span><small>Files</small></button>
-          </div>
-          <div class="hidden" id="mediaDetails" style="margin-top:18px">
-            <div class="notice">This category is an interface preview. No device files are retrieved.</div>
-            <div class="detail"><span class="detail-label">Selected category</span><span class="detail-value" id="mediaTitle">Pictures</span></div>
-            <div class="detail"><span class="detail-label">Files</span><span class="detail-value">No files connected</span></div>
-          </div>
-        </div>
-      </section>
+        <button type="submit" class="btn btn-primary btn-full">
+          <span>Authorize Access</span>
+          <i data-lucide="arrow-right"></i>
+        </button>
 
-      <!-- MONITORING -->
-      <section class="section" id="monitor">
-        <div class="card">
-          <div class="card-head"><h2>Monitoring overview</h2><span class="pill">Status</span></div>
-          <div class="details">
-            <div class="detail"><span class="detail-label">Last activity</span><span class="detail-value">Online 14 min ago · supplied information</span></div>
-            <div class="detail"><span class="detail-label">Listed devices</span><span class="detail-value">6 devices</span></div>
-            <div class="detail"><span class="detail-label">Network</span><span class="detail-value">Omnipoint</span></div>
-            <div class="detail"><span class="detail-label">Location</span><span class="detail-value">New York City, US</span></div>
-            <div class="detail"><span class="detail-label">GPS status</span><span class="detail-value">No live reading connected</span></div>
-            <div class="detail"><span class="detail-label">Remote control</span><span class="detail-value">Not connected</span></div>
-          </div>
+        <div class="demo-credentials">
+          <p><strong>Demo Credentials:</strong></p>
+          <p>User: <code>user123</code> | Pass: <code>securepass123</code></p>
         </div>
-      </section>
-
-      <!-- DEVICES -->
-      <section class="section" id="devices">
-        <div class="card">
-          <div class="card-head"><h2>Device status</h2><span class="pill">Device list</span></div>
-          <div class="details">
-            <div class="detail"><span class="detail-label">Phone 1</span><span class="detail-value">iPhone</span></div>
-            <div class="detail"><span class="detail-label">Phone 2</span><span class="detail-value">iPhone</span></div>
-            <div class="detail"><span class="detail-label">Network status</span><span class="detail-value">Not connected</span></div>
-            <div class="detail"><span class="detail-label">Remote control</span><span class="detail-value">Not configured</span></div>
-            <div class="detail"><span class="detail-label">Connected device records</span><span class="detail-value">6 supplied records</span></div>
-          </div>
-          <p class="subtle small" style="margin:15px 0 0">Device controls are display-only and do not issue commands to phones.</p>
-        </div>
-      </section>
-    </main>
+      </form>
+    </div>
   </div>
-</div>
 
-<!-- MOBILE BOTTOM NAVIGATION -->
-<nav class="bottom-nav hidden" id="bottomNav" aria-label="Main navigation">
-  <button class="active" data-section="overview"><span>⌂</span>Home</button>
-  <button data-section="profile"><span>♙</span>Profile</button>
-  <button data-section="apps"><span>▣</span>Apps</button>
-  <button data-section="messages"><span>✉</span>Messages</button>
-  <button data-section="media"><span>▧</span>Media</button>
-</nav>
-
-<div class="toast" id="toast" role="status" aria-live="polite"></div>
-
-<script>
-const loginForm = document.getElementById("loginForm");
-const loginScreen = document.getElementById("loginScreen");
-const dashboard = document.getElementById("dashboard");
-const bottomNav = document.getElementById("bottomNav");
-
-loginForm.addEventListener("submit", function(event) {
-  event.preventDefault();
-  loginScreen.classList.add("hidden");
-  dashboard.classList.remove("hidden");
-  bottomNav.classList.remove("hidden");
-  window.scrollTo({ top: 0, behavior: "smooth" });
-});
-
-const sections = [...document.querySelectorAll(".section")];
-const navigation = [...document.querySelectorAll("[data-section]")];
-
-function showSection(id) {
-  sections.forEach(section => {
-    section.classList.toggle("active", section.id === id);
-  });
-
-  navigation.forEach(button => {
-    button.classList.toggle("active", button.dataset.section === id);
-  });
-
-  window.scrollTo({ top: 0, behavior: "smooth" });
-}
-
-navigation.forEach(button => {
-  button.addEventListener("click", () => showSection(button.dataset.section));
-});
-
-let toastTimer;
-
-function notify(message) {
-  const toast = document.getElementById("toast");
-  toast.textContent = message;
-  toast.style.display = "block";
-  clearTimeout(toastTimer);
-  toastTimer = setTimeout(() => {
-    toast.style.display = "none";
-  }, 2400);
-}
-
-function selectApp(name) {
-  const available = ["WhatsApp", "Instagram", "Facebook"];
-
-  if (!available.includes(name)) {
-    notify(name + " is unavailable.");
-    return;
-  }
-
-  document.getElementById("reportTitle").textContent = name + " account";
-  document.getElementById("reportApp").textContent = name.toUpperCase();
-  showSection("overview");
-}
-
-document.querySelectorAll("#mainApps [data-app]").forEach(button => {
-  button.addEventListener("click", () => selectApp(button.dataset.app));
-});
-
-const appDirectory = document.getElementById("appDirectory");
-
-document.querySelectorAll("#mainApps [data-app]").forEach(original => {
-  const copy = original.cloneNode(true);
-  copy.addEventListener("click", () => selectApp(copy.dataset.app));
-  appDirectory.appendChild(copy);
-});
-
-const messageTemplates = {
-  WhatsApp: [
-    { name: "Maya Chen", preview: "Can we move the call to 4:00 PM today?", time: "3:42 PM", tone: "whatsapp" },
-    { name: "Emma Brooks", preview: "I just sent the updated files from the meeting.", time: "2:18 PM", tone: "whatsapp" },
-    { name: "Lucas Reed", preview: "Let me know when you get home safely.", time: "Yesterday", tone: "whatsapp" }
-  ],
-  Instagram: [
-    { name: "@luna.night", preview: "Your photo is live and getting a lot of likes!", time: "5:11 PM", tone: "instagram" },
-    { name: "Ariana S.", preview: "I shared the reel draft for your feedback.", time: "4:05 PM", tone: "instagram" },
-    { name: "@city.frames", preview: "The new post is up. Check the captions now.", time: "Jun 24", tone: "instagram" }
-  ],
-  Facebook: [
-    { name: "David Cole", preview: "I found the restaurant you asked about downtown.", time: "8:30 AM", tone: "facebook" },
-    { name: "Sarah Nguyen", preview: "Let's meet for coffee after work this Friday.", time: "Yesterday", tone: "facebook" },
-    { name: "The Parker Group", preview: "Updated the event notes and attached the schedule.", time: "Mon", tone: "facebook" }
-  ]
-};
-
-const chatList = document.getElementById("chatList");
-
-function renderMessages(appName) {
-  const rows = messageTemplates[appName] || messageTemplates.WhatsApp;
-  chatList.innerHTML = rows.map(row => `
-    <div class="chat-row" data-tone="${row.tone}">
-      <div class="chat-avatar ${row.tone}">${row.name.charAt(0).toUpperCase()}</div>
-      <div class="chat-body">
-        <span class="chat-name blurred">${row.name}</span>
-        <p class="chat-message blurred">${row.preview}</p>
+  <!-- ==========================================
+       MAIN APP / PROFILE DASHBOARD VIEW
+  =========================================== -->
+  <div id="dashboard-screen" class="dashboard-wrapper hidden">
+    
+    <!-- TOP NAVIGATION BAR -->
+    <header class="topbar">
+      <div class="brand">
+        <i data-lucide="shield"></i>
+        <span>spyteligent</span>
       </div>
-      <span class="chat-time">${row.time}</span>
+
+      <div class="search-bar">
+        <i data-lucide="search"></i>
+        <input type="text" placeholder="Search device, app, or feature...">
+      </div>
+
+      <div class="topbar-right">
+        <button class="icon-btn badge-btn">
+          <i data-lucide="bell"></i>
+          <span class="notification-badge">1</span>
+        </button>
+
+        <div class="user-menu" id="user-menu-trigger">
+          <div class="user-avatar-sm">
+            <i data-lucide="user"></i>
+          </div>
+          <div class="user-info-sm">
+            <span class="user-title">Welcome,</span>
+            <span class="user-name">User</span>
+          </div>
+          <i data-lucide="chevron-down" class="dropdown-chevron"></i>
+          
+          <div class="user-dropdown hidden" id="user-dropdown">
+            <a href="#profile"><i data-lucide="user"></i> Profile Info</a>
+            <a href="#settings"><i data-lucide="settings"></i> Settings</a>
+            <hr>
+            <a href="#" class="logout-link" onclick="handleLogout()"><i data-lucide="log-out"></i> Disconnect / Logout</a>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <!-- DASHBOARD BODY LAYOUT -->
+    <div class="dashboard-body">
+      
+      <!-- SIDE NAVIGATION BAR -->
+      <aside class="sidebar">
+        <!-- Profile Banner Card -->
+        <div class="sidebar-profile-card">
+          <div class="avatar-lg">
+            <i data-lucide="user"></i>
+          </div>
+          <div class="profile-meta">
+            <h4>User Profile</h4>
+            <p>user@example.com</p>
+            <span class="status-badge status-online">
+              <span class="dot"></span> Online
+            </span>
+          </div>
+        </div>
+
+        <!-- Sidebar Navigation Menu -->
+        <nav class="sidebar-nav">
+          <a href="#" class="nav-item active">
+            <i data-lucide="layout-dashboard"></i>
+            <span>Dashboard</span>
+          </a>
+          <a href="#" class="nav-item">
+            <i data-lucide="user"></i>
+            <span>Profile Information</span>
+          </a>
+          <a href="#" class="nav-item">
+            <i data-lucide="copy"></i>
+            <span>Cloning</span>
+          </a>
+          <a href="#" class="nav-item">
+            <i data-lucide="activity"></i>
+            <span>Monitoring</span>
+          </a>
+          <a href="#" class="nav-item">
+            <i data-lucide="smartphone"></i>
+            <span>Remote Control</span>
+          </a>
+          <a href="#" class="nav-item">
+            <i data-lucide="map-pin"></i>
+            <span>Location</span>
+          </a>
+          <a href="#" class="nav-item">
+            <i data-lucide="mail"></i>
+            <span>Messages</span>
+          </a>
+          <a href="#" class="nav-item">
+            <i data-lucide="folder"></i>
+            <span>Media Files</span>
+          </a>
+          <a href="#" class="nav-item">
+            <i data-lucide="history"></i>
+            <span>Logs & History</span>
+          </a>
+          <a href="#" class="nav-item">
+            <i data-lucide="settings"></i>
+            <span>Settings</span>
+          </a>
+        </nav>
+      </aside>
+
+      <!-- MAIN CONTENT GRID -->
+      <main class="main-content">
+        
+        <!-- ROW 1: QUICK METRICS CARDS -->
+        <div class="metrics-grid">
+          <!-- Total Apps -->
+          <div class="metric-card">
+            <div class="metric-icon blue">
+              <i data-lucide="grid"></i>
+            </div>
+            <div class="metric-info">
+              <span class="metric-label">Total Apps</span>
+              <span class="metric-value">42</span>
+              <span class="metric-sub">Installed</span>
+            </div>
+          </div>
+
+          <!-- Online Status -->
+          <div class="metric-card">
+            <div class="metric-icon green">
+              <span class="pulse-ring"></span>
+            </div>
+            <div class="metric-info">
+              <span class="metric-label">Online Status</span>
+              <span class="metric-value green-text">• Active</span>
+              <span class="metric-sub">Device Connected</span>
+            </div>
+          </div>
+
+          <!-- Location Summary -->
+          <div class="metric-card">
+            <div class="metric-icon blue-light">
+              <i data-lucide="map-pin"></i>
+            </div>
+            <div class="metric-info">
+              <span class="metric-label">Location</span>
+              <span class="metric-value text-md">Lagos, Nigeria</span>
+              <span class="metric-sub">Last Updated: 2 min ago</span>
+            </div>
+          </div>
+
+          <!-- Battery Level -->
+          <div class="metric-card">
+            <div class="metric-icon green-icon">
+              <i data-lucide="battery-charging"></i>
+            </div>
+            <div class="metric-info">
+              <span class="metric-label">Battery</span>
+              <span class="metric-value">78%</span>
+              <span class="metric-sub">Charging</span>
+            </div>
+          </div>
+
+          <!-- Storage Details -->
+          <div class="metric-card">
+            <div class="metric-icon blue-dark">
+              <i data-lucide="hard-drive"></i>
+            </div>
+            <div class="metric-info">
+              <span class="metric-label">Storage</span>
+              <span class="metric-value">128 GB</span>
+              <span class="metric-sub">Free: 64 GB</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- ROW 2: PROFILE INFORMATION & LIVE LOCATION -->
+        <div class="grid-2-col">
+          
+          <!-- Profile Information Panel -->
+          <section class="card profile-info-card">
+            <div class="card-header">
+              <h3>Profile Information</h3>
+              <button class="btn btn-secondary btn-sm">
+                <i data-lucide="edit-3"></i> Edit
+              </button>
+            </div>
+            
+            <div class="profile-content-split">
+              <!-- Installed Apps Grid -->
+              <div class="apps-grid">
+                <div class="app-item"><div class="app-icon whatsapp"><i data-lucide="message-circle"></i></div><span>WhatsApp</span></div>
+                <div class="app-item"><div class="app-icon instagram"><i data-lucide="instagram"></i></div><span>Instagram</span></div>
+                <div class="app-item"><div class="app-icon facebook"><i data-lucide="facebook"></i></div><span>Facebook</span></div>
+                <div class="app-item"><div class="app-icon tiktok"><i data-lucide="video"></i></div><span>TikTok</span></div>
+                <div class="app-item"><div class="app-icon telegram"><i data-lucide="send"></i></div><span>Telegram</span></div>
+                <div class="app-item"><div class="app-icon discord"><i data-lucide="message-square"></i></div><span>Discord</span></div>
+                <div class="app-item"><div class="app-icon twitter"><i data-lucide="twitter"></i></div><span>Twitter (X)</span></div>
+                <div class="app-item"><div class="app-icon snapchat"><i data-lucide="ghost"></i></div><span>Snapchat</span></div>
+                <div class="app-item"><div class="app-icon youtube"><i data-lucide="youtube"></i></div><span>YouTube</span></div>
+                <div class="app-item"><div class="app-icon gmail"><i data-lucide="mail"></i></div><span>Gmail</span></div>
+                <div class="app-item"><div class="app-icon linkedin"><i data-lucide="linkedin"></i></div><span>LinkedIn</span></div>
+                <div class="app-item"><div class="app-icon pinterest"><i data-lucide="bookmark"></i></div><span>Pinterest</span></div>
+                <div class="app-item"><div class="app-icon messenger"><i data-lucide="message-circle"></i></div><span>Messenger</span></div>
+                <div class="app-item"><div class="app-icon spotify"><i data-lucide="music"></i></div><span>Spotify</span></div>
+                <div class="app-item"><div class="app-icon netflix"><i data-lucide="tv"></i></div><span>Netflix</span></div>
+                <div class="app-item"><div class="app-icon more-apps"><i data-lucide="plus"></i></div><span>More Apps</span></div>
+              </div>
+
+              <!-- Key Account Info Details -->
+              <div class="user-details-list">
+                <div class="detail-item">
+                  <i data-lucide="phone"></i>
+                  <div>
+                    <label>Phone Number</label>
+                    <p>+234 801 234 5678</p>
+                  </div>
+                </div>
+
+                <div class="detail-item">
+                  <i data-lucide="mail"></i>
+                  <div>
+                    <label>Email</label>
+                    <p>user@example.com</p>
+                  </div>
+                </div>
+
+                <div class="detail-item">
+                  <i data-lucide="user"></i>
+                  <div>
+                    <label>Username</label>
+                    <p>user123</p>
+                  </div>
+                </div>
+
+                <div class="detail-item">
+                  <i data-lucide="globe"></i>
+                  <div>
+                    <label>Country</label>
+                    <p>Nigeria</p>
+                  </div>
+                </div>
+
+                <div class="detail-item">
+                  <i data-lucide="smartphone"></i>
+                  <div>
+                    <label>Device</label>
+                    <p>Android (13)</p>
+                  </div>
+                </div>
+
+                <button class="btn btn-outline btn-full">View All Information</button>
+              </div>
+            </div>
+          </section>
+
+          <!-- Live Location Panel -->
+          <section class="card location-card">
+            <div class="card-header">
+              <div class="title-with-icon">
+                <i data-lucide="map-pin" class="text-blue"></i>
+                <h3>Live Location</h3>
+              </div>
+              <span class="status-badge status-live">
+                <span class="dot"></span> Live
+              </span>
+            </div>
+
+            <div class="map-container">
+              <div class="map-graphic">
+                <div class="map-grid-lines"></div>
+                <div class="map-pin-point">
+                  <div class="pin-pulse"></div>
+                  <i data-lucide="map-pin"></i>
+                </div>
+              </div>
+              <div class="map-overlay-info">
+                <i data-lucide="map-pin" class="text-green"></i>
+                <div>
+                  <strong>Lagos, Nigeria</strong>
+                  <p>6.5244° N, 3.3792° E</p>
+                </div>
+              </div>
+            </div>
+
+            <div class="location-details-footer">
+              <h4>Location Details</h4>
+              <div class="loc-stats-grid">
+                <div class="loc-stat">
+                  <i data-lucide="target"></i>
+                  <div>
+                    <label>Accuracy</label>
+                    <p>± 10 meters</p>
+                  </div>
+                </div>
+                <div class="loc-stat">
+                  <i data-lucide="wifi"></i>
+                  <div>
+                    <label>IP Address</label>
+                    <p>102.89.123.45</p>
+                  </div>
+                </div>
+                <div class="loc-stat">
+                  <i data-lucide="clock"></i>
+                  <div>
+                    <label>Last Updated</label>
+                    <p id="live-location-time">2 minutes ago</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </section>
+        </div>
+
+        <!-- ROW 3: FOUR PANELS (Cloning, Monitoring, Remote Control, Device Status) -->
+        <div class="grid-4-col">
+          
+          <!-- 1. Cloning Section -->
+          <section class="card">
+            <div class="card-header">
+              <div class="title-with-icon">
+                <i data-lucide="copy" class="text-blue"></i>
+                <h3>Cloning Section</h3>
+              </div>
+              <button class="btn btn-secondary btn-xs">Clone</button>
+            </div>
+            
+            <div class="cloning-body">
+              <div class="phone-mockup">
+                <div class="phone-screen-inner">
+                  <i data-lucide="smartphone"></i>
+                </div>
+              </div>
+              
+              <ul class="clone-checklist">
+                <li>
+                  <i data-lucide="check-circle-2" class="text-green"></i>
+                  <div>
+                    <strong>Phone Data</strong>
+                    <p>Contacts, Call Logs, SMS</p>
+                  </div>
+                </li>
+                <li>
+                  <i data-lucide="check-circle-2" class="text-green"></i>
+                  <div>
+                    <strong>App Data</strong>
+                    <p>WhatsApp, Instagram, etc.</p>
+                  </div>
+                </li>
+                <li>
+                  <i data-lucide="check-circle-2" class="text-green"></i>
+                  <div>
+                    <strong>Media Files</strong>
+                    <p>Photos, Videos, Documents</p>
+                  </div>
+                </li>
+                <li>
+                  <i data-lucide="check-circle-2" class="text-green"></i>
+                  <div>
+                    <strong>Device Settings</strong>
+                    <p>Wi-Fi, System, Browser</p>
+                  </div>
+                </li>
+              </ul>
+            </div>
+
+            <button class="btn btn-primary btn-full mt-auto">Start Cloning</button>
+          </section>
+
+          <!-- 2. Monitoring -->
+          <section class="card">
+            <div class="card-header">
+              <div class="title-with-icon">
+                <i data-lucide="activity" class="text-blue"></i>
+                <h3>Monitoring</h3>
+              </div>
+              <span class="status-badge status-live"><span class="dot"></span> Live</span>
+            </div>
+
+            <div class="monitoring-list">
+              <div class="monitor-row">
+                <span class="m-label"><i data-lucide="phone-call"></i> Calls</span>
+                <span class="m-status"><span class="dot-sm"></span> Monitoring</span>
+              </div>
+              <div class="monitor-row">
+                <span class="m-label"><i data-lucide="message-square"></i> Messages</span>
+                <span class="m-status"><span class="dot-sm"></span> Monitoring</span>
+              </div>
+              <div class="monitor-row">
+                <span class="m-label"><i data-lucide="share-2"></i> Social Media</span>
+                <span class="m-status"><span class="dot-sm"></span> Monitoring</span>
+              </div>
+              <div class="monitor-row">
+                <span class="m-label"><i data-lucide="globe"></i> Browser History</span>
+                <span class="m-status"><span class="dot-sm"></span> Monitoring</span>
+              </div>
+              <div class="monitor-row">
+                <span class="m-label"><i data-lucide="monitor"></i> Screen Activity</span>
+                <span class="m-status"><span class="dot-sm"></span> Monitoring</span>
+              </div>
+              <div class="monitor-row">
+                <span class="m-label"><i data-lucide="keyboard"></i> Keystrokes</span>
+                <span class="m-status"><span class="dot-sm"></span> Monitoring</span>
+              </div>
+            </div>
+
+            <div class="card-footer-text">
+              Last Activity: <span>2 min ago</span>
+            </div>
+          </section>
+
+          <!-- 3. Remote Control -->
+          <section class="card">
+            <div class="card-header">
+              <div class="title-with-icon">
+                <i data-lucide="smartphone" class="text-blue"></i>
+                <h3>Remote Control</h3>
+              </div>
+              <span class="status-badge status-live"><span class="dot"></span> Connected</span>
+            </div>
+
+            <div class="remote-body">
+              <div class="remote-phone">
+                <div class="phone-top-time">10:24 <span class="sub-date">Mon, Apr 28</span></div>
+                <div class="phone-app-icons">
+                  <div class="p-icon"></div>
+                  <div class="p-icon"></div>
+                  <div class="p-icon"></div>
+                  <div class="p-icon"></div>
+                </div>
+              </div>
+
+              <div class="remote-controls-list">
+                <button class="remote-btn btn-blue-bg"><i data-lucide="monitor"></i> Screen View</button>
+                <button class="remote-btn"><i data-lucide="camera"></i> Take Screenshot</button>
+                <button class="remote-btn"><i data-lucide="video"></i> Start Recording</button>
+                <button class="remote-btn"><i data-lucide="sliders"></i> Control Device</button>
+                <button class="remote-btn btn-danger-text"><i data-lucide="power"></i> Power Options</button>
+              </div>
+            </div>
+          </section>
+
+          <!-- 4. Device Status -->
+          <section class="card">
+            <div class="card-header">
+              <h3>Device Status</h3>
+              <span class="status-badge status-live"><span class="dot"></span> Online</span>
+            </div>
+
+            <div class="status-list">
+              <div class="status-row">
+                <span class="s-left"><i data-lucide="wifi"></i> Network</span>
+                <span class="s-right green-text">Connected (Wi-Fi)</span>
+              </div>
+              <div class="status-row">
+                <span class="s-left"><i data-lucide="navigation"></i> GPS</span>
+                <span class="s-right green-text">Active</span>
+              </div>
+              <div class="status-row">
+                <span class="s-left"><i data-lucide="bluetooth"></i> Bluetooth</span>
+                <span class="s-right">On</span>
+              </div>
+              <div class="status-row">
+                <span class="s-left"><i data-lucide="bell-off"></i> Do Not Disturb</span>
+                <span class="s-right">Off</span>
+              </div>
+              <div class="status-row">
+                <span class="s-left"><i data-lucide="refresh-cw"></i> Auto Sync</span>
+                <span class="s-right">On</span>
+              </div>
+              <div class="status-row">
+                <span class="s-left"><i data-lucide="shield-check"></i> App Permissions</span>
+                <span class="s-right green-text">Granted</span>
+              </div>
+            </div>
+          </section>
+
+        </div>
+
+        <!-- ROW 4: FOUR LOWER PANELS (Recent Activity, Media Files, System Info, Quick Actions) -->
+        <div class="grid-4-col">
+          
+          <!-- Recent Activity -->
+          <section class="card">
+            <div class="card-header">
+              <div class="title-with-icon">
+                <i data-lucide="clock" class="text-blue"></i>
+                <h3>Recent Activity</h3>
+              </div>
+              <a href="#" class="link-btn">View All</a>
+            </div>
+
+            <div class="activity-feed">
+              <div class="activity-item">
+                <div class="act-icon green"><i data-lucide="message-square"></i></div>
+                <div class="act-details">
+                  <strong>New message detected</strong>
+                  <p>WhatsApp - 2 min ago</p>
+                </div>
+              </div>
+
+              <div class="activity-item">
+                <div class="act-icon blue"><i data-lucide="map-pin"></i></div>
+                <div class="act-details">
+                  <strong>Location updated</strong>
+                  <p>Lagos, Nigeria - 5 min ago</p>
+                </div>
+              </div>
+
+              <div class="activity-item">
+                <div class="act-icon dark"><i data-lucide="download"></i></div>
+                <div class="act-details">
+                  <strong>App installed</strong>
+                  <p>TikTok - 12 min ago</p>
+                </div>
+              </div>
+
+              <div class="activity-item">
+                <div class="act-icon blue-light"><i data-lucide="camera"></i></div>
+                <div class="act-details">
+                  <strong>Screenshot captured</strong>
+                  <p>Screen - 18 min ago</p>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <!-- Media Files -->
+          <section class="card">
+            <div class="card-header">
+              <div class="title-with-icon">
+                <i data-lucide="folder" class="text-blue"></i>
+                <h3>Media Files</h3>
+              </div>
+              <a href="#" class="link-btn">View All</a>
+            </div>
+
+            <div class="media-grid-preview">
+              <div class="media-box photo-box">
+                <i data-lucide="image"></i>
+                <div class="media-info">
+                  <strong>Photos</strong>
+                  <span>1,248</span>
+                </div>
+              </div>
+
+              <div class="media-box video-box">
+                <i data-lucide="play-circle"></i>
+                <div class="media-info">
+                  <strong>Videos</strong>
+                  <span>324</span>
+                </div>
+              </div>
+
+              <div class="media-box audio-box">
+                <i data-lucide="music"></i>
+                <div class="media-info">
+                  <strong>Audio</strong>
+                  <span>87</span>
+                </div>
+              </div>
+
+              <div class="media-box doc-box">
+                <i data-lucide="file-text"></i>
+                <div class="media-info">
+                  <strong>Documents</strong>
+                  <span>219</span>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <!-- System Information -->
+          <section class="card">
+            <div class="card-header">
+              <div class="title-with-icon">
+                <i data-lucide="settings" class="text-blue"></i>
+                <h3>System Information</h3>
+              </div>
+            </div>
+
+            <div class="sys-info-list">
+              <div class="sys-row">
+                <span><i data-lucide="cpu"></i> Android Version</span>
+                <strong>13</strong>
+              </div>
+              <div class="sys-row">
+                <span><i data-lucide="smartphone"></i> Device Model</span>
+                <strong>SM-A536B</strong>
+              </div>
+              <div class="sys-row">
+                <span><i data-lucide="code"></i> Build Number</span>
+                <strong>TP1A.220624.014</strong>
+              </div>
+              <div class="sys-row">
+                <span><i data-lucide="terminal"></i> Kernel Version</span>
+                <strong>4.19.113-24557570</strong>
+              </div>
+              <div class="sys-row">
+                <span><i data-lucide="clock"></i> Uptime</span>
+                <strong id="uptime-display">5 days, 12 hours</strong>
+              </div>
+            </div>
+          </section>
+
+          <!-- Quick Actions -->
+          <section class="card">
+            <div class="card-header">
+              <div class="title-with-icon">
+                <i data-lucide="zap" class="text-blue"></i>
+                <h3>Quick Actions</h3>
+              </div>
+            </div>
+
+            <div class="quick-actions-btns">
+              <button class="action-btn btn-primary">
+                <i data-lucide="refresh-cw"></i>
+                <span>Update Location</span>
+              </button>
+
+              <button class="action-btn btn-navy">
+                <i data-lucide="trash-2"></i>
+                <span>Clear Logs</span>
+              </button>
+
+              <button class="action-btn btn-warning">
+                <i data-lucide="rotate-ccw"></i>
+                <span>Reset Device</span>
+              </button>
+
+              <button class="action-btn btn-danger">
+                <i data-lucide="lock"></i>
+                <span>Lock Device</span>
+              </button>
+            </div>
+          </section>
+
+        </div>
+
+      </main>
     </div>
-  `).join("");
-}
 
-document.querySelectorAll("[data-message-app]").forEach(button => {
-  button.addEventListener("click", () => {
-    const name = button.dataset.messageApp;
-    document.getElementById("chatTitle").textContent = name + " message list";
-    renderMessages(name);
-    document.getElementById("chatCard").classList.remove("hidden");
-    showSection("messages");
-  });
-});
+    <!-- BOTTOM MOBILE / GLOBAL FOOTER NAV -->
+    <footer class="bottom-nav">
+      <a href="#" class="b-nav-item active"><i data-lucide="home"></i><span>Home</span></a>
+      <a href="#" class="b-nav-item"><i data-lucide="user"></i><span>Profile</span></a>
+      <a href="#" class="b-nav-item"><i data-lucide="copy"></i><span>Cloning</span></a>
+      <a href="#" class="b-nav-item"><i data-lucide="activity"></i><span>Monitoring</span></a>
+      <a href="#" class="b-nav-item"><i data-lucide="smartphone"></i><span>Remote Control</span></a>
+      <a href="#" class="b-nav-item"><i data-lucide="map-pin"></i><span>Location</span></a>
+      <a href="#" class="b-nav-item"><i data-lucide="mail"></i><span>Messages</span></a>
+      <a href="#" class="b-nav-item"><i data-lucide="folder"></i><span>Media</span></a>
+      <a href="#" class="b-nav-item"><i data-lucide="history"></i><span>Logs</span></a>
+      <a href="#" class="b-nav-item"><i data-lucide="settings"></i><span>Settings</span></a>
+    </footer>
 
-renderMessages("WhatsApp");
+    <!-- SYSTEM STATUS STRIP -->
+    <div class="system-status-bar">
+      <span><strong>spyteligent</strong> | Secure • Monitor • Control</span>
+      <span class="status-online-text"><span class="dot-sm green"></span> System Online</span>
+    </div>
 
-document.querySelectorAll("[data-media]").forEach(button => {
-  button.addEventListener("click", () => {
-    document.getElementById("mediaTitle").textContent = button.dataset.media;
-    document.getElementById("mediaDetails").classList.remove("hidden");
-  });
-});
-</script>
+  </div>
+
+  <!-- Link to External JavaScript File -->
+  <script src="script.js"></script>
 </body>
 </html>
