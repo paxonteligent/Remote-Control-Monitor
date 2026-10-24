@@ -242,6 +242,9 @@ h3 { font-size: 15px; font-weight: 600; margin: 0 0 8px; }
   background: white;
   box-shadow: 0 1px 0 rgba(15,23,42,0.02);
 }
+.chat-row[data-tone="whatsapp"] { border-left: 4px solid #25d366; background: linear-gradient(180deg, #ffffff, #f7fff9); }
+.chat-row[data-tone="instagram"] { border-left: 4px solid #d62976; background: linear-gradient(180deg, #ffffff, #fff8fc); }
+.chat-row[data-tone="facebook"] { border-left: 4px solid #1877f2; background: linear-gradient(180deg, #ffffff, #f6faff); }
 .chat-avatar {
   flex: 0 0 40px;
   width: 40px;
@@ -764,7 +767,7 @@ const chatList = document.getElementById("chatList");
 function renderMessages(appName) {
   const rows = messageTemplates[appName] || messageTemplates.WhatsApp;
   chatList.innerHTML = rows.map(row => `
-    <div class="chat-row">
+    <div class="chat-row" data-tone="${row.tone}">
       <div class="chat-avatar ${row.tone}">${row.name.charAt(0).toUpperCase()}</div>
       <div class="chat-body">
         <span class="chat-name blurred">${row.name}</span>
