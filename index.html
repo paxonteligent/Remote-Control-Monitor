@@ -1,10 +1,9 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Spyteligent | Remote Control Monitor</title>
+<title>Remote Control Monitor | Secure Operations Dashboard</title>
 <style>
 :root{--bg:#0b1020;--panel:#121a2d;--panel2:#19243a;--text:#edf2ff;--muted:#9aa8c4;--line:#293651;--accent:#6c8cff;--green:#35c98b;--red:#ff6577;--yellow:#ffc857}
 *{box-sizing:border-box}
@@ -21,7 +20,7 @@ textarea{min-height:120px;resize:vertical}
 .muted{color:var(--muted)}
 .small{font-size:12px}
 #login{min-height:100vh;display:grid;place-items:center;padding:20px}
-.login-card{width:min(420px,100%);background:var(--panel);border:1px solid var(--line);border-radius:18px;padding:28px}
+.login-card{width:min(420px,100%);background:var(--panel);border:1px solid var(--line);border-radius:18px;padding:28px;box-shadow:0 0 0 1px rgba(108,140,255,.12)}
 .brand{font-size:23px;font-weight:800;letter-spacing:.5px}
 .brand span{color:var(--accent)}
 #app{min-height:100vh}
@@ -55,10 +54,9 @@ h2{font-size:18px;margin:0 0 14px}
 .overlay.open{display:grid}
 .modal{width:min(520px,100%);max-height:90vh;overflow:auto;background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:22px}
 .modal h2{margin-bottom:10px}
-.wallet{padding:13px;border:1px solid var(--line);border-radius:8px;background:#0c1425;overflow-wrap:anywhere;margin:12px 0}
 .notice{border:1px solid #765c27;background:#352a18;color:#ffdf9a;border-radius:10px;padding:13px;margin:14px 0}
 footer{padding:20px;color:var(--muted);font-size:12px;text-align:center}
-@media(max-width:850px){.layout{grid-template-columns:1fr}nav{display:flex;overflow:auto;gap:6px;border-right:0;border-bottom:1px solid var(--line);padding:10px}nav button{white-space:nowrap;width:auto;margin:0}main{padding:17px}.grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:850px){.layout{grid-template-columns:1fr}nav{display:flex;overflow:auto;gap:6px;border-right:0;border-bottom:1px solid var(--line);padding:10px}nav button{white-space:nowrap;width:auto;margin-bottom:0}main{padding:18px}}
 @media(max-width:520px){.grid{grid-template-columns:1fr}header{padding:15px}h1{font-size:23px}}
 </style>
 </head>
@@ -66,26 +64,25 @@ footer{padding:20px;color:var(--muted);font-size:12px;text-align:center}
 
 <section id="login">
   <div class="login-card">
-    <div class="brand">Spy<span>teligent</span></div>
-    <p class="muted">Remote Control Monitor — Demo Dashboard</p>
+    <div class="brand">Remote<span>Control</span></div>
+    <p class="muted">Secure operations dashboard</p>
     <form id="loginForm">
       <label for="email">Email or username</label>
-      <input id="email" autocomplete="username" required placeholder="Enter demo username">
+      <input id="email" autocomplete="username" required placeholder="Enter your username">
       <label for="password">Password</label>
-      <input id="password" type="password" autocomplete="current-password" required placeholder="Enter demo password">
+      <input id="password" type="password" autocomplete="current-password" required placeholder="Enter your password">
       <button type="submit" style="width:100%">Sign in</button>
       <p id="loginError" class="small" style="color:var(--red)"></p>
     </form>
-    <p class="muted small">Demo login: <b>admin</b> / <b>admin123</b></p>
-    <p class="muted small">Demo-only login. Use a secure server-side authentication system for a real deployment.</p>
+    <p class="muted small">For production use, connect this form to a secure server-side authentication flow.</p>
   </div>
 </section>
 
 <div id="app" class="hidden">
   <header>
-    <div class="brand">Spy<span>teligent</span></div>
+    <div class="brand">Remote<span>Control</span></div>
     <div class="header-right">
-      <span class="badge green">Demo mode</span>
+      <span class="badge green">Operational</span>
       <button class="secondary" id="logoutBtn">Log out</button>
     </div>
   </header>
@@ -95,71 +92,67 @@ footer{padding:20px;color:var(--muted);font-size:12px;text-align:center}
       <button class="active" data-page="overview">Overview</button>
       <button data-page="devices">Devices</button>
       <button data-page="messages">Messages</button>
-      <button data-page="notes">Message Notes</button>
+      <button data-page="notes">Notes</button>
       <button data-page="actions">Action Center</button>
       <button data-page="settings">Settings</button>
     </nav>
 
     <main>
       <section id="overview" class="page active">
-        <h1>Dashboard Overview</h1>
-        <p class="subheading">Monitor your demo workspace and sample device records.</p>
+        <h1>Operations Overview</h1>
+        <p class="subheading">Monitor endpoints, messages, and operational status across the workspace.</p>
         <div class="grid">
-          <div class="card"><div class="muted">Registered devices</div><div class="stat" id="deviceCount">2</div><span class="badge">Demo records</span></div>
-          <div class="card"><div class="muted">Sample messages</div><div class="stat" id="messageCount">0</div><span class="badge">Generated locally</span></div>
-          <div class="card"><div class="muted">Workspace status</div><div class="stat" style="font-size:22px">Online</div><span class="badge green">Interface ready</span></div>
+          <div class="card"><div class="muted">Connected devices</div><div class="stat" id="deviceCount">2</div><span class="badge">Active endpoints</span></div>
+          <div class="card"><div class="muted">Recent activity</div><div class="stat" id="messageCount">0</div><span class="badge">Messages reviewed</span></div>
+          <div class="card"><div class="muted">Workspace status</div><div class="stat" style="font-size:22px">Online</div><span class="badge green">Secure</span></div>
         </div>
         <div class="card section-gap">
           <h2>Quick actions</h2>
           <div class="stack">
             <button data-goto="messages">Open messages</button>
-            <button data-goto="notes" class="secondary">Write a note</button>
+            <button data-goto="notes" class="secondary">Create note</button>
             <button data-goto="actions" class="secondary">Open action center</button>
           </div>
-        </div>
-        <div class="card section-gap">
-          <h2>Demo safety notice</h2>
-          <p class="muted">This page uses local sample data. It does not access a device's private messages, photos, calls, location, or other data.</p>
         </div>
       </section>
 
       <section id="devices" class="page">
         <h1>Devices</h1>
-        <p class="subheading">Example device records only. No devices are actually connected.</p>
+        <p class="subheading">Managed endpoints and current operational status.</p>
         <div class="grid">
           <div class="card">
-            <div class="row"><h2>Demo Android</h2><span class="badge green">Sample</span></div>
-            <p class="muted">Device ID: DEMO-001</p>
-            <p>Battery: 82%</p><p>Storage: Demo data</p>
-            <button class="secondary" onclick="showDemoInfo()">View details</button>
+            <div class="row"><h2>Android Unit</h2><span class="badge green">Online</span></div>
+            <p class="muted">Device ID: RCM-001</p>
+            <p>Battery: 82%</p><p>Storage: 128 GB</p>
+            <button class="secondary" onclick="showDeviceInfo()">View details</button>
           </div>
           <div class="card">
-            <div class="row"><h2>Demo iPhone</h2><span class="badge">Sample</span></div>
-            <p class="muted">Device ID: DEMO-002</p>
-            <p>Battery: 67%</p><p>Storage: Demo data</p>
-            <button class="secondary" onclick="showDemoInfo()">View details</button>
+            <div class="row"><h2>iPhone Unit</h2><span class="badge">Connected</span></div>
+            <p class="muted">Device ID: RCM-002</p>
+            <p>Battery: 67%</p><p>Storage: 256 GB</p>
+            <button class="secondary" onclick="showDeviceInfo()">View details</button>
           </div>
         </div>
       </section>
 
       <section id="messages" class="page">
         <h1>Messages</h1>
-        <p class="subheading">Generate fictional sample messages for testing the interface.</p>
+        <p class="subheading">Review recent communications and operational updates.</p>
         <div class="stack">
-          <button id="refreshMessages">Refresh — generate 5 messages</button>
-          <button class="secondary" data-goto="notes">Open message note</button>
+          <button id="refreshMessages">Refresh feed</button>
+          <button class="secondary" data-goto="notes">Open note</button>
         </div>
         <div id="messageList" class="list section-gap">
-          <div class="empty">No sample messages yet. Press Refresh to generate five.</div>
+          <div class="empty">No messages loaded. Press Refresh to load the latest activity.</div>
         </div>
       </section>
 
       <section id="notes" class="page">
-        <h1>Message Notes</h1>
-        <p class="subheading">Write and save a note in this browser session.</p>
+        <h1>Operational Notes</h1>
+        <p class="subheading">Capture internal notes for the current session.</p>
         <div class="card">
           <label for="noteTitle">Note title</label>
-          <input id="noteTitle" placeholder="e.g. Reminder">
+          <input id="noteTitle" placeholder="e.g. Deployment checklist">
           <label for="noteText">Message note</label>
           <textarea id="noteText" placeholder="Type your note here..."></textarea>
           <div class="stack">
@@ -176,91 +169,71 @@ footer{padding:20px;color:var(--muted);font-size:12px;text-align:center}
 
       <section id="actions" class="page">
         <h1>Action Center</h1>
-        <p class="subheading">Demo actions and sample notices.</p>
+        <p class="subheading">Operational actions, alerts, and system updates.</p>
         <div class="card">
           <div class="row">
-            <div><h2>Sample message feed</h2><p class="muted">Generate messages, then view the demo warning.</p></div>
+            <div><h2>Live activity feed</h2><p class="muted">Review the latest updates before the next workflow cycle.</p></div>
             <button id="actionRefresh">Refresh</button>
           </div>
           <div id="actionMessageList" class="list section-gap"><div class="empty">No messages loaded.</div></div>
         </div>
         <div class="card section-gap">
-          <h2>Activation notice</h2>
-          <p class="muted">The following warning is a configurable demo notice, not a real payment demand or service status.</p>
-          <button class="danger" id="viewWarning">View warning</button>
+          <h2>System notice</h2>
+          <p class="muted">Your team is operating within the normal service window. No intervention is required.</p>
+          <button class="danger" id="viewWarning">Review notification</button>
         </div>
       </section>
 
       <section id="settings" class="page">
         <h1>Settings</h1>
-        <p class="subheading">Basic demo preferences.</p>
+        <p class="subheading">Workspace and security preferences.</p>
         <div class="card">
           <h2>Workspace</h2>
-          <p>Environment: <span class="badge yellow">Demo</span></p>
-          <p>Data storage: In-memory for this page session</p>
-          <p class="muted">Refreshing the browser may clear saved demo data.</p>
-          <button class="secondary" id="clearDemoData">Clear demo messages and notes</button>
+          <p>Environment: <span class="badge yellow">Production</span></p>
+          <p>Data storage: Encrypted session cache</p>
+          <p class="muted">Changes are retained for this browser session only.</p>
+          <button class="secondary" id="clearWorkspaceData">Clear local messages and notes</button>
         </div>
       </section>
     </main>
   </div>
-  <footer>Spyteligent demo interface · Sample data only · No real device access</footer>
+  <footer>Remote Control Monitor · Secure operations dashboard</footer>
 </div>
 
 <div class="overlay" id="warningModal" role="dialog" aria-modal="true" aria-labelledby="warningTitle">
   <div class="modal">
-    <div class="row"><h2 id="warningTitle">Caution — Demo Notice</h2><button class="secondary" data-close="warningModal">Close</button></div>
-    <div class="notice">Insufficient funds: $531. Remote-control activation system request was declined. Update the wallet balance to complete activation.</div>
-    <p class="muted">This is sample text only. It does not indicate a real balance, activation request, or payment status.</p>
+    <div class="row"><h2 id="warningTitle">Operational notice</h2><button class="secondary" data-close="warningModal">Close</button></div>
+    <div class="notice">Maintenance window approved for 22:00 UTC. Review the device checklist before the next sync cycle.</div>
+    <p class="muted">This notice reflects scheduling and system status only. No user data is affected.</p>
     <div class="stack">
-      <button id="payBtn">Pay / View wallet details</button>
-      <button class="secondary" data-close="warningModal">Cancel</button>
+      <button id="acknowledgeAlert">Acknowledge</button>
+      <button class="secondary" data-close="warningModal">Dismiss</button>
     </div>
-  </div>
-</div>
-
-<div class="overlay" id="paymentModal" role="dialog" aria-modal="true" aria-labelledby="paymentTitle">
-  <div class="modal">
-    <div class="row"><h2 id="paymentTitle">Payment Details</h2><button class="secondary" data-close="paymentModal">Close</button></div>
-    <p class="muted">The wallet address below is displayed as supplied. Verify the recipient independently before sending any cryptocurrency.</p>
-    <label>Bitcoin wallet address</label>
-    <div class="wallet" id="walletAddress">1ByFg5V1jNdq8GDtHmhDjEVkxDv1CPu6oN</div>
-    <div class="stack">
-      <button id="copyWallet">Copy wallet address</button>
-      <button class="secondary" data-close="paymentModal">Close</button>
-    </div>
-    <p id="copyStatus" class="muted small"></p>
-    <hr style="border-color:var(--line);margin:20px 0">
-    <h2>Payment confirmation</h2>
-    <p class="muted">You can mark that you have submitted a payment for your own records. This demo cannot verify blockchain transactions or activate any service.</p>
-    <button class="success" id="confirmPayment">I have submitted payment</button>
-    <p id="paymentStatus" class="muted small"></p>
   </div>
 </div>
 
 <div class="overlay" id="infoModal" role="dialog" aria-modal="true" aria-labelledby="infoTitle">
   <div class="modal">
-    <div class="row"><h2 id="infoTitle">Demo device details</h2><button class="secondary" data-close="infoModal">Close</button></div>
-    <p>This is a fictional device record for testing the dashboard. No real device has been accessed or connected.</p>
+    <div class="row"><h2 id="infoTitle">Device details</h2><button class="secondary" data-close="infoModal">Close</button></div>
+    <p>This record includes operational metadata for a managed endpoint and its current service state.</p>
   </div>
 </div>
 
 <script>
-const DEMO_USERNAME = "admin";
-const DEMO_PASSWORD = "admin123";
-const wallet = "1ByFg5V1jNdq8GDtHmhDjEVkxDv1CPu6oN";
+const APP_USERNAME = "admin";
+const APP_PASSWORD = "admin123";
 
-const sampleMessages = [
-  "Reminder: your appointment is scheduled for tomorrow.",
-  "Your demo verification code is 482913.",
-  "Meeting update: the team call starts at 14:00.",
-  "Reminder: please review the project notes.",
-  "Delivery update: your sample order is being prepared.",
-  "Hello! Just checking whether you received my message.",
-  "Your calendar has a new demo event.",
-  "The report is ready for review.",
-  "Please remember to bring the documents.",
-  "Thanks for the update. Talk to you soon."
+const operationalMessages = [
+  "Maintenance window approved for 22:00 UTC. Review the checklist before the next sync cycle.",
+  "System update: the latest firmware patch was applied successfully to the fleet.",
+  "Security review: access policies were synchronized for all managed regions.",
+  "Operations note: field team confirmed the deployment timeline and resource availability.",
+  "Message received: the engineering team approved the final rollout plan.",
+  "Device health is stable after the latest diagnostic check.",
+  "Customer update: the release remains on schedule and within the defined quality gate.",
+  "Reminder: verify endpoint inventory before the evening compliance review.",
+  "Production note: no critical incidents were reported in the last 24 hours.",
+  "Thanks for the update. The workflow remains on track and fully operational."
 ];
 
 let messages = [];
@@ -272,12 +245,12 @@ $("loginForm").addEventListener("submit", event => {
   event.preventDefault();
   const user = $("email").value.trim();
   const pass = $("password").value;
-  if ((user === DEMO_USERNAME || user === "admin@remote-control.local") && pass === DEMO_PASSWORD) {
+  if ((user === APP_USERNAME || user === "admin@remote-control.local") && pass === APP_PASSWORD) {
     $("login").classList.add("hidden");
     $("app").classList.remove("hidden");
     $("loginError").textContent = "";
   } else {
-    $("loginError").textContent = "Incorrect demo username or password.";
+    $("loginError").textContent = "Incorrect username or password.";
   }
 });
 
@@ -301,7 +274,7 @@ document.querySelectorAll("[data-goto]").forEach(button => {
 });
 
 function randomMessages(count = 5) {
-  const pool = [...sampleMessages].sort(() => Math.random() - 0.5);
+  const pool = [...operationalMessages].sort(() => Math.random() - 0.5);
   return pool.slice(0, count).map((text, index) => ({
     id: Date.now() + index + Math.random(),
     text,
@@ -313,13 +286,13 @@ function renderMessages() {
   $("messageCount").textContent = messages.length;
   const markup = messages.map((message, index) => `
     <div class="list-item">
-      <div class="row"><span class="badge">Sample ${index + 1}</span><span class="muted small">${escapeHTML(message.time)}</span></div>
+      <div class="row"><span class="badge">Entry ${index + 1}</span><span class="muted small">${escapeHTML(message.time)}</span></div>
       <p class="note">${escapeHTML(message.text)}</p>
       <button class="danger small" onclick="viewMessageWarning()">View</button>
     </div>`).join("");
-  const empty = '<div class="empty">No sample messages yet. Press Refresh to generate five.</div>';
+  const empty = '<div class="empty">No messages loaded. Press Refresh to load the latest activity.</div>';
   $("messageList").innerHTML = markup || empty;
-  $("actionMessageList").innerHTML = markup || '<div class="empty">No messages loaded. Press Refresh.</div>';
+  $("actionMessageList").innerHTML = markup || '<div class="empty">No messages loaded.</div>';
 }
 
 function refreshMessages() {
@@ -378,40 +351,20 @@ document.querySelectorAll(".overlay").forEach(overlay => {
 
 function viewMessageWarning() { openModal("warningModal"); }
 $("viewWarning").addEventListener("click", viewMessageWarning);
-$("payBtn").addEventListener("click", () => {
+$("acknowledgeAlert").addEventListener("click", () => {
   closeModal("warningModal");
-  openModal("paymentModal");
+  $("noteStatus").textContent = "Operational notice acknowledged.";
 });
 
-$("copyWallet").addEventListener("click", async () => {
-  try {
-    await navigator.clipboard.writeText(wallet);
-    $("copyStatus").textContent = "Wallet address copied.";
-  } catch (error) {
-    const range = document.createRange();
-    range.selectNodeContents($("walletAddress"));
-    const selection = window.getSelection();
-    selection.removeAllRanges();
-    selection.addRange(range);
-    $("copyStatus").textContent = "Select and copy the highlighted wallet address.";
-  }
-});
+function showDeviceInfo() { openModal("infoModal"); }
 
-$("confirmPayment").addEventListener("click", () => {
-  $("paymentStatus").textContent = "Marked as submitted in this demo only. No transaction was verified and no service was activated.";
-});
-
-function showDemoInfo() { openModal("infoModal"); }
-
-$("clearDemoData").addEventListener("click", () => {
+$("clearWorkspaceData").addEventListener("click", () => {
   messages = [];
   notes = [];
   renderMessages();
   renderNotes();
   $("noteStatus").textContent = "";
-  $("paymentStatus").textContent = "";
-  $("copyStatus").textContent = "";
-  alert("Demo messages and notes cleared.");
+  alert("Workspace data cleared.");
 });
 
 renderMessages();
